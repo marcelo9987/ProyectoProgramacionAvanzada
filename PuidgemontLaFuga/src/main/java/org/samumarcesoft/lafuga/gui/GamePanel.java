@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GamePanel extends JPanel {
+
+    public static final int KFILAS = 5;
+    public static final int KCOLUMNAS = 5;
+
     Map<Integer,Tile> tiles;
 
     /**
@@ -14,21 +18,21 @@ public class GamePanel extends JPanel {
     public GamePanel()
     {
         this.tiles = new HashMap<>();
-        for(int cell = 0; cell<5;cell++)
+        for(int row = 0; row< KFILAS;row++)
         {
-            for(int row = 0; row<5;row++)
+            for(int column = 0; column< KCOLUMNAS;column++)
             {
-                Tile tile = new Tile();
-                tile.setText(cell+"-"+row);
-                tiles.put(cell*5+row,tile);
+                Tile tile = new Tile(row,column);
+                tile.setText(row+"-"+column);
+                tiles.put(row*KFILAS+column,tile);
             }
         }
-        this.setLayout(new GridLayout(5,5));
-        for(int cell = 0; cell<5;cell++)
+        this.setLayout(new GridLayout(KFILAS,KCOLUMNAS));
+        for(int row = 0; row< KFILAS;row++)
         {
-            for(int row = 0; row<5;row++)
+            for(int column = 0; column< KCOLUMNAS;column++)
             {
-                this.add(tiles.get(cell*5+row));
+                this.add(tiles.get(row*KFILAS+column));
             }
         }
 

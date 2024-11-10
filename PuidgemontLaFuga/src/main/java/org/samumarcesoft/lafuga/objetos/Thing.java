@@ -15,6 +15,10 @@ public class Thing implements Drawable {
 
     @Override
     public void draw() {
+        if(imagen == null) {
+            System.out.println("No image to draw");
+            return;
+        }
     }
 
     public Boolean setImage(String imageAddress) {
@@ -33,7 +37,6 @@ public class Thing implements Drawable {
 
         return true;
     }
-
 
     public Icon getImageInIcon() {
         return new ImageIcon(imagen);
