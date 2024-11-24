@@ -18,13 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class DAOTren implements IDAO {
+public class DAOTren extends AbstractDAO implements IDAO {
 
+    // Logger (heredado de AbstractDAO)
     private static DAOTren instance = null;
 
     List<Tren> trenes = null;
 
     private DAOTren() {
+        this.obtenerLogger();
         this.trenes = new ArrayList<>();
     }
 
@@ -37,7 +39,8 @@ public class DAOTren implements IDAO {
     }
 
     public void addTren(Tren tren) {
-        LoggerFactory.getLogger(DAOTren.class).trace("Añadiendo tren: " + tren);
+
+        LoggerFactory.getLogger(DAOTren.class).trace("Añadiendo tren: {}", tren);
         trenes.add(tren);
     }
 
@@ -54,47 +57,64 @@ public class DAOTren implements IDAO {
     }
 
     @Override
-    public Boolean save() {
+    protected BufferedWriter obtenerFileWriter() { //todo: NORMALÍZAME
         BufferedWriter writer = null;
-
         try {
             FileWriter file = new FileWriter("trenes.txt");
             writer = new BufferedWriter(file);
-            for (Tren tren : trenes) {
-                writer.write(tren.toString());
-                writer.newLine();
-            }
         } catch (Exception e) {
             LoggerFactory.getLogger(DAOTren.class).error("Error al volcar el archivo");
-            return false;
+            return null;
         }
-
-        try {
-            writer.close();
-        } catch (Exception e) {
-            LoggerFactory.getLogger(DAOTren.class).error("Error al cerrar el archivo, no se guardaron los cambios");
-            return false;
-        }
-
-        return true;
+        return writer;
     }
 
     @Override
-    public Boolean load() {
-        BufferedReader br_trainReader = null;
-        try {
-            br_trainReader = new BufferedReader(new FileReader("trenes.txt"));
-            String line = br_trainReader.readLine();
-            while (line != null) {
-                String[] parts = line.split(",");
-                trenes.add(new Tren(UUID.fromString(parts[0]), Integer.parseInt(parts[1])));
-                line = br_trainReader.readLine();
+    protected void guardarArchivo(BufferedWriter writer) {
+        for (Tren tren : trenes) {
+            try {
+                writer.write(tren.toString());
+            } catch (Exception e) {
+                this.logger.error("Error al guardar el archivo", e);
             }
-        } catch (Exception e) {
-            LoggerFactory.getLogger(DAOTren.class).error("Error al cargar el archivo");
-            return false;
         }
-        return true;
+        this.logger.trace("Contenido guardado en el archivo...");
     }
 
+
+    @Override
+    protected BufferedReader obtenerFileReader() {
+        this.obtenerLogger(); // esta llamada es gratis,
+        // ya que logger ya está inicializado, y si no lo está, se inicializa
+
+        BufferedReader reader = null;
+        try {
+            FileReader file = new FileReader("trenes.txt");
+            reader = new BufferedReader(file);
+        } catch (Exception e) {
+            this.logger.error("Error al leer el archivo", e);
+            return null;
+        }
+        return reader;
+    }
+
+    @Override
+    protected void cargarArchivo(BufferedReader reader) {
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                UUID id = UUID.fromString(parts[0].split("id=")[1]);
+                int num = Integer.parseInt(parts[1].split("num=")[1].split("]")[0]);
+                Tren tren = new Tren(id, num);
+                trenes.add(tren);
+
+                // DEBUG
+                this.logger.debug("Tren cargado: {}", tren);
+
+            }
+        } catch (Exception e) {
+            this.logger.error("Error al cargar el archivo", e);
+        }
+    }
 }

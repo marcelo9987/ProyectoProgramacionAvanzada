@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class criptograficos {
     private static final String ALGORITMO = "DES";
-    private static final String CLAVE = "825837445";
+    private static final String CLAVE = "82837445";
 
     public static SecretKey obtenerClave(String clave) {
         SecretKey claveSecreta = new SecretKeySpec(clave.getBytes(), ALGORITMO);

@@ -1,6 +1,7 @@
 package dao;
 
 import modelo.Tren;
+import modelo.Usuario;
 
 public class FachadaDAO {
     private static final String FILE = "trenes.txt";
@@ -53,4 +54,19 @@ public class FachadaDAO {
     }
 
 
+    public void guardarTrenes() {
+        DAOTren.getInstance().save();
+    }
+
+    public void addUser(Usuario elemental) {
+        DAOUsuario.getInstance().addUser(elemental);
+    }
+
+    public void saveUsers() {
+        DAOUsuario.getInstance().save();
+    }
+
+    public void loadUsers() {
+        DAOUsuario.getInstance().load();
+    }
 }

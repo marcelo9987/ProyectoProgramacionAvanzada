@@ -1,5 +1,7 @@
 package modelo;
 
+import util.criptograficos;
+
 import java.util.Date;
 
 public final class Usuario {
@@ -19,14 +21,37 @@ public final class Usuario {
     private String direccion;
     private Date fechaNacimiento;
 
-    public Usuario(String contrasenha, String correo, String direccion, int DNI, Date fechaNacimiento, String nombre, int telefono) {
-        this.contrasenha = contrasenha;
-        this.correo = correo;
-        this.direccion = direccion;
+    public Usuario(int DNI, String nombre, String correo, String contrasenha, int telefono, String direccion, Date fechaNacimiento) {
         this.DNI = DNI;
-        this.fechaNacimiento = fechaNacimiento;
         this.nombre = nombre;
+        this.correo = correo;
+        this.contrasenha = criptograficos.cifrar(contrasenha);
         this.telefono = telefono;
+        this.direccion = direccion;
+        this.fechaNacimiento = fechaNacimiento;
     }
 
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "DNI=" + DNI +
+                ", nombre='" + nombre + '\'' +
+                ", correo='" + correo + '\'' +
+                ", contrasenha='" + contrasenha + '\'' +
+                ", telefono=" + telefono +
+                ", direccion='" + direccion + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
+                '}';
+    }
+
+    public String printReadyString() {
+        return "Usuario{"
+                + DNI + ","
+                + nombre + ","
+                + correo + ","
+                + contrasenha + ","
+                + telefono + ","
+                + direccion + ","
+                + fechaNacimiento + '}';
+    }
 }
