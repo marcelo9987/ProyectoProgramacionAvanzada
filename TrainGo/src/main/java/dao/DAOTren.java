@@ -8,7 +8,6 @@ package dao;
  */
 
 import modelo.Tren;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -40,7 +39,7 @@ public class DAOTren extends AbstractDAO implements IDAO {
 
     public void addTren(Tren tren) {
 
-        LoggerFactory.getLogger(DAOTren.class).trace("Añadiendo tren: {}", tren);
+        this.logger.trace("Añadiendo tren: {}", tren);
         trenes.add(tren);
     }
 
@@ -57,13 +56,13 @@ public class DAOTren extends AbstractDAO implements IDAO {
     }
 
     @Override
-    protected BufferedWriter obtenerFileWriter() { //todo: NORMALÍZAME
+    protected BufferedWriter obtenerFileWriter() {
         BufferedWriter writer = null;
         try {
             FileWriter file = new FileWriter("trenes.txt");
             writer = new BufferedWriter(file);
         } catch (Exception e) {
-            LoggerFactory.getLogger(DAOTren.class).error("Error al volcar el archivo");
+            this.logger.error("Error al volcar el archivo");
             return null;
         }
         return writer;
