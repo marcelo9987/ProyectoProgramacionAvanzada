@@ -6,20 +6,20 @@ import java.util.Date;
 
 public final class Usuario {
     private final int DNI;
-    private String nombre;
-    private String correo;
+    private final String nombre;
+    private final String correo;
     /**
      * Contraseña del usuario
      *
      * @implNote La contraseña debe tener al menos 8 caracteres.
-     * Esta es almacenada encriptada mediante ÑÑÑÑÑ.
-     * @see ÑÑÑÑLLLLXXXX
+     * Esta es almacenada encriptada mediante DES.
+     * @see util.criptograficos
      * @since 1.0 20/11/2024
      */
-    private String contrasenha;
-    private int telefono;
-    private String direccion;
-    private Date fechaNacimiento;
+    private final String contrasenha;
+    private final int telefono;
+    private final String direccion;
+    private final Date fechaNacimiento;
 
     public Usuario(int DNI, String nombre, String correo, String contrasenha, int telefono, String direccion, Date fechaNacimiento) {
         this.DNI = DNI;
@@ -52,6 +52,15 @@ public final class Usuario {
                 + contrasenha + ","
                 + telefono + ","
                 + direccion + ","
-                + fechaNacimiento + '}';
+                + fechaNacimiento.toString().substring(0, 10) + fechaNacimiento.toString().substring(23) + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Usuario usuario)) {
+            return false;
+        }
+
+        return DNI == usuario.DNI;
     }
 }
