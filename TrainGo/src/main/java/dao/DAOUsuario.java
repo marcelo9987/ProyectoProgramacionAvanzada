@@ -78,7 +78,7 @@ public class DAOUsuario extends AbstractDAO {
             while ((linea = reader.readLine()) != null) {
                 String[] partes = linea.split(",");
 
-                Usuario usr = new Usuario(Integer.parseInt(partes[0].substring(8)), partes[1], partes[2], partes[3], Integer.parseInt(partes[4]), partes[5], new Date(partes[6].split("}")[0]));
+                Usuario usr = new Usuario(Integer.parseInt(partes[0].substring(8)), partes[1], partes[2], partes[3], Integer.parseInt(partes[4]), partes[5], new Date(partes[6].split("}")[0]), false);
                 if (usuarios.contains(usr)) {
                     this.logger.warn("Usuario duplicado: {}. No se cargará", usr);
                     continue;
@@ -94,5 +94,55 @@ public class DAOUsuario extends AbstractDAO {
     public void addUser(Usuario usr) {
         this.logger.trace("Añadiendo usuario: {}", usr);
         usuarios.add(usr);
+    }
+
+
+    /**
+     * Mét.odo que autentica a un usuario
+     *
+     * @param email          Correo del usuario
+     * @param hashedPassword Contraseña del usuario
+     * @return true si el usuario es autenticado, false en caso contrario
+     */
+    public boolean autenticar(String email, String hashedPassword) {
+        //logar la contraseña descifrada :: cifrada (DEBUG)
+//        this.logger.debug("Contraseña cifrada: {} -> descifrada: {}", hashedPassword, util.criptograficos.descifrar(hashedPassword));
+
+        comprobarHayUsuariosEnOrigen();
+        // Había pensado en comprobar si el correo existe, pero no sé si es muy eficiente, ya que se recorrería la lista dos veces.
+        if (this.usuarios.stream().anyMatch(usr ->/* usr.correo().equals(email) &&*/ usr.contrasenha().equals(hashedPassword))) {
+            this.logger.info("Usuario autenticado: {}", email);
+            return true;
+        }
+        this.logger.warn("Usuario no autenticado: {}", email);
+        return false;
+    }
+
+    /**
+     * Mét.odo que obtiene un usuario
+     *
+     * @param email Correo del usuario
+     * @return Usuario si existe, null en caso contrario
+     */
+    public Usuario encontrarUsuarioPorEmail(String email) {
+        if (comprobarHayUsuariosEnOrigen()) {
+            return null;
+        }
+        Usuario usr = this.usuarios.stream().filter(u -> u.correo().equals(email)).findFirst().orElse(null);
+        if (usr != null) {
+            this.logger.info("Usuario encontrado: {}", email);
+        }
+        else {
+            this.logger.warn("Usuario no encontrado: {}", email);
+        }
+        return usr;
+    }
+
+    private boolean comprobarHayUsuariosEnOrigen() {
+        if (usuarios.isEmpty()) {
+            this.logger.warn("No hay usuarios registrados");
+            return true;
+        }
+        return false;
     }
 }

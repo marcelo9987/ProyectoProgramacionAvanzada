@@ -1,8 +1,10 @@
 package gui.formularios;
 
 import gui.modelos.ModeloDesplegableUbicacion;
+import modelo.formatos.FormatedFecha;
 
 import javax.swing.*;
+import java.text.ParseException;
 
 public class FormularioPrincipal extends JFrame {
 
@@ -17,17 +19,17 @@ public class FormularioPrincipal extends JFrame {
     public static void main(String[] args) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("IBM".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FormularioPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormularioPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, "Ha habido un fallo estableciendo la estética del prograama", ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
+
+        // Lanzo el formulario
         java.awt.EventQueue.invokeLater(() -> new FormularioPrincipal().setVisible(true));
     }
 
@@ -36,14 +38,20 @@ public class FormularioPrincipal extends JFrame {
         JPanel jPanel1 = new JPanel();
         JLabel jLabel1 = new JLabel();
         JPanel jPanel2 = new JPanel();
-        JComboBox<String> jComboBox1 = new JComboBox<>();
-        JComboBox<String> jComboBox2 = new JComboBox<>();
-        JFormattedTextField jFormattedTextField1 = new JFormattedTextField();
+        JComboBox<String> comboOrigen = new JComboBox<>();
+        JComboBox<String> comboDestino = new JComboBox<>();
+        JLabel formatoFechaIncorrecto = new JLabel();
+        JFormattedTextField txtformateado_fecha = null;
+        try {
+            txtformateado_fecha = new JFormattedTextField(new FormatedFecha(formatoFechaIncorrecto));
+        } catch (ParseException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error en el formato de la fecha");
+        }
         JPanel jPanel3 = new JPanel();
-        JButton jButton5 = new JButton();
-        JButton jButton6 = new JButton();
+        JButton btn_buscar = new JButton();
+        JButton btnSalir = new JButton();
         JMenuBar jMenuBar1 = new JMenuBar();
-        JMenu jMenu1 = new JMenu();
+        JMenu menuConfiguracion = new JMenu();
         JMenu jMenu2 = new JMenu();
         JMenu jMenu3 = new JMenu();
         JMenu jMenu4 = new JMenu();
@@ -69,25 +77,27 @@ public class FormularioPrincipal extends JFrame {
         modeloOrigen.addUbicacion("A Coruña");
         modeloOrigen.setSelectedItem("Seleccione una ubicación");
 
-        jComboBox1.setModel(modeloOrigen);
 
-        jPanel2.add(jComboBox1);
+        comboOrigen.setModel(modeloOrigen);
+
+        jPanel2.add(comboOrigen);
 
         ModeloDesplegableUbicacion modeloDestino = modeloOrigen.clone();
 
         modeloDestino.setSelectedItem("Seleccione una ubicación");
 
-        jComboBox2.setModel(modeloDestino);
-        jPanel2.add(jComboBox2);
+        comboDestino.setModel(modeloDestino);
+        jPanel2.add(comboDestino);
 
-        jFormattedTextField1.setText("jFormattedTextField1");
-        jPanel2.add(jFormattedTextField1);
+        jPanel2.add(txtformateado_fecha);
+
+        jPanel2.add(formatoFechaIncorrecto);
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 
-        jButton5.setText("jButton5");
+        btn_buscar.setText("Buscar");
 
-        jButton6.setText("jButton6");
+        btnSalir.setText("Salir");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -95,9 +105,9 @@ public class FormularioPrincipal extends JFrame {
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                 .addGap(279, 279, 279)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btn_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
-                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -107,15 +117,15 @@ public class FormularioPrincipal extends JFrame {
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addGroup(jPanel3Layout.createSequentialGroup()
                                                 .addGap(25, 25, 25)
-                                                .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(btn_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap())
         );
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
 
-        jMenu1.setText("Ajustes");
-        jMenuBar1.add(jMenu1);
+        menuConfiguracion.setText("Ajustes");
+        jMenuBar1.add(menuConfiguracion);
 
         jMenu2.setText("Mis Viajes");
         jMenuBar1.add(jMenu2);
@@ -132,8 +142,21 @@ public class FormularioPrincipal extends JFrame {
 
         pack();
 
+        JFormattedTextField txtformateado_aux = txtformateado_fecha;
+        btn_buscar.addActionListener(e -> {
+            String origen = (String) comboOrigen.getSelectedItem();
+            String destino = (String) comboDestino.getSelectedItem();
+            assert txtformateado_aux != null;
+            String fecha = txtformateado_aux.getText();
+            System.out.println("Origen: " + origen);
+            System.out.println("Destino: " + destino);
+            System.out.println("Fecha: " + fecha);
+        });
+
         // Lo posiciono en el centro de la pantalla
         setLocationRelativeTo(null);
+
+        this.setVisible(true);
     }
 
 

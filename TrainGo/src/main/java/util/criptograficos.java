@@ -12,18 +12,17 @@ public class criptograficos {
     private static final String CLAVE = "82837445";
 
     public static SecretKey obtenerClave(String clave) {
-        SecretKey claveSecreta = new SecretKeySpec(clave.getBytes(), ALGORITMO);
-        return claveSecreta;
+        return new SecretKeySpec(clave.getBytes(), ALGORITMO);
     }
 
     public static String cifrar(String texto) {
 
         byte[] mensajeEntrada = texto.getBytes();
         try {
-            Cipher encifrador = Cipher.getInstance(ALGORITMO);
+            Cipher encriptador = Cipher.getInstance(ALGORITMO);
             SecretKey claveSecreta = obtenerClave(CLAVE);
-            encifrador.init(Cipher.ENCRYPT_MODE, claveSecreta);
-            byte[] claveCifrada = encifrador.doFinal(mensajeEntrada);
+            encriptador.init(Cipher.ENCRYPT_MODE, claveSecreta);
+            byte[] claveCifrada = encriptador.doFinal(mensajeEntrada);
             return new String(Base64.getEncoder().encode(claveCifrada));
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -5,17 +5,20 @@ import modelo.Usuario;
 
 public class FachadaDAO {
     private static final String FILE = "trenes.txt";
-    private static FachadaDAO instance = null; // Singleton pattern ()
-    private DAOTren daoTren = null;
+    private static FachadaDAO instance = null; // Singleton pattern
+
+    private final DAOTren daoTren;
+    private final DAOUsuario daoUsuario;
 
     // Constructor
 
     private FachadaDAO() {
         daoTren = DAOTren.getInstance();
+        daoUsuario = DAOUsuario.getInstance();
     }
 
     /**
-     * Método que devuelve la instancia de la clase FachadaDAO
+     * Mét.odo que devuelve la instancia de la clase FachadaDAO
      *
      * @return instance Instancia de la clase FachadaDAO. Si no existe, la crea
      */
@@ -31,42 +34,59 @@ public class FachadaDAO {
     // CRUD Tren (Crear, Leer, Actualizar, Borrar)
 
     public void addTren(Tren tren) {
-        DAOTren.getInstance().addTren(tren);
+        this.daoTren.addTren(tren);
     }
 
 
     public void loadTren() {
-        DAOTren.getInstance().load();
+        this.daoTren.load();
     }
 
 
     public void updateTren(Tren tren) {
-        DAOTren.getInstance().updateTren(tren);
+        this.daoTren.updateTren(tren);
     }
 
     public void saveTren() {
-        DAOTren.getInstance().save();
+        this.daoTren.save();
     }
 
 
     public void deleteTren(Tren tren) {
-        DAOTren.getInstance().deleteTren(tren);
+        this.daoTren.deleteTren(tren);
     }
 
 
     public void guardarTrenes() {
-        DAOTren.getInstance().save();
+        this.daoTren.save();
     }
 
     public void addUser(Usuario elemental) {
-        DAOUsuario.getInstance().addUser(elemental);
+        this.daoUsuario.addUser(elemental);
     }
 
     public void saveUsers() {
-        DAOUsuario.getInstance().save();
+        this.daoUsuario.save();
     }
 
     public void loadUsers() {
-        DAOUsuario.getInstance().load();
+        this.daoUsuario.load();
+    }
+
+    public void cargaloTodo() {
+        // Cargar trenes
+        this.daoTren.load();
+        // Cargar usuarios
+        this.daoUsuario.load();
+        // TODO: EL RESTO DE ENTIDADES
+
+    }
+
+    public boolean autenticar(String email, String hashedPassword) {
+        return this.daoUsuario.autenticar(email, hashedPassword);
+    }
+
+    public Usuario encontrarUsuarioPorEmail(String email) {
+        return this.daoUsuario.encontrarUsuarioPorEmail(email);
     }
 }

@@ -21,14 +21,23 @@ public final class Usuario {
     private final String direccion;
     private final Date fechaNacimiento;
 
-    public Usuario(int DNI, String nombre, String correo, String contrasenha, int telefono, String direccion, Date fechaNacimiento) {
+    public Usuario(int DNI, String nombre, String correo, String contrasenha, int telefono, String direccion, Date fechaNacimiento, boolean cifrar) {
         this.DNI = DNI;
         this.nombre = nombre;
         this.correo = correo;
-        this.contrasenha = criptograficos.cifrar(contrasenha);
+        this.contrasenha = cifrar ? criptograficos.cifrar(contrasenha) : contrasenha;
         this.telefono = telefono;
         this.direccion = direccion;
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+
+    public String correo() {
+        return correo;
+    }
+
+    public String contrasenha() {
+        return contrasenha;
     }
 
     @Override

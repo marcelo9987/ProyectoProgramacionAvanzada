@@ -22,7 +22,7 @@ public class Main {
 
         // Usuarios
 
-        Usuario elemental = new Usuario(2569685, "Dr. Elemental", "dr.elemental@oxford.uk", "timefortea123", 25696665, "TEst 24", new Date(21 / 11 / 1965));
+        Usuario elemental = new Usuario(2569685, "Dr. Elemental", "dr.elemental@oxford.uk", "timefortea123", 25696665, "TEst 24", new Date(21 / 11 / 1965), true);
 
         fachada.addUser(elemental);
 
