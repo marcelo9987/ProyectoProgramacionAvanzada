@@ -1,15 +1,28 @@
 package gui.formularios;
 
 import gui.modelos.ModeloDesplegableUbicacion;
+import modelo.FachadaAplicacion;
 import modelo.formatos.FormatedFecha;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.text.ParseException;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 public class FormularioPrincipal extends JFrame {
+    ResourceBundle bundle;
+    FachadaAplicacion fa;
 
+    public FormularioPrincipal(@org.jetbrains.annotations.NotNull FachadaAplicacion fa) {
+        this.fa = fa;
+        this.bundle = fa.getBundleInstance();
+        lanzarFormulario();
+    }
 
-    public FormularioPrincipal() {
+    private FormularioPrincipal() {
+        this.bundle = this.fa.getBundleInstance();
         lanzarFormulario();
     }
 
@@ -56,6 +69,15 @@ public class FormularioPrincipal extends JFrame {
         JMenu jMenu3 = new JMenu();
         JMenu jMenu4 = new JMenu();
 
+        BufferedImage myPicture = null;
+
+        try {
+            myPicture = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/tren.png")));
+        } catch (Exception e) {
+            System.out.println("Error al cargar la imagen");
+        }
+
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 
@@ -64,18 +86,21 @@ public class FormularioPrincipal extends JFrame {
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jLabel1.setMaximumSize(null);
 
+
+        jPanel1.add(new JLabel(new ImageIcon(myPicture)));
+
         getContentPane().add(jPanel1, java.awt.BorderLayout.NORTH);
 
         jPanel2.setLayout(new java.awt.GridLayout(2, 2));
 
         ModeloDesplegableUbicacion modeloOrigen = new ModeloDesplegableUbicacion();
 
-        modeloOrigen.addUbicacion("Seleccione una ubicación");
+        modeloOrigen.addUbicacion(fa.bundle.getString("destino_sel1"));
         modeloOrigen.addUbicacion("Madrid");
         modeloOrigen.addUbicacion("Barcelona");
         modeloOrigen.addUbicacion("Sevilla");
         modeloOrigen.addUbicacion("A Coruña");
-        modeloOrigen.setSelectedItem("Seleccione una ubicación");
+        modeloOrigen.setSelectedItem(fa.bundle.getString("destino_sel1"));
 
 
         comboOrigen.setModel(modeloOrigen);
@@ -84,7 +109,7 @@ public class FormularioPrincipal extends JFrame {
 
         ModeloDesplegableUbicacion modeloDestino = modeloOrigen.clone();
 
-        modeloDestino.setSelectedItem("Seleccione una ubicación");
+        modeloDestino.setSelectedItem(fa.bundle.getString("destino_sel1"));
 
         comboDestino.setModel(modeloDestino);
         jPanel2.add(comboDestino);
@@ -124,7 +149,7 @@ public class FormularioPrincipal extends JFrame {
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
 
-        menuConfiguracion.setText("Ajustes");
+        menuConfiguracion.setText(fa.bundle.getString("configuracion"));
         jMenuBar1.add(menuConfiguracion);
 
         jMenu2.setText("Mis Viajes");
@@ -151,6 +176,14 @@ public class FormularioPrincipal extends JFrame {
             System.out.println("Origen: " + origen);
             System.out.println("Destino: " + destino);
             System.out.println("Fecha: " + fecha);
+        });
+
+        // Evento en click para el menú de configuración
+        menuConfiguracion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                FormularioConfiguracion fc = new FormularioConfiguracion(fa);
+                fc.setVisible(true);
+            }
         });
 
         // Lo posiciono en el centro de la pantalla

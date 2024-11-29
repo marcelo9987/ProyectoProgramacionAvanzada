@@ -19,10 +19,9 @@ public class Main {
 
         fachada.guardarTrenes();
 
-
         // Usuarios
 
-        Usuario elemental = new Usuario(2569685, "Dr. Elemental", "dr.elemental@oxford.uk", "timefortea123", 25696665, "TEst 24", new Date(21 / 11 / 1965), true);
+        Usuario elemental = new Usuario(2569685, "a", "a@a.a", "a", 25696665, "TEst 24", new Date(21 / 11 / 1965), true);
 
         fachada.addUser(elemental);
 

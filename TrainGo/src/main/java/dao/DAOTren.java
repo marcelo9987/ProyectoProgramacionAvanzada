@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class DAOTren extends AbstractDAO implements IDAO {
+public class DAOTren extends AbstractDAO {
 
     // Logger (heredado de AbstractDAO)
     private static DAOTren instance = null;

@@ -11,12 +11,17 @@ public class FachadaGui {
 
     public FachadaGui(FachadaAplicacion fa) {
         this.fa = fa;
-        this.vp = new FormularioPrincipal();
+        this.vp = new FormularioPrincipal(fa);
     }
 
     public void ponerEnMarcha() {
         FormularioAutenticacion va = new FormularioAutenticacion(this.fa, this.vp, true);
         va.setVisible(true);
 
+    }
+
+    public void ponerEnMarchaNoAuth() {
+        vp.dispose();
+        vp = new FormularioPrincipal(fa);
     }
 }
