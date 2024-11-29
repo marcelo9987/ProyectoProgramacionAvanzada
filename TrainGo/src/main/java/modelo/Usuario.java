@@ -1,6 +1,6 @@
 package modelo;
 
-import util.criptograficos;
+import util.Criptograficos;
 
 import java.util.Date;
 
@@ -13,7 +13,7 @@ public final class Usuario {
      *
      * @implNote La contraseña debe tener al menos 8 caracteres.
      * Esta es almacenada encriptada mediante DES.
-     * @see util.criptograficos
+     * @see Criptograficos
      * @since 1.0 20/11/2024
      */
     private final String contrasenha;
@@ -25,7 +25,7 @@ public final class Usuario {
         this.DNI = DNI;
         this.nombre = nombre;
         this.correo = correo;
-        this.contrasenha = cifrar ? criptograficos.cifrar(contrasenha) : contrasenha;
+        this.contrasenha = cifrar ? Criptograficos.cifrar(contrasenha) : contrasenha;
         this.telefono = telefono;
         this.direccion = direccion;
         this.fechaNacimiento = fechaNacimiento;

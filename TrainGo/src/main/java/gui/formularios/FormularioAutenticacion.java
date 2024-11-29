@@ -16,7 +16,7 @@ public class FormularioAutenticacion extends JDialog {
     private final JButton btnAceptar;
     private final JButton btnCancelar;
 
-    private FachadaAplicacion fa;
+    private final FachadaAplicacion fa;
 
     public FormularioAutenticacion(FachadaAplicacion fa, Frame parent, boolean modal) {
         super(parent, modal);
@@ -40,6 +40,11 @@ public class FormularioAutenticacion extends JDialog {
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
 
+        /*
+         * Nivel 1: lblUsuario, lblContrasena
+         * Nivel 2: txtUsuario, txtContrasena
+         * Nivel 3: btnAceptar, btnCancelar
+         */
         layout.setHorizontalGroup(
                 layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -53,6 +58,9 @@ public class FormularioAutenticacion extends JDialog {
                                         .addComponent(btnCancelar)))
         );
 
+        /*
+         * lblUsuario, txtUsuario | lblContrasena, txtContrasena | btnAceptar, btnCancelar
+         */
         layout.setVerticalGroup(
                 layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -119,7 +127,7 @@ public class FormularioAutenticacion extends JDialog {
     private void comprobarAutenticacion() {
         Usuario usuario = null;
         if (fa.autenticar(usuario, txtUsuario.getText(), txtContrasena.getText())) {
-            JOptionPane.showMessageDialog(this, "Autenticación correcta");
+            JOptionPane.showMessageDialog(this, fa.getBundleInstance().getString("autenticacion.correcta"));
             this.dispose();
         }
         else {

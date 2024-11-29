@@ -66,8 +66,8 @@ public class FormularioConfiguracion extends javax.swing.JDialog {
         this.add(panel);
 
         btnAceptar.addActionListener(e -> {
-            String idiomaSeleccionado = Objects.requireNonNull(comboIdioma.getSelectedItem()).toString().equals("Español") ? "ESPANHOL" : comboIdioma.getSelectedItem().toString().toLowerCase();
-            fa.cambiarIdioma(EnumIdioma.valueOf(comboIdioma.getSelectedItem().toString().toUpperCase()));
+            String idiomaSeleccionado = Objects.requireNonNull(comboIdioma.getSelectedItem()).toString().equals("Español") ? "ESPANHOL" : comboIdioma.getSelectedItem().toString().toUpperCase().replace('É', 'E');
+            fa.cambiarIdioma(EnumIdioma.valueOf(idiomaSeleccionado));
             fa.relanzarGUI();
             this.dispose();
         });

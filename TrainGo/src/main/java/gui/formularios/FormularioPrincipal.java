@@ -22,7 +22,7 @@ public class FormularioPrincipal extends JFrame {
     }
 
     private FormularioPrincipal() {
-        this.bundle = this.fa.getBundleInstance();
+        this.bundle = fa.getBundleInstance();
         lanzarFormulario();
     }
 

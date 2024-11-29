@@ -30,17 +30,17 @@ public class DAOUsuario extends AbstractDAO {
     @Override
     protected BufferedWriter obtenerFileWriter() {
         this.obtenerLogger();
-        BufferedWriter mrBtheGentlemanWriter;
+        BufferedWriter writer;
 
         try {
             FileWriter file = new FileWriter("usuarios.txt");
-            mrBtheGentlemanWriter = new BufferedWriter(file);
+            writer = new BufferedWriter(file);
         } catch (Exception e) {
             this.logger.error("Error al volcar el archivo", e);
             return null;
         }
 
-        return mrBtheGentlemanWriter;
+        return writer;
 
     }
 
@@ -59,16 +59,16 @@ public class DAOUsuario extends AbstractDAO {
     @Override
     protected BufferedReader obtenerFileReader() {
         this.obtenerLogger();
-        BufferedReader mrBtheGentlemanReader;
+        BufferedReader reader;
 
         try {
-            mrBtheGentlemanReader = new BufferedReader(new FileReader("usuarios.txt"));
+            reader = new BufferedReader(new FileReader("usuarios.txt"));
         } catch (Exception e) {
             this.logger.error("Error al leer el archivo", e);
             return null;
         }
 
-        return mrBtheGentlemanReader;
+        return reader;
     }
 
     @Override

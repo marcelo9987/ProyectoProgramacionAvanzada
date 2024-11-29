@@ -7,7 +7,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-public class criptograficos {
+public class Criptograficos {
     private static final String ALGORITMO = "DES";
     private static final String CLAVE = "82837445";
 

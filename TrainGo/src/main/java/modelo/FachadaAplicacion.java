@@ -3,21 +3,25 @@ package modelo;
 import dao.FachadaDAO;
 import gui.FachadaGui;
 import modelo.Enums.EnumIdioma;
+import util.Criptograficos;
+import util.Internacionalizacion;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class FachadaAplicacion {
 
     FachadaGui fgui;
     FachadaDAO fdao;
-
-    public ResourceBundle bundle = null;
+    public ResourceBundle bundle;
+    Internacionalizacion itz;
 
     public FachadaAplicacion() {
-        fgui = new FachadaGui(this); //todo: debería ser un singleton
 
-        bundle = ResourceBundle.getBundle("gui", new Locale("es", "ES"));
+        itz = Internacionalizacion.getInstance();
+
+        fgui = new FachadaGui(this); //todo: ¿debería ser un singleton?
+
+        bundle = itz.getBundle();
 
         fdao = FachadaDAO.getInstance();
     }
@@ -40,8 +44,8 @@ public class FachadaAplicacion {
     }
 
     public boolean autenticar(Usuario usuario, String email, String plainPassword) {
-        String hashedPassword = util.criptograficos.cifrar(plainPassword);
-        plainPassword = null;
+        String hashedPassword = Criptograficos.cifrar(plainPassword);
+        plainPassword = null; // Eliminamos la contraseña en texto plano
         if (fdao.autenticar(email, hashedPassword)) {
             usuario = fdao.encontrarUsuarioPorEmail(email);
             return true;
@@ -49,31 +53,18 @@ public class FachadaAplicacion {
         return false;
     }
 
-    public void cambiarIdioma(EnumIdioma idioma) {
-        switch (idioma) {
-            case ESPANHOL:
-                bundle = ResourceBundle.getBundle("gui_es_ES", new Locale("es", "ES"));
-                break;
-
-            case GALEGO:
-                bundle = ResourceBundle.getBundle("gui_gl", new Locale("gl", "ES"));
-                break;
-
-            case INGLES:
-                bundle = ResourceBundle.getBundle("gui_en_US", new Locale("en", "US"));
-                break;
-        }
-        ResourceBundle.clearCache();
-    }
-
     public ResourceBundle getBundleInstance() {
         if (bundle == null) {
-            bundle = ResourceBundle.getBundle("gui", new Locale("es", "ES"));
+            bundle = itz.getBundle();
         }
-        return bundle;
+        return itz.getBundle();
     }
 
     public void relanzarGUI() {
         fgui.ponerEnMarchaNoAuth();
+    }
+
+    public void cambiarIdioma(EnumIdioma idioma) {
+        itz.cambiarIdioma(idioma);
     }
 }

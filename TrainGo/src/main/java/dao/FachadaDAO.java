@@ -61,8 +61,8 @@ public class FachadaDAO {
         this.daoTren.save();
     }
 
-    public void addUser(Usuario elemental) {
-        this.daoUsuario.addUser(elemental);
+    public void addUser(Usuario usuario) {
+        this.daoUsuario.addUser(usuario);
     }
 
     public void saveUsers() {
