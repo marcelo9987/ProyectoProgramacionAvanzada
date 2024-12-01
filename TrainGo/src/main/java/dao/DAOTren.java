@@ -211,4 +211,14 @@ public class DAOTren extends AbstractDAO {
 
 
     }
+
+    @Nullable
+    public Tren localizarTren(String trenId) {
+        for (Tren tren : trenes) {
+            if (tren.id().toString().equals(trenId)) {
+                return tren;
+            }
+        }
+        return null;
+    }
 }

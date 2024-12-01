@@ -2,6 +2,9 @@ package dao;
 
 import modelo.Estacion;
 import modelo.Ruta;
+import modelo.excepciones.SituacionDeRutasInesperadaException;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.stream.XMLEventReader;
@@ -17,7 +20,7 @@ import java.util.Map;
 public class DAORuta extends AbstractDAO {
     private static DAORuta instance = null; // Singleton pattern
     private final FachadaDAO fadao;
-    private Map<Estacion, Map<Estacion, Ruta>> rutas;
+    private final Map<Estacion, Map<Estacion, Ruta>> rutas;
 
     private DAORuta(FachadaDAO fadao) {
         super();
@@ -78,7 +81,7 @@ public class DAORuta extends AbstractDAO {
     @Override
     protected XMLEventReader obtenerXmlEventReader() {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        XMLEventReader reader = null;
+        XMLEventReader reader;
         try {
             reader = xmlInputFactory.createXMLEventReader(new FileInputStream("rutas.xml"));
         } catch (Exception e) {
@@ -119,7 +122,7 @@ public class DAORuta extends AbstractDAO {
                             }
 
                             if (evento.isStartElement()) {
-                                String nombreElementoInterno = evento.asStartElement().getName().getLocalPart();
+                                @NonNls String nombreElementoInterno = evento.asStartElement().getName().getLocalPart();
                                 try {
                                     evento = reader.nextEvent();
                                 } catch (Exception e) {
@@ -129,19 +132,15 @@ public class DAORuta extends AbstractDAO {
 
                                 if (evento.isCharacters()) {
                                     String valor = evento.asCharacters().getData();
-                                    if (nombreElementoInterno.equals("origen")) {
-                                        origen = valor;
-                                    }
-                                    else if (nombreElementoInterno.equals("destino")) {
-                                        destino = valor;
-                                    }
-                                    else if (nombreElementoInterno.equals("distancia")) {
-                                        distancia = Integer.parseInt(valor);
+                                    switch (nombreElementoInterno) {
+                                        case "origen" -> origen = valor;
+                                        case "destino" -> destino = valor;
+                                        case "distancia" -> distancia = Integer.parseInt(valor);
                                     }
                                 }
                             }
                             else if (evento.isEndElement()) {
-                                String nombreElementoInterno = evento.asEndElement().getName().getLocalPart();
+                                @NonNls String nombreElementoInterno = evento.asEndElement().getName().getLocalPart();
                                 if (nombreElementoInterno.equals("ruta")) {
                                     break;
                                 }
@@ -149,8 +148,9 @@ public class DAORuta extends AbstractDAO {
                         }
 
                         if (origen != null && destino != null) {
-                            this.logger.trace("Añadiendo ruta de {} a {} con distancia de {}", origen, destino, distancia);
+                            this.logger.trace("Añadiendo ruta de {} a {} con distancia de {}", origen, destino, Integer.valueOf(distancia));
                             this.addRutaDesdeComponentes(origen, destino, distancia);
+
                         }
                     }
                 }
@@ -234,4 +234,29 @@ public class DAORuta extends AbstractDAO {
     }
 
 
+    public boolean confirmarEnlace(@NotNull String origen, @NonNls @NotNull String destino) {
+        if (origen.isEmpty() || destino.isEmpty()) {
+            return false;
+        }
+
+
+        Estacion estacionOrigen = this.rutas.keySet().stream().filter(e -> e.ciudad().equals(origen)).findFirst().get();
+        Estacion estacionDestino = this.fadao.buscaEstacionPorNombre(destino);
+        return this.rutas.get(estacionOrigen).containsKey(estacionDestino);
+
+        //        Estacion estacionDestino = this.rutas.get(estacionOrigen).keySet().stream().filter(e -> e.ciudad().equals(destino)).findFirst().get();
+
+    }
+
+
+    public Ruta buscarRutaPorNombres(@NonNls @NotNull String origen, @NotNull @NonNls String destino) {
+        Estacion estacionOrigen = this.rutas.keySet().stream().filter(e -> e.ciudad().equals(origen)).findFirst().get();
+        Estacion estacionDestino = this.fadao.buscaEstacionPorNombre(destino);
+
+        if (!this.rutas.get(estacionOrigen).containsKey(estacionDestino)) {
+            throw new SituacionDeRutasInesperadaException("No se ha encontrado la ruta entre " + origen + " y " + destino);
+        }
+
+        return this.rutas.get(estacionOrigen).get(estacionDestino);
+    }
 }

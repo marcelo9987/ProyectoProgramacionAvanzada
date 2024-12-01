@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class Internacionalizacion {
+public final class Internacionalizacion {
     private ResourceBundle bundle;
 
     private static Internacionalizacion instance;

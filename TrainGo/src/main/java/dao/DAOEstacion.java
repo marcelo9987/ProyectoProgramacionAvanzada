@@ -1,6 +1,7 @@
 package dao;
 
 import modelo.Estacion;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.xml.stream.XMLEventReader;
@@ -161,7 +162,12 @@ public class DAOEstacion extends AbstractDAO {
         return xmlWriter;
     }
 
-    public List<Estacion> estaciones() {
+    @Deprecated(forRemoval = true)
+    protected List<Estacion> estaciones() {
         return estaciones;
+    }
+
+    public Estacion buscaEstacionPorNombre(@NonNls String nombreEstacion) {
+        return estaciones.stream().filter(e -> e.ciudad().equals(nombreEstacion)).findFirst().orElse(null);
     }
 }

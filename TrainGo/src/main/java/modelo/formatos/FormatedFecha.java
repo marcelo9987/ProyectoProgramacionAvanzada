@@ -13,7 +13,7 @@ import javax.swing.*;
  *
  * @see javax.swing.text.MaskFormatter
  */
-public class FormatedFecha extends javax.swing.text.MaskFormatter {
+public final class FormatedFecha extends javax.swing.text.MaskFormatter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

@@ -1,6 +1,7 @@
 package dao;
 
 import modelo.Estacion;
+import modelo.Ruta;
 import modelo.Tren;
 import modelo.Usuario;
 
@@ -12,6 +13,7 @@ public class FachadaDAO {
     private final DAOTren daoTren;
     private final DAOUsuario daoUsuario;
     private final DAOEstacion daoEstacion;
+    private final DAORuta daoRuta;
 
     // Constructor
 
@@ -23,6 +25,8 @@ public class FachadaDAO {
         daoUsuario = DAOUsuario.getInstance();
 
         daoEstacion = DAOEstacion.getInstance();
+
+        daoRuta = DAORuta.getInstance(this);
     }
 
     /**
@@ -91,6 +95,8 @@ public class FachadaDAO {
 
         this.daoEstacion.load();
 
+        this.daoRuta.load();
+
     }
 
     public boolean autenticar(String email, String hashedPassword) {
@@ -111,5 +117,21 @@ public class FachadaDAO {
 
     public void guardarUsuarios() {
         this.daoUsuario.save();
+    }
+
+    public boolean existeRuta(String origen, String destino) {
+        return daoRuta.confirmarEnlace(origen, destino);
+    }
+
+    public Estacion buscaEstacionPorNombre(String nombreEstacion) {
+        return daoEstacion.buscaEstacionPorNombre(nombreEstacion);
+    }
+
+    public Ruta buscarRutaPorNombres(String origen, String destino) {
+        return daoRuta.buscarRutaPorNombres(origen, destino);
+    }
+
+    public Tren localizarTren(String trenId) {
+        return daoTren.localizarTren(trenId);
     }
 }

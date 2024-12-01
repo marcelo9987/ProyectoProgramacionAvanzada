@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<circulaciones>
+    <circulacion>
+        <uuid>29cff1c6-68f3-4ccd-b55a-4a544dd5b9be</uuid>
+        <ruta>
+            <origen>A Coruña</origen>
+            <destino>Madrid</destino>
+        </ruta>
+        <hora_salida>
+            <dia>22</dia>
+            <mes>10</mes>
+            <año>2021</año>
+            <hora>12</hora>
+            <minutos>30</minutos>
+        </hora_salida>
+        <estado>FINALIZADO</estado>
+        <precio_por_asiento>50.0€</precio_por_asiento>
+        <tren_id>0d11f043-157c-46f9-a356-763e2c01ea44</tren_id>
+    </circulacion>
+</circulaciones>

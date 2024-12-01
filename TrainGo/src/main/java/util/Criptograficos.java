@@ -15,7 +15,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Criptograficos {
+public final class Criptograficos {
     private static final Logger logger = LoggerFactory.getLogger(Criptograficos.class);
 
     private static final String ALGORITMO = "DES";
