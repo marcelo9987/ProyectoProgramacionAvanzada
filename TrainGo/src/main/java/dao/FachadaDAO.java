@@ -104,4 +104,12 @@ public class FachadaDAO {
     public List<Estacion> getEstaciones() {
         return this.daoEstacion.estaciones();
     }
+
+    public void actualizarUsuario(String correoAntiguo, Usuario usuario) {
+        this.daoUsuario.actualizarUsuario(correoAntiguo, usuario);
+    }
+
+    public void guardarUsuarios() {
+        this.daoUsuario.save();
+    }
 }

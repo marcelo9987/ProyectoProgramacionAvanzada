@@ -22,7 +22,7 @@ public final class FormularioAutenticacion extends JDialog {
         JLabel lblContrasena = new JLabel("Contraseña:");
         this.txtUsuario = new JTextField(20);
         this.txtContrasena = new JPasswordField(20);
-        JButton btnAceptar = new JButton("Aceptar");
+        JButton btnAceptar = new JButton("aceptar");
         JButton btnCancelar = new JButton("Cancelar");
 
         this.fa = fa;

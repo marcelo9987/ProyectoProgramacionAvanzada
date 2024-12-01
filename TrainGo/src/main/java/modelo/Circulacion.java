@@ -2,8 +2,8 @@ package modelo;
 
 import modelo.Enums.EnumCirculacion;
 
+import java.time.LocalDateTime;
 import java.util.Currency;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -17,12 +17,13 @@ public final class Circulacion {
     private Tren tren;
     private Ruta ruta;
     private EnumCirculacion estado;
-    private Date horaSalidaReal;
-    private Date horaLlegadaReal;
+    private LocalDateTime horaSalidaReal;
+    private LocalDateTime horaLlegadaReal;
     private Currency precioPorAsiento;
 
 
-    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, Date horaSalidaReal, Date horaLlegadaReal, Currency precioPorAsiento) {
+    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalidaReal, LocalDateTime horaLlegadaReal, Currency precioPorAsiento) {
+        super();
         this.id = id;
         this.tren = tren;
         this.ruta = ruta;
@@ -32,7 +33,8 @@ public final class Circulacion {
         this.precioPorAsiento = precioPorAsiento;
     }
 
-    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, Date horaSalidaReal, Date horaLlegadaReal) {
+    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalidaReal, LocalDateTime horaLlegadaReal) {
+        super();
         this.id = id;
         this.tren = tren;
         this.ruta = ruta;

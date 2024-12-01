@@ -4,13 +4,13 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import util.Criptograficos;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public final class Usuario {
     private final int DNI;
     private final String nombre;
-    private final String correo;
+    private final LocalDate fechaNacimiento;
     /**
      * Contraseña del usuario
      *
@@ -20,11 +20,11 @@ public final class Usuario {
      * @since 1.0 20/11/2024
      */
     private final String contrasenha;
-    private final int telefono;
-    private final String direccion;
-    private final Date fechaNacimiento;
+    private String correo;
+    private int telefono;
+    private String direccion;
 
-    public Usuario(int DNI, String nombre, String correo, String contrasenha, int telefono, String direccion, Date fechaNacimiento, boolean cifrar) {
+    public Usuario(int DNI, String nombre, String correo, String contrasenha, int telefono, String direccion, LocalDate fechaNacimiento, boolean cifrar) {
         super();
         this.DNI = DNI;
         this.nombre = nombre;
@@ -46,7 +46,7 @@ public final class Usuario {
                 ", contrasenha='" + contrasenha + '\'' +
                 ", telefono=" + telefono +
                 ", direccion='" + direccion + '\'' +
-                ", fechaNacimiento=" + fechaNacimiento +
+                ", fechaNacimiento=" + fechaNacimiento.toString() +
                 '}';
     }
 
@@ -55,6 +55,7 @@ public final class Usuario {
      *
      * @return Cadena con los datos del usuario listos para ser guardados en un archivo.
      * @deprecated Previo a la migración a XML. No se recomienda su uso.
+     *
      */
     @NotNull
     @Deprecated
@@ -95,7 +96,7 @@ public final class Usuario {
         return direccion;
     }
 
-    public Date fechaNacimiento() {
+    public LocalDate fechaNacimiento() {
         return fechaNacimiento;
     }
 
@@ -108,8 +109,17 @@ public final class Usuario {
     }
 
 
+    public void actualizarDatos(String nuevoCorreo, String nuevaDireccion, int nuevoTelefono) {
+        this.correo = nuevoCorreo;
+        this.direccion = nuevaDireccion;
+        this.telefono = nuevoTelefono;
+    }
+
+
     @Override
     public int hashCode() {
-        return Objects.hash(DNI);
+        return Objects.hash(Integer.valueOf(DNI));
     }
+
+
 }

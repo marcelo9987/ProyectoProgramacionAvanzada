@@ -1,15 +1,17 @@
 package dao;
 
 import modelo.Usuario;
+import modelo.excepciones.UsuarioNoEncontradoException;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.xml.stream.*;
 import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 public class DAOUsuario extends AbstractDAO {
@@ -33,11 +35,11 @@ public class DAOUsuario extends AbstractDAO {
             System.out.println(usuario);
         }
 
-        Usuario usr = new Usuario(1, "Pepe", "pepef@incibe.cdi.net", "1234", 666666666, "Calle Falsa 123", new Date(), true);
+//        Usuario usr = new Usuario(1, "Pepe", "pepef@incibe.cdi.net", "1234", 666666666, "Calle Falsa 123", new Date(), true);
 
-        dao.addUser(usr);
+//        dao.addUser(usr);
 
-        dao.save();
+//        dao.save();
     }
 
     private Collection<Usuario> usuarios() {
@@ -113,7 +115,19 @@ public class DAOUsuario extends AbstractDAO {
                 writer.writeEndElement();
 
                 writer.writeStartElement("fechaNacimiento");
-                writer.writeCharacters(usuario.fechaNacimiento().toString());
+
+                writer.writeStartElement("dia");
+                writer.writeCharacters(String.valueOf(usuario.fechaNacimiento().getDayOfMonth()));
+                writer.writeEndElement();
+
+                writer.writeStartElement("mes");
+                writer.writeCharacters(String.valueOf(usuario.fechaNacimiento().getMonthValue()));
+                writer.writeEndElement();
+
+                writer.writeStartElement("anho");
+                writer.writeCharacters(String.valueOf(usuario.fechaNacimiento().getYear()));
+                writer.writeEndElement();
+
                 writer.writeEndElement();
 
                 writer.writeEndElement();
@@ -167,7 +181,7 @@ public class DAOUsuario extends AbstractDAO {
         String contrasenha = "err";
         int telefono = 0;
         String direccion = "err";
-        Date fechaNacimiento = new Date();
+        int[] fechaNacimiento = new int[3];
         int DNI = 0;
 
         while (reader.hasNext()) {
@@ -206,6 +220,11 @@ public class DAOUsuario extends AbstractDAO {
                             this.logger.trace("Contraseña: {}", contrasenha);
                             break;
                         case "telefono":
+                            if (!reader.peek().isCharacters()) {
+                                telefono = 0;
+                                this.logger.error("Error al leer el archivo: el teléfono no es un número. Se asigna 0");
+                                break;
+                            }
                             evento = reader.nextEvent();
                             telefono = Integer.parseInt(evento.asCharacters().getData());
                             this.logger.trace("Teléfono: {}", telefono);
@@ -217,7 +236,35 @@ public class DAOUsuario extends AbstractDAO {
                             break;
                         case "fechaNacimiento":
                             evento = reader.nextEvent();
-                            fechaNacimiento = new Date(evento.asCharacters().getData());
+                            while (reader.hasNext()) {
+                                if (evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals("fechaNacimiento")) {
+                                    break;
+                                }
+                                if (evento.isStartElement()) {
+                                    logger.debug("Inicio de campo de fecha de nacimiento de tipo: {}", evento.asStartElement().getName().getLocalPart());
+                                    switch (evento.asStartElement().getName().getLocalPart()) {
+                                        case "dia":
+                                            evento = reader.nextEvent();
+//                                            fechaNacimiento.set(Calendar.DAY_OF_MONTH, Integer.parseInt(evento.asCharacters().getData()));
+                                            fechaNacimiento[0] = Integer.parseInt(evento.asCharacters().getData());
+                                            this.logger.trace("Día de nacimiento: {}", evento.asCharacters().getData());
+                                            break;
+                                        case "mes":
+                                            evento = reader.nextEvent();
+//                                            fechaNacimiento.set(Calendar.MONTH, Integer.parseInt(evento.asCharacters().getData()));
+                                            fechaNacimiento[1] = Integer.parseInt(evento.asCharacters().getData());
+                                            this.logger.trace("Mes de nacimiento: {}", evento.asCharacters().getData());
+                                            break;
+                                        case "anho":
+                                            evento = reader.nextEvent();
+//                                            fechaNacimiento.set(Calendar.YEAR, Integer.parseInt(evento.asCharacters().getData()));
+                                            fechaNacimiento[2] = Integer.parseInt(evento.asCharacters().getData());
+                                            this.logger.trace("Año de nacimiento: {}", evento.asCharacters().getData());
+                                            break;
+                                    }
+                                }
+                                evento = reader.nextEvent();
+                            }
                             this.logger.trace("Fecha de nacimiento: {}", fechaNacimiento);
                             break;
                     }
@@ -229,9 +276,21 @@ public class DAOUsuario extends AbstractDAO {
             if (evento.isEndElement()) {
                 if (evento.asEndElement().getName().getLocalPart().equals("usuario")) {
                     this.logger.trace("Fin de usuario");
-                    usr = new Usuario(DNI, nombre, correo, contrasenha, telefono, direccion, fechaNacimiento, false);
+                    usr = new Usuario
+                            (
+                                    DNI
+                                    , nombre
+                                    , correo
+                                    , contrasenha
+                                    , telefono
+                                    , direccion
+                                    , LocalDate.of(fechaNacimiento[2], fechaNacimiento[1], fechaNacimiento[0])
+                                    , false
+                            );
                     usuarios.add(usr);
                     this.logger.debug("Usuario añadido: {}", usr);
+                    telefono = 0;
+
                 }
             }
         }
@@ -295,5 +354,17 @@ public class DAOUsuario extends AbstractDAO {
             return true;
         }
         return false;
+    }
+
+    public void actualizarUsuario(@NonNls String correoAntiguo, Usuario usuario) {
+        Usuario usuarioActualizar = this.usuarios.stream().filter(u -> u.correo().equals(correoAntiguo)).findFirst().orElse(null);
+        if (usuarioActualizar == null) {
+            this.logger.warn("No se ha encontrado el usuario con correo: {}", correoAntiguo);
+            throw new UsuarioNoEncontradoException("No se ha encontrado el usuario con correo: " + correoAntiguo);
+        }
+
+        logger.debug("Usuario a actualizar: {}", usuarioActualizar);
+        usuarioActualizar.actualizarDatos(usuario.correo(), usuario.direccion(), usuario.telefono());
+        logger.debug("Usuario actualizado: {}", usuarioActualizar);
     }
 }

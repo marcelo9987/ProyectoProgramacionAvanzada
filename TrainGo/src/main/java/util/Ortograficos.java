@@ -20,6 +20,7 @@ public final class Ortograficos {
         return s1.compareTo(s2);
     }
 
+
     /**
      * Envoltorio para facilitar la comparación alfabética de dos estaciones.
      *

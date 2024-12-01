@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class DAOEstacion extends AbstractDAO {
     private static DAOEstacion instance = null;
     private final List<Estacion> estaciones;
@@ -38,6 +39,7 @@ public class DAOEstacion extends AbstractDAO {
 
         dao.save();
     }
+
 
     public static DAOEstacion getInstance() {
         if (instance == null) {

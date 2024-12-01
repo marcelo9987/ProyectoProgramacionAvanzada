@@ -16,8 +16,9 @@ import java.util.ResourceBundle;
  * Formulario (ventana) principal de la aplicación
  */
 public final class FormularioPrincipal extends JFrame {
-    ResourceBundle bundle; //mírame
+    private final ResourceBundle bundle;
     private FachadaAplicacion fa;
+
 
     public FormularioPrincipal(@NotNull FachadaAplicacion fa) {
         super();
@@ -75,7 +76,7 @@ public final class FormularioPrincipal extends JFrame {
         JMenu menuConfiguracion = new JMenu();
         JMenu jMenu2 = new JMenu();
         JMenu jMenu3 = new JMenu();
-        JMenu jMenu4 = new JMenu();
+        JMenu menuMiUsuario = new JMenu();
 
         BufferedImage myPicture = null;
 
@@ -103,8 +104,8 @@ public final class FormularioPrincipal extends JFrame {
 
         ModeloDesplegableUbicacion modeloOrigen = new ModeloDesplegableUbicacion(this.fa);
 
-        modeloOrigen.addUbicacion(fa.bundle.getString("destino_sel1"));
-        modeloOrigen.setSelectedItem(fa.bundle.getString("destino_sel1"));
+        modeloOrigen.addUbicacion(fa.getBundleInstance().getString("destino_sel1"));
+        modeloOrigen.setSelectedItem(fa.getBundleInstance().getString("destino_sel1"));
 
 
         comboOrigen.setModel(modeloOrigen);
@@ -113,7 +114,7 @@ public final class FormularioPrincipal extends JFrame {
 
         ModeloDesplegableUbicacion modeloDestino = modeloOrigen.clone();
 
-        modeloDestino.setSelectedItem(fa.bundle.getString("destino_sel1"));
+        modeloDestino.setSelectedItem(fa.getBundleInstance().getString("destino_sel1"));
 
         comboDestino.setModel(modeloDestino);
         jPanel2.add(comboDestino);
@@ -124,9 +125,9 @@ public final class FormularioPrincipal extends JFrame {
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 
-        btn_buscar.setText("Buscar");
+        btn_buscar.setText(bundle.getString("buscar"));
 
-        btnSalir.setText("Salir");
+        btnSalir.setText(bundle.getString("salir"));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -153,19 +154,19 @@ public final class FormularioPrincipal extends JFrame {
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
 
-        menuConfiguracion.setText(fa.bundle.getString("configuracion"));
+        menuConfiguracion.setText(fa.getBundleInstance().getString("configuracion"));
         jMenuBar1.add(menuConfiguracion);
 
-        jMenu2.setText("Mis Viajes");
+        jMenu2.setText(bundle.getString("mis_viajes"));
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("COMPRAR");
         jMenuBar1.add(jMenu3);
 
-        jMenu4.setText("Mi usuario");
-        jMenu4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jMenu4.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jMenuBar1.add(jMenu4);
+        menuMiUsuario.setText(bundle.getString("mi_usuario"));
+        menuMiUsuario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        menuMiUsuario.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jMenuBar1.add(menuMiUsuario);
 
         setJMenuBar(jMenuBar1);
 
@@ -182,12 +183,24 @@ public final class FormularioPrincipal extends JFrame {
             System.out.println("Fecha: " + fecha);
         });
 
+        // Evento en clic para salir
+        btnSalir.addActionListener(e -> System.exit(0));
+
         // Evento en clic para el menú de configuración
         menuConfiguracion.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 FormularioConfiguracion fc = new FormularioConfiguracion(fa);
                 fc.setVisible(true);
+            }
+        });
+
+
+        menuMiUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                FormularioMiUsuario fmu = new FormularioMiUsuario(fa);
+                fmu.setVisible(true);
             }
         });
 

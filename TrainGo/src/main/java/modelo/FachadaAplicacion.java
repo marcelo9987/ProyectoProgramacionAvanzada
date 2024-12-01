@@ -13,8 +13,8 @@ public final class FachadaAplicacion {
 
     // Atributos
 
-    public ResourceBundle bundle; // arreglame: ¿por qué es public? PRIORITARIO
-    Internacionalizacion itz; // arreglame: ¿por qué no tiene modificador? PRIORITARIO
+    private ResourceBundle bundle;
+    private Internacionalizacion itz;
     private FachadaGui fgui;
     private FachadaDAO fdao;
     private Usuario usuario;
@@ -37,6 +37,8 @@ public final class FachadaAplicacion {
 
         fa.extraerDatosPorDefecto();
         fa.lanzaInterfazGrafica();
+        // pruebo miUsuario
+//        fa.lanzaInterfazGrafica();
 
     }
 
@@ -73,7 +75,6 @@ public final class FachadaAplicacion {
         return false;
     }
 
-    // ARRÉGLAME: ¿Por qué no se usa el método autenticar de FachadaDAO?
     public ResourceBundle getBundleInstance() {
         if (bundle == null) {
             bundle = itz.getBundle();
@@ -110,5 +111,31 @@ public final class FachadaAplicacion {
      */
     public List<Estacion> getEstaciones() {
         return fdao.getEstaciones();
+    }
+
+    public int getUsrDni() {
+        return this.usuario.DNI();
+    }
+
+    public String getUsrNombre() {
+        return this.usuario.nombre();
+    }
+
+    public String getUsrCorreo() {
+        return this.usuario.correo();
+    }
+
+    public int getUsrTelefono() {
+        return this.usuario.telefono();
+    }
+
+    public String getUsrDireccion() {
+        return this.usuario.direccion();
+    }
+
+    public void actualizarUsuario(String correoAntiguo, String nuevoCorreo, String nuevaDireccion, int nuevoTelefono) {
+        this.usuario.actualizarDatos(nuevoCorreo, nuevaDireccion, nuevoTelefono);
+        fdao.actualizarUsuario(correoAntiguo, this.usuario);
+        fdao.guardarUsuarios();
     }
 }

@@ -2,7 +2,7 @@ import dao.FachadaDAO;
 import modelo.Tren;
 import modelo.Usuario;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class Main {
@@ -21,7 +21,7 @@ public class Main {
 
         // Usuarios
 
-        Usuario elemental = new Usuario(2569685, "a", "a@a.a", "a", 25696665, "TEst 24", new Date(21 / 11 / 1965), true);
+        Usuario elemental = new Usuario(2569685, "a", "a@a.a", "a", 25696665, "TEst 24", LocalDate.parse("2004-11-20"), true);
 
         fachada.addUser(elemental);
 

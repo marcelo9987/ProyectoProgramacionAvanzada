@@ -130,7 +130,11 @@ public class Criptograficos {
      * @param dniNumber Número del DNI
      * @return Letra del DNI
      */
-    public char calculateDniLetter(int dniNumber) {
+    public static char calculateDniLetter(int dniNumber) throws IllegalArgumentException {
+        if (dniNumber < 0 || dniNumber > 99999999) {
+            throw new IllegalArgumentException("El número del DNI no puede ser negativo.");
+        }
+
         Map<Integer, Character> letterMap = new HashMap<>();
         letterMap.put(0, 'T');
         letterMap.put(1, 'R');
@@ -158,6 +162,6 @@ public class Criptograficos {
 
         int codigoCaracterResultante = dniNumber % 23;
 
-        return letterMap.get(codigoCaracterResultante);
+        return letterMap.get(Integer.valueOf(codigoCaracterResultante)).charValue();
     }
 }

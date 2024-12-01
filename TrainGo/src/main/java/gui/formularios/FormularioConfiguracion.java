@@ -8,7 +8,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public final class FormularioConfiguracion extends javax.swing.JDialog {
+public final class FormularioConfiguracion extends JDialog {
     private final FachadaAplicacion fa;
 
     public FormularioConfiguracion(FachadaAplicacion fa) {
@@ -36,8 +36,8 @@ public final class FormularioConfiguracion extends javax.swing.JDialog {
         comboIdioma.addItem("Inglés");
         comboIdioma.addItem("Galego");
 
-        JButton btnAceptar = new JButton("Aceptar");
-        JButton btnCancelar = new JButton("Cancelar");
+        JButton btnAceptar = new JButton(bundle.getString("aceptar"));
+        JButton btnCancelar = new JButton(bundle.getString("cancelar"));
 
         layout.setHorizontalGroup(
                 layout.createSequentialGroup()
@@ -62,7 +62,7 @@ public final class FormularioConfiguracion extends javax.swing.JDialog {
 
 
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setTitle("Configuración");
+        this.setTitle(bundle.getString("configuracion"));
         this.setResizable(false);
         this.add(panel);
 
