@@ -3,6 +3,7 @@ package gui.formularios;
 import gui.modelos.ModeloDesplegableUbicacion;
 import modelo.FachadaAplicacion;
 import modelo.formatos.FormatedFecha;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,17 +12,24 @@ import java.text.ParseException;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class FormularioPrincipal extends JFrame {
-    ResourceBundle bundle;
-    FachadaAplicacion fa;
+/**
+ * Formulario (ventana) principal de la aplicación
+ */
+public final class FormularioPrincipal extends JFrame {
+    ResourceBundle bundle; //mírame
+    private FachadaAplicacion fa;
 
-    public FormularioPrincipal(@org.jetbrains.annotations.NotNull FachadaAplicacion fa) {
+    public FormularioPrincipal(@NotNull FachadaAplicacion fa) {
+        super();
         this.fa = fa;
         this.bundle = fa.getBundleInstance();
         lanzarFormulario();
     }
 
     private FormularioPrincipal() {
+        super();
+
+
         this.bundle = fa.getBundleInstance();
         lanzarFormulario();
     }
@@ -30,7 +38,7 @@ public class FormularioPrincipal extends JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        try {
+        try { // Pruebas de estilo
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("IBM".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -78,7 +86,7 @@ public class FormularioPrincipal extends JFrame {
         }
 
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -93,13 +101,9 @@ public class FormularioPrincipal extends JFrame {
 
         jPanel2.setLayout(new java.awt.GridLayout(2, 2));
 
-        ModeloDesplegableUbicacion modeloOrigen = new ModeloDesplegableUbicacion();
+        ModeloDesplegableUbicacion modeloOrigen = new ModeloDesplegableUbicacion(this.fa);
 
         modeloOrigen.addUbicacion(fa.bundle.getString("destino_sel1"));
-        modeloOrigen.addUbicacion("Madrid");
-        modeloOrigen.addUbicacion("Barcelona");
-        modeloOrigen.addUbicacion("Sevilla");
-        modeloOrigen.addUbicacion("A Coruña");
         modeloOrigen.setSelectedItem(fa.bundle.getString("destino_sel1"));
 
 
@@ -178,8 +182,9 @@ public class FormularioPrincipal extends JFrame {
             System.out.println("Fecha: " + fecha);
         });
 
-        // Evento en click para el menú de configuración
+        // Evento en clic para el menú de configuración
         menuConfiguracion.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 FormularioConfiguracion fc = new FormularioConfiguracion(fa);
                 fc.setVisible(true);

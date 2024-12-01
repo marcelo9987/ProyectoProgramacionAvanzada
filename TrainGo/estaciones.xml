@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<estaciones>
+    <estacion>
+        <nombre>A Coruña</nombre>
+    </estacion>
+    <estacion>
+        <nombre>Madrid</nombre>
+    </estacion>
+    <estacion>
+        <nombre>Barcelona</nombre>
+    </estacion>
+    <estacion>
+        <nombre>Valencia</nombre>
+    </estacion>
+    <estacion>
+        <nombre>Sevilla</nombre>
+    </estacion>
+    <estacion>
+        <nombre>Lugo</nombre>
+    </estacion>
+    <estacion>
+        <nombre>Lisboa</nombre>
+    </estacion>
+    <estacion>
+        <nombre>Oporto</nombre>
+    </estacion>
+    <estacion>
+        <nombre>Mataró</nombre>
+    </estacion>
+</estaciones>

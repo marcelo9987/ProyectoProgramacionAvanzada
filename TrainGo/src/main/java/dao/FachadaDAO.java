@@ -1,28 +1,37 @@
 package dao;
 
+import modelo.Estacion;
 import modelo.Tren;
 import modelo.Usuario;
 
+import java.util.List;
+
 public class FachadaDAO {
-    private static final String FILE = "trenes.txt";
     private static FachadaDAO instance = null; // Singleton pattern
 
     private final DAOTren daoTren;
     private final DAOUsuario daoUsuario;
+    private final DAOEstacion daoEstacion;
 
     // Constructor
 
     private FachadaDAO() {
+        super();
+
         daoTren = DAOTren.getInstance();
+
         daoUsuario = DAOUsuario.getInstance();
+
+        daoEstacion = DAOEstacion.getInstance();
     }
 
     /**
-     * Mét.odo que devuelve la instancia de la clase FachadaDAO
+     * Método que devuelve la instancia de la clase FachadaDAO
      *
      * @return instance Instancia de la clase FachadaDAO. Si no existe, la crea
      */
-    public static FachadaDAO getInstance() {
+    public static FachadaDAO getInstance()// Singleton
+    {
         if (instance == null) {
             instance = new FachadaDAO();
         }
@@ -73,12 +82,14 @@ public class FachadaDAO {
         this.daoUsuario.load();
     }
 
+
     public void cargaloTodo() {
         // Cargar trenes
         this.daoTren.load();
         // Cargar usuarios
         this.daoUsuario.load();
-        // TODO: EL RESTO DE ENTIDADES
+
+        this.daoEstacion.load();
 
     }
 
@@ -88,5 +99,9 @@ public class FachadaDAO {
 
     public Usuario encontrarUsuarioPorEmail(String email) {
         return this.daoUsuario.encontrarUsuarioPorEmail(email);
+    }
+
+    public List<Estacion> getEstaciones() {
+        return this.daoEstacion.estaciones();
     }
 }

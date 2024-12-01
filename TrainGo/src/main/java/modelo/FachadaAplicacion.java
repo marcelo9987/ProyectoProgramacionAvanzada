@@ -6,24 +6,30 @@ import modelo.Enums.EnumIdioma;
 import util.Criptograficos;
 import util.Internacionalizacion;
 
+import java.util.List;
 import java.util.ResourceBundle;
 
-public class FachadaAplicacion {
+public final class FachadaAplicacion {
 
-    FachadaGui fgui;
-    FachadaDAO fdao;
-    public ResourceBundle bundle;
-    Internacionalizacion itz;
+    // Atributos
+
+    public ResourceBundle bundle; // arreglame: ¿por qué es public? PRIORITARIO
+    Internacionalizacion itz; // arreglame: ¿por qué no tiene modificador? PRIORITARIO
+    private FachadaGui fgui;
+    private FachadaDAO fdao;
+    private Usuario usuario;
 
     public FachadaAplicacion() {
+        super();
 
         itz = Internacionalizacion.getInstance();
 
-        fgui = new FachadaGui(this); //todo: ¿debería ser un singleton?
+        fdao = FachadaDAO.getInstance();
 
         bundle = itz.getBundle();
 
-        fdao = FachadaDAO.getInstance();
+        fgui = new FachadaGui(this); //hazme: ¿debería ser un singleton? ¿Singleton con parámetros?
+
     }
 
     public static void main(String[] args) {
@@ -34,25 +40,40 @@ public class FachadaAplicacion {
 
     }
 
+    /**
+     * Método que extrae los datos almacenados en los ficheros por defecto
+     *
+     * @implNote No se tiene intención de permitir en un futuro próximo la carga de rutas personalizadas.
+     */
     private void extraerDatosPorDefecto() {
         fdao.cargaloTodo();
     }
 
-
+    /**
+     * Método que lanza la interfaz gráfica. Llamada en cascada.
+     */
     private void lanzaInterfazGrafica() {
         fgui.ponerEnMarcha();
     }
 
-    public boolean autenticar(Usuario usuario, String email, String plainPassword) {
+    /**
+     * Permite comprobar si una tupla de usuario y contraseña es válida y se tiene constancia de ella en la «base de datos».
+     *
+     * @param email         Email del usuario.
+     * @param plainPassword Contraseña en texto plano.
+     * @return true si la tupla es válida, false en caso contrario.
+     */
+    public boolean autenticar(String email, String plainPassword) {
         String hashedPassword = Criptograficos.cifrar(plainPassword);
         plainPassword = null; // Eliminamos la contraseña en texto plano
         if (fdao.autenticar(email, hashedPassword)) {
-            usuario = fdao.encontrarUsuarioPorEmail(email);
+            this.usuario = fdao.encontrarUsuarioPorEmail(email);
             return true;
         }
         return false;
     }
 
+    // ARRÉGLAME: ¿Por qué no se usa el método autenticar de FachadaDAO?
     public ResourceBundle getBundleInstance() {
         if (bundle == null) {
             bundle = itz.getBundle();
@@ -60,11 +81,34 @@ public class FachadaAplicacion {
         return itz.getBundle();
     }
 
+    /**
+     * Reinicia la interfaz gráfica.
+     *      Está pensado para cuando se cambia el idioma. Puede ser útil en otros casos.
+     */
     public void relanzarGUI() {
         fgui.ponerEnMarchaNoAuth();
     }
 
+    /**
+     * Método que permite cambiar el idioma de la aplicación.
+     * @param idioma Idioma al que se quiere cambiar.
+     *                  Opciones:
+     *                     ESPAÑOL,
+     *                     GALEGO,
+     *                     INGLES.
+     * @see Internacionalizacion#cambiarIdioma(EnumIdioma)
+     */
     public void cambiarIdioma(EnumIdioma idioma) {
         itz.cambiarIdioma(idioma);
+    }
+
+    /**
+     * Método que permite obtener las estaciones de la base de datos.
+     *
+     * @return Devuelve una lista (Vectorizada) con las estaciones de la «base de datos».
+     * @see FachadaDAO#getEstaciones()
+     */
+    public List<Estacion> getEstaciones() {
+        return fdao.getEstaciones();
     }
 }

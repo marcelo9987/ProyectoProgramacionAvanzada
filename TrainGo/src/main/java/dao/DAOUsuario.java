@@ -1,23 +1,47 @@
 package dao;
 
 import modelo.Usuario;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import javax.xml.stream.*;
+import javax.xml.stream.events.XMLEvent;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 public class DAOUsuario extends AbstractDAO {
 
-    private static DAOUsuario instance = null;
-    List<Usuario> usuarios;
+    private final List<Usuario> usuarios;
 
     private DAOUsuario() {
+        super();
         this.obtenerLogger();
         this.usuarios = new ArrayList<>();
+    }
+
+    private static DAOUsuario instance = null;
+
+    public static void main(String[] args) {
+        DAOUsuario dao = getInstance();
+        XMLEventReader xmlEvtRdr_lector = dao.obtenerXmlEventReader();
+        dao.cargarArchivo(xmlEvtRdr_lector);
+
+        for (Usuario usuario : dao.usuarios()) {
+            System.out.println(usuario);
+        }
+
+        Usuario usr = new Usuario(1, "Pepe", "pepef@incibe.cdi.net", "1234", 666666666, "Calle Falsa 123", new Date(), true);
+
+        dao.addUser(usr);
+
+        dao.save();
+    }
+
+    private Collection<Usuario> usuarios() {
+        return this.usuarios;
     }
 
     public static DAOUsuario getInstance() {
@@ -28,13 +52,14 @@ public class DAOUsuario extends AbstractDAO {
     }
 
     @Override
-    protected BufferedWriter obtenerFileWriter() {
+    protected XMLStreamWriter obtenerXMLStreamWriter() {
         this.obtenerLogger();
-        BufferedWriter writer;
+
+        XMLStreamWriter writer;
 
         try {
-            FileWriter file = new FileWriter("usuarios.txt");
-            writer = new BufferedWriter(file);
+            XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("usuarios.xml"));
         } catch (Exception e) {
             this.logger.error("Error al volcar el archivo", e);
             return null;
@@ -45,60 +70,186 @@ public class DAOUsuario extends AbstractDAO {
     }
 
     @Override
-    protected void guardarArchivo(BufferedWriter writer) {
+    protected void guardarArchivo(@NotNull XMLStreamWriter writer) {
+
+        try {
+            writer.writeStartDocument();
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al escribir cabecera en el archivo", e);
+        }
+
+        try {
+            writer.writeStartElement("usuarios");
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al escribir inicio de usuarios en el archivo", e);
+        }
+
         for (Usuario usuario : usuarios) {
             try {
-                writer.write(usuario.printReadyString());
-                writer.newLine();
-            } catch (Exception e) {
-                this.logger.error("Error al escribir en el archivo", e);
+                writer.writeStartElement("usuario");
+
+                writer.writeStartElement("DNI");
+                writer.writeCharacters(String.valueOf(usuario.DNI()));
+                writer.writeEndElement();
+
+                writer.writeStartElement("nombre");
+                writer.writeCharacters(usuario.nombre());
+                writer.writeEndElement();
+
+                writer.writeStartElement("correo");
+                writer.writeCharacters(usuario.correo());
+                writer.writeEndElement();
+
+                writer.writeStartElement("contrasenha");
+                writer.writeCharacters(usuario.contrasenha());
+                writer.writeEndElement();
+
+                writer.writeStartElement("telefono");
+                writer.writeCharacters(String.valueOf(usuario.telefono()));
+                writer.writeEndElement();
+
+                writer.writeStartElement("direccion");
+                writer.writeCharacters(usuario.direccion());
+                writer.writeEndElement();
+
+                writer.writeStartElement("fechaNacimiento");
+                writer.writeCharacters(usuario.fechaNacimiento().toString());
+                writer.writeEndElement();
+
+                writer.writeEndElement();
+            } catch (XMLStreamException e) {
+                this.logger.error("Error al escribir en el archivo <Seccion Usuario(s)>", e);
             }
+        }
+
+
+        try {
+            writer.writeEndElement();
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al escribir fin de usuarios en el archivo", e);
+        }
+
+        try {
+            writer.writeEndDocument();
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al escribir fin de documento en el archivo", e);
+        }
+
+        try {
+            writer.flush();
+            writer.close();
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al cerrar el archivo", e);
         }
     }
 
+
     @Override
-    protected BufferedReader obtenerFileReader() {
+    protected XMLEventReader obtenerXmlEventReader() {
         this.obtenerLogger();
-        BufferedReader reader;
-
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        XMLEventReader xmlReader = null;
         try {
-            reader = new BufferedReader(new FileReader("usuarios.txt"));
+            xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("usuarios.xml"));
         } catch (Exception e) {
-            this.logger.error("Error al leer el archivo", e);
-            return null;
+            this.logger.error("Error al leer el archivo: ", e);
         }
+        return xmlReader;
 
-        return reader;
     }
+
 
     @Override
-    protected void cargarArchivo(BufferedReader reader) {
-        String linea;
-        try {
-            while ((linea = reader.readLine()) != null) {
-                String[] partes = linea.split(",");
+    protected void cargarArchivo(@NotNull XMLEventReader reader) {
+        Usuario usr;
+        String nombre = "err";
+        String correo = "err";
+        String contrasenha = "err";
+        int telefono = 0;
+        String direccion = "err";
+        Date fechaNacimiento = new Date();
+        int DNI = 0;
 
-                Usuario usr = new Usuario(Integer.parseInt(partes[0].substring(8)), partes[1], partes[2], partes[3], Integer.parseInt(partes[4]), partes[5], new Date(partes[6].split("}")[0]), false);
-                if (usuarios.contains(usr)) {
-                    this.logger.warn("Usuario duplicado: {}. No se cargará", usr);
-                    continue;
-                }
-                usuarios.add(usr);
-                this.logger.debug("Usuario cargado: {}", usr);
+        while (reader.hasNext()) {
+            XMLEvent evento;
+            try {
+                evento = reader.nextEvent();
+            } catch (Exception e) {
+                this.logger.error("Error al obtener el siguiente evento (¿Puede que el archivo esté mal formado?)", e);
+                continue;
             }
-        } catch (Exception e) {
-            this.logger.error("Error al leer el archivo", e);
+
+            if (evento.isStartElement()) {
+                try {
+                    switch (evento.asStartElement().getName().getLocalPart()) {
+                        case "usuario":
+                            this.logger.trace("Inicio de usuario");
+                            break;
+                        case "DNI":
+                            evento = reader.nextEvent();
+                            DNI = Integer.parseInt(evento.asCharacters().getData());
+                            this.logger.trace("DNI: {}", evento.asCharacters().getData());
+                            break;
+                        case "nombre":
+                            evento = reader.nextEvent();
+                            nombre = evento.asCharacters().getData();
+                            this.logger.trace("Nombre: {}", nombre);
+                            break;
+                        case "correo":
+                            evento = reader.nextEvent();
+                            correo = evento.asCharacters().getData();
+                            this.logger.trace("Correo: {}", correo);
+                            break;
+                        case "contrasenha":
+                            evento = reader.nextEvent();
+                            contrasenha = evento.asCharacters().getData();
+                            this.logger.trace("Contraseña: {}", contrasenha);
+                            break;
+                        case "telefono":
+                            evento = reader.nextEvent();
+                            telefono = Integer.parseInt(evento.asCharacters().getData());
+                            this.logger.trace("Teléfono: {}", telefono);
+                            break;
+                        case "direccion":
+                            evento = reader.nextEvent();
+                            direccion = evento.asCharacters().getData();
+                            this.logger.trace("Dirección: {}", direccion);
+                            break;
+                        case "fechaNacimiento":
+                            evento = reader.nextEvent();
+                            fechaNacimiento = new Date(evento.asCharacters().getData());
+                            this.logger.trace("Fecha de nacimiento: {}", fechaNacimiento);
+                            break;
+                    }
+                } catch (Exception e) {
+                    this.logger.error("Error al leer el archivo", e);
+                }
+            }
+
+            if (evento.isEndElement()) {
+                if (evento.asEndElement().getName().getLocalPart().equals("usuario")) {
+                    this.logger.trace("Fin de usuario");
+                    usr = new Usuario(DNI, nombre, correo, contrasenha, telefono, direccion, fechaNacimiento, false);
+                    usuarios.add(usr);
+                    this.logger.debug("Usuario añadido: {}", usr);
+                }
+            }
         }
     }
+
 
     public void addUser(Usuario usr) {
         this.logger.trace("Añadiendo usuario: {}", usr);
+        if (usuarios.contains(usr)) {
+            this.logger.warn("El usuario ya existe");
+            return;
+        }
         usuarios.add(usr);
     }
 
 
     /**
-     * Mét.odo que autentica a un usuario
+     * Método que autentica a un usuario
      *
      * @param email          Correo del usuario
      * @param hashedPassword Contraseña del usuario
@@ -119,7 +270,7 @@ public class DAOUsuario extends AbstractDAO {
     }
 
     /**
-     * Mét.odo que obtiene un usuario
+     * Método que obtiene un usuario
      *
      * @param email Correo del usuario
      * @return Usuario si existe, null en caso contrario

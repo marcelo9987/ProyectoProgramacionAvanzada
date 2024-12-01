@@ -8,10 +8,11 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class FormularioConfiguracion extends javax.swing.JDialog {
-    private FachadaAplicacion fa;
+public final class FormularioConfiguracion extends javax.swing.JDialog {
+    private final FachadaAplicacion fa;
 
     public FormularioConfiguracion(FachadaAplicacion fa) {
+        super();
         this.fa = fa;
         inicializarFormularioConfiguracion();
     }
@@ -60,7 +61,7 @@ public class FormularioConfiguracion extends javax.swing.JDialog {
         );
 
 
-        this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setTitle("Configuración");
         this.setResizable(false);
         this.add(panel);

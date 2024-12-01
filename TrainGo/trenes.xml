@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<trenes>
+    <tren>
+        <id>0d11f043-157c-46f9-a356-763e2c01ea44</id>
+        <num>1</num>
+    </tren>
+    <tren>
+        <id>0ef2d805-8364-4c21-9393-4855d43a6bfe</id>
+        <num>678</num>
+    </tren>
+    <tren>
+        <id>42f851c3-84b0-408b-9a5a-6e4a5fa6f442</id>
+        <num>91011</num>
+    </tren>
+    <tren>
+        <id>a98d31f6-a44b-45cb-876d-794c309d9b11</id>
+        <num>678</num>
+    </tren>
+    <tren>
+        <id>6553b65d-9bcc-4610-8430-c796f640b152</id>
+        <num>91011</num>
+    </tren>
+    <tren>
+        <id>8344cba7-4087-45e4-a7a1-f141080e0e00</id>
+        <num>678</num>
+    </tren>
+    <tren>
+        <id>1b5f53ee-36cd-40dc-bd4d-094807ae53ad</id>
+        <num>91011</num>
+    </tren>
+</trenes>

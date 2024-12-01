@@ -13,7 +13,7 @@ public interface IDAO {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    Boolean load();
+    boolean load();
 
     default Boolean save(File file) throws UnsupportedOperationException {
         // Se deja así para que sea opcional implementarla
@@ -27,5 +27,5 @@ public interface IDAO {
     }
 
 
-    Boolean save();
+    boolean save();
 }

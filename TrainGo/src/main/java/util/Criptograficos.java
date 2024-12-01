@@ -1,46 +1,126 @@
 package util;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.processing.Generated;
+import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Criptograficos {
+    private static final Logger logger = LoggerFactory.getLogger(Criptograficos.class);
+
     private static final String ALGORITMO = "DES";
     private static final String CLAVE = "82837445";
 
-    public static SecretKey obtenerClave(String clave) {
+    /**
+     * Método que obtiene una clave secreta a partir de una cadena de texto.
+     *
+     * @param clave Cadena de texto a partir de la cual se obtendrá la clave secreta.
+     * @return Clave secreta.
+     */
+    @NotNull
+    @Contract("_ -> new")
+    private static SecretKey obtenerClave(@NotNull String clave) {
+        if (clave.length() < 8) {
+            LoggerFactory.getLogger(Criptograficos.class).error("La clave debe tener al menos 8 caracteres.");
+            throw new IllegalArgumentException("La clave debe tener al menos 8 caracteres.");
+        }
         return new SecretKeySpec(clave.getBytes(), ALGORITMO);
     }
 
-    public static String cifrar(String texto) {
+    /**
+     * Método que cifra un texto.
+     *
+     * @param texto Texto a cifrar. Utiliza la clave secreta definida en la clase.
+     * @return Texto cifrado.
+     * @apiNote Utiliza el algoritmo DES. La idea era poder cambiar el algoritmo, pero se me ha complicado.
+     * @see #descifrar(String)
+     */
+    @Nullable
+    public static String cifrar(@NotNull String texto) {
 
         byte[] mensajeEntrada = texto.getBytes();
         try {
-            Cipher encriptador = Cipher.getInstance(ALGORITMO);
-            SecretKey claveSecreta = obtenerClave(CLAVE);
-            encriptador.init(Cipher.ENCRYPT_MODE, claveSecreta);
-            byte[] claveCifrada = encriptador.doFinal(mensajeEntrada);
+            ObtenerEncriptadorYCalcularClave encriptadorYClave = obtenerEncriptadorYCalcularClave();
+            encriptadorYClave.traductor().init(Cipher.ENCRYPT_MODE, encriptadorYClave.claveSecreta());
+            byte[] claveCifrada = encriptadorYClave.traductor().doFinal(mensajeEntrada);
             return new String(Base64.getEncoder().encode(claveCifrada));
+        } catch (InvalidKeyException e) {
+            // En la documentación pone que esta excepción no se lanza, pero por si acaso...
+            logger.error("Clave Mal Formada, ¿Están bien hechos los cálculos? :(");
+            System.exit(-1);
+        } catch (IllegalBlockSizeException ibe) {
+            // Esto ocurre cuando el tamaño del bloque es incorrecto.
+            logger.error(" El tamaño del bloque es incorrecto. ¿Has hecho bien los cálculos?");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            // Estos son errores que solo deberían ocurrir en caso de desencriptación, por lo que los ignoramos.
+            logger.error("Error desconocido: " + e.getMessage());
         }
         return null;
     }
 
-    public static String descifrar(String textoCifrado) {
+    /**
+     * Método que descifra un texto.
+     *
+     * @param textoCifrado Texto cifrado.
+     * @return Texto descifrado.
+     * @see #cifrar(String)
+     */
+    @Nullable
+    public static String descifrar(@NotNull String textoCifrado) {
         try {
-            Cipher descifrador = Cipher.getInstance(ALGORITMO);
-            SecretKey claveSecreta = obtenerClave(CLAVE);
-            descifrador.init(Cipher.DECRYPT_MODE, claveSecreta);
-            byte[] textoDescifrado = descifrador.doFinal(Base64.getDecoder().decode(textoCifrado.getBytes()));
+            ObtenerEncriptadorYCalcularClave encriptadorYClave = obtenerEncriptadorYCalcularClave();
+            encriptadorYClave.traductor().init(Cipher.DECRYPT_MODE, encriptadorYClave.claveSecreta());
+            byte[] textoDescifrado = encriptadorYClave.traductor().doFinal(Base64.getDecoder().decode(textoCifrado.getBytes()));
             return new String(textoDescifrado);
+        } catch (InvalidKeyException e) {
+            // En la documentación pone que esta excepción no se lanza, pero por si acaso...
+            logger.error("Clave Mal Formada, ¿Están bien hechos los cálculos? :(");
+            System.exit(-1);
+        } catch (IllegalBlockSizeException ibe) {
+            // Esto ocurre cuando el tamaño del bloque es incorrecto.
+            logger.error(" El tamaño del bloque es incorrecto. ¿Has hecho bien los cálculos?");
+        } catch (BadPaddingException bpe) {
+            // Esto ocurre cuando el padding es incorrecto.
+            logger.error("El padding es incorrecto. ¿Has hecho bien los cálculos?");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            // Estos son errores que solo deberían ocurrir en caso de desencriptación, por lo que los ignoramos.
+            logger.error("Error desconocido: " + e.getMessage());
         }
         return null;
+    }
+
+    @NotNull
+    private static ObtenerEncriptadorYCalcularClave obtenerEncriptadorYCalcularClave() {
+        try {
+            Cipher traductor = Cipher.getInstance(ALGORITMO);
+            SecretKey claveSecreta = obtenerClave(CLAVE);
+            return new ObtenerEncriptadorYCalcularClave(traductor, claveSecreta);
+        } catch (NoSuchAlgorithmException e) {
+            // Algoritmo nunca debería ser nulo, descartamos la excepción por ese frente.
+            logger.error("Algoritmo no encontrado o no implementado :( " + ALGORITMO);
+            System.exit(-1);
+        } catch (NoSuchPaddingException e) {
+            // Padding nunca debería ser nulo, descartamos la excepción por ese frente.
+            logger.error("Padding no implementado :(");
+            System.exit(-1);
+        }
+        logger.error(" Error desconocido al obtener el encriptador y calcular la clave.");
+        System.exit(-1);
+        return new ObtenerEncriptadorYCalcularClave(null, null);// Nunca se llega aquí.
+    }
+
+    @Generated("IntelliJ IDEA REFACTORING")
+    private record ObtenerEncriptadorYCalcularClave(Cipher traductor, SecretKey claveSecreta) {
     }
 
 

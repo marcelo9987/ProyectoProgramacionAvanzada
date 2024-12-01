@@ -1,30 +1,36 @@
 package dao;
-/**
- * DAOTren
- *
- * @apiNote Clase que implementa la interfaz IDAO y se encarga de gestionar los trenes
- * @version 1.0 20/11/2024
- * @implNote Se encarga de gestionar los a
- */
 
 import modelo.Tren;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.events.XMLEvent;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * DAOTren
+ *
+ * @version 2.0 20/11/2024
+ * @apiNote Clase que extiende AbstractDAO y se encarga de gestionar los trenes
+ * @implNote Se encarga de gestionar los trenes y su persistencia en un archivo XML
+ */
 public class DAOTren extends AbstractDAO {
 
     // Logger (heredado de AbstractDAO)
     private static DAOTren instance = null;
 
-    List<Tren> trenes = null;
+    private final List<Tren> trenes;
 
     private DAOTren() {
+        super();
         this.obtenerLogger();
         this.trenes = new ArrayList<>();
     }
@@ -37,9 +43,33 @@ public class DAOTren extends AbstractDAO {
         return instance;
     }
 
-    public void addTren(Tren tren) {
+    public static void main(String[] args) {
+        DAOTren dao = DAOTren.getInstance();
+        XMLEventReader xmlEvtRdr_lector = dao.obtenerXmlEventReader();
+        dao.cargarArchivo(xmlEvtRdr_lector);
 
+        for (Tren tren : dao.getTrenes()) {
+            System.out.println(tren);
+        }
+
+        dao.addTren(new Tren(UUID.randomUUID(), 678));
+        dao.addTren(new Tren(UUID.randomUUID(), 91011));
+
+        dao.save();
+    }
+
+    void addTren(Tren tren) {
         this.logger.trace("Añadiendo tren: {}", tren);
+        if (tren == null) {
+            this.logger.warn("No se puede añadir un tren nulo");
+            return;
+        }
+
+        if (trenes.contains(tren)) {
+            this.logger.warn("El tren ya existe");
+            return;
+        }
+
         trenes.add(tren);
     }
 
@@ -55,65 +85,130 @@ public class DAOTren extends AbstractDAO {
         trenes.set(trenes.indexOf(tren), tren);
     }
 
+    @Nullable
     @Override
-    protected BufferedWriter obtenerFileWriter() {
-        BufferedWriter writer = null;
+    protected XMLStreamWriter obtenerXMLStreamWriter() {
+        XMLStreamWriter writer;
         try {
-            FileWriter file = new FileWriter("trenes.txt");
-            writer = new BufferedWriter(file);
+            XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("trenes.xml"));
         } catch (Exception e) {
-            this.logger.error("Error al volcar el archivo");
+            this.logger.error("Error al solicitar P sobre el archivo", e);
             return null;
         }
+        this.logger.trace("XMLStreamWriter obtenido. Todo listo para guardar el archivo...");
         return writer;
     }
 
     @Override
-    protected void guardarArchivo(BufferedWriter writer) {
+    protected void guardarArchivo(XMLStreamWriter writer) {
+        this.logger.trace("Guardando contenido en el archivo...");
+        try {
+            writer.writeStartDocument();
+            writer.writeStartElement("trenes");
+        } catch (Exception e) {
+            this.logger.error("Error al escribir cabecera. Es posible que el haya dejado de existir (o el acceso a mutex haya sido revocado)", e);
+        }
+
         for (Tren tren : trenes) {
             try {
-                writer.write(tren.toString());
+                writer.writeStartElement("tren");
+
+                writer.writeStartElement("id");
+                writer.writeCharacters(tren.id().toString());
+                writer.writeEndElement();
+
+                writer.writeStartElement("num");
+                writer.writeCharacters(String.valueOf(tren.num()));
+                writer.writeEndElement();
+
+                writer.writeEndElement();
             } catch (Exception e) {
-                this.logger.error("Error al guardar el archivo", e);
+                this.logger.error("¡¡CRITICO!! --> Error al escribir el tren. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
+
             }
         }
-        this.logger.trace("Contenido guardado en el archivo...");
+
+        try {
+            writer.writeEndElement();
+            writer.writeEndDocument();
+        } catch (Exception e) {
+            this.logger.error("¡¡CRITICO!! --> Error al escribir el final del documento. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
+        }
+
+        this.logger.trace("Contenido guardado en el archivo con éxito!");
     }
 
 
     @Override
-    protected BufferedReader obtenerFileReader() {
+    protected XMLEventReader obtenerXmlEventReader() {
+
         this.obtenerLogger(); // esta llamada es gratis,
         // ya que logger ya está inicializado, y si no lo está, se inicializa
 
-        BufferedReader reader = null;
+        XMLEventReader reader = null;
         try {
-            FileReader file = new FileReader("trenes.txt");
-            reader = new BufferedReader(file);
+            XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+            reader = xmlInputFactory.createXMLEventReader(new FileInputStream("trenes.xml"));
         } catch (Exception e) {
-            this.logger.error("Error al leer el archivo", e);
-            return null;
+            this.logger.error("Error al solicitar P sobre el archivo. Puede que la ruta sea incorrecta o el archivo no exista", e);
         }
+        this.logger.trace("XMLEventReader obtenido. Todo listo para cargar el archivo...");
         return reader;
     }
 
     @Override
-    protected void cargarArchivo(BufferedReader reader) {
-        String line;
-        try {
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                UUID id = UUID.fromString(parts[0].split("id=")[1]);
-                int num = Integer.parseInt(parts[1].split("num=")[1].split("]")[0]);
-                Tren tren = new Tren(id, num);
-                trenes.add(tren);
+    protected void cargarArchivo(@NotNull XMLEventReader reader) {
+        this.obtenerLogger(); // Esta llamada es gratis. Si ya existe, no hace nada, y si no, inicializa logger
 
-                // DEBUG
-                this.logger.debug("Tren cargado: {}", tren);
+        this.logger.trace("Cargando contenido del archivo...");
 
+        Tren tren;
+        String id = null;
+        Integer num = null;
+
+        while (reader.hasNext()) {
+            XMLEvent evento;
+            try {
+                evento = reader.nextEvent();
+            } catch (Exception e) {
+                this.logger.error("Error al leer el evento. ¿Está bien formado el archivo?", e);
+                continue;
             }
-        } catch (Exception e) {
-            this.logger.error("Error al cargar el archivo", e);
+
+            if (evento.isStartElement()) {
+                try {
+                    switch (evento.asStartElement().getName().getLocalPart()) {
+                        case "tren":
+                            this.logger.trace("Inicio de tren");
+                            break;
+                        case "id":
+                            evento = reader.nextEvent();
+                            id = evento.asCharacters().getData();
+                            break;
+                        case "num":
+                            evento = reader.nextEvent();
+                            num = Integer.parseInt(evento.asCharacters().getData());
+                            break;
+                    }
+                } catch (Exception e) {
+                    this.logger.error("Error al leer el archivo. ¿Está bien formado?", e);
+                }
+            }
+
+            if (evento.isEndElement()) {
+                if (evento.asEndElement().getName().getLocalPart().equals("tren")) {
+                    this.logger.trace("Fin de tren");
+                    if (id == null || num == null) {
+                        this.logger.warn("No se ha podido cargar el tren (Parámetro de entrada incorrecto) . ¿Está bien formado el archivo?");
+                        continue;
+                    }
+                    tren = new Tren(UUID.fromString(id), num);
+                    trenes.add(tren);
+                }
+            }
         }
+
+
     }
 }

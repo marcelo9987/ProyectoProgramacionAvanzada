@@ -9,7 +9,7 @@ public record Tren(UUID id, int num) {
             return false;
         }
 
-        return id.equals(tren.id);
+        return id.equals(tren.id());
     }
 
     @Override

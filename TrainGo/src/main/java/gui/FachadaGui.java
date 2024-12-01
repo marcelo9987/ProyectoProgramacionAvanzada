@@ -10,17 +10,31 @@ public class FachadaGui {
     FachadaAplicacion fa;
 
     public FachadaGui(FachadaAplicacion fa) {
+        super();
         this.fa = fa;
-        this.vp = new FormularioPrincipal(fa);
     }
 
+    /**
+     * Pone en marcha la interfaz gráfica
+     */
     public void ponerEnMarcha() {
+        vp = new FormularioPrincipal(fa);
+        vp.setVisible(true);
+
         FormularioAutenticacion va = new FormularioAutenticacion(this.fa, this.vp, true);
         va.setVisible(true);
 
     }
 
-    public void ponerEnMarchaNoAuth() {
+    /**
+     * Pone en marcha la interfaz gráfica sin autenticación.
+     *
+     * @implNote Pensado para:
+     * - Pruebas.
+     * - Cambios de idioma.
+     */
+    public void ponerEnMarchaNoAuth() // mírame: ¿Posible vulnerabilidad?
+    {
         vp.dispose();
         vp = new FormularioPrincipal(fa);
     }

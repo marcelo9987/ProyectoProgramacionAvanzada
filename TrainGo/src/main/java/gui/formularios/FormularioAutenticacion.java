@@ -1,36 +1,33 @@
 package gui.formularios;
 
 import modelo.FachadaAplicacion;
-import modelo.Usuario;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 
-public class FormularioAutenticacion extends JDialog {
-    private final JLabel lblUsuario;
-    private final JLabel lblContrasena;
+public final class FormularioAutenticacion extends JDialog {
     private final JTextField txtUsuario;
     private final JPasswordField txtContrasena;
-    private final JButton btnAceptar;
-    private final JButton btnCancelar;
 
     private final FachadaAplicacion fa;
 
     public FormularioAutenticacion(FachadaAplicacion fa, Frame parent, boolean modal) {
         super(parent, modal);
 
-        this.lblUsuario = new JLabel("Usuario:");
-        this.lblContrasena = new JLabel("Contraseña:");
+        JLabel lblUsuario = new JLabel("Usuario:");
+        JLabel lblContrasena = new JLabel("Contraseña:");
         this.txtUsuario = new JTextField(20);
         this.txtContrasena = new JPasswordField(20);
-        this.btnAceptar = new JButton("Aceptar");
-        this.btnCancelar = new JButton("Cancelar");
+        JButton btnAceptar = new JButton("Aceptar");
+        JButton btnCancelar = new JButton("Cancelar");
 
         this.fa = fa;
 
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("Autenticación");
         setResizable(false);
 
@@ -93,9 +90,7 @@ public class FormularioAutenticacion extends JDialog {
                 }
         );
 
-        btnCancelar.addActionListener(e -> {
-            System.exit(0);
-        });
+        btnCancelar.addActionListener(_ -> System.exit(0));
 
         txtContrasena.addKeyListener(
                 new KeyAdapter() {
@@ -108,10 +103,7 @@ public class FormularioAutenticacion extends JDialog {
                 }
         );
 
-        btnAceptar.addActionListener(e ->
-        {
-            comprobarAutenticacion();
-        });
+        btnAceptar.addActionListener(_ -> comprobarAutenticacion());
 
         this.getContentPane().add(panel);
         this.pack();
@@ -120,13 +112,23 @@ public class FormularioAutenticacion extends JDialog {
 
     }
 
-    private boolean comprobarTeclaPulsada(KeyEvent e) {
+    /**
+     * Comprueba si la tecla pulsada es la tecla de intro
+     *
+     * @param e Evento de teclado
+     * @return True si la tecla pulsada es la tecla de intro, false en caso contrario
+     */
+    private boolean comprobarTeclaPulsada(@NotNull KeyEvent e) {
         return e.getKeyCode() == '\r' || e.getKeyCode() == '\n';
     }
 
+    /**
+     * Comprueba si la autenticación es correcta
+     *
+     * @see FachadaAplicacion#autenticar(String, String)
+     */
     private void comprobarAutenticacion() {
-        Usuario usuario = null;
-        if (fa.autenticar(usuario, txtUsuario.getText(), txtContrasena.getText())) {
+        if (fa.autenticar(txtUsuario.getText(), Arrays.toString(txtContrasena.getPassword()).replaceAll("[\\[\\], ]", ""))) {
             JOptionPane.showMessageDialog(this, fa.getBundleInstance().getString("autenticacion.correcta"));
             this.dispose();
         }

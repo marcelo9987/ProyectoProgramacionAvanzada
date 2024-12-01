@@ -1,8 +1,11 @@
 package modelo;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import util.Criptograficos;
 
 import java.util.Date;
+import java.util.Objects;
 
 public final class Usuario {
     private final int DNI;
@@ -13,7 +16,7 @@ public final class Usuario {
      *
      * @implNote La contraseña debe tener al menos 8 caracteres.
      * Esta es almacenada encriptada mediante DES.
-     * @see Criptograficos
+     * @see Criptograficos#cifrar(String)
      * @since 1.0 20/11/2024
      */
     private final String contrasenha;
@@ -22,6 +25,7 @@ public final class Usuario {
     private final Date fechaNacimiento;
 
     public Usuario(int DNI, String nombre, String correo, String contrasenha, int telefono, String direccion, Date fechaNacimiento, boolean cifrar) {
+        super();
         this.DNI = DNI;
         this.nombre = nombre;
         this.correo = correo;
@@ -31,15 +35,8 @@ public final class Usuario {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-
-    public String correo() {
-        return correo;
-    }
-
-    public String contrasenha() {
-        return contrasenha;
-    }
-
+    @NotNull
+    @Contract(pure = true)
     @Override
     public String toString() {
         return "Usuario{" +
@@ -53,6 +50,14 @@ public final class Usuario {
                 '}';
     }
 
+    /**
+     * Devuelve una cadena con los datos del usuario listos para ser guardados en un archivo.
+     *
+     * @return Cadena con los datos del usuario listos para ser guardados en un archivo.
+     * @deprecated Previo a la migración a XML. No se recomienda su uso.
+     */
+    @NotNull
+    @Deprecated
     public String printReadyString() {
         return "Usuario{"
                 + DNI + ","
@@ -64,6 +69,7 @@ public final class Usuario {
                 + fechaNacimiento.toString().substring(0, 10) + fechaNacimiento.toString().substring(23) + '}';
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Usuario usuario)) {
@@ -71,5 +77,39 @@ public final class Usuario {
         }
 
         return DNI == usuario.DNI;
+    }
+
+    public int DNI() {
+        return DNI;
+    }
+
+    public String contrasenha() {
+        return contrasenha;
+    }
+
+    public String correo() {
+        return correo;
+    }
+
+    public String direccion() {
+        return direccion;
+    }
+
+    public Date fechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public String nombre() {
+        return nombre;
+    }
+
+    public int telefono() {
+        return telefono;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(DNI);
     }
 }
