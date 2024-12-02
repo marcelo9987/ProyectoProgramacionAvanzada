@@ -13,8 +13,8 @@ import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Currency;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -129,7 +129,7 @@ public class DAOCirculacion extends AbstractDAO {
             EnumCirculacion estado;
             LocalDateTime horaSalida;
             LocalDateTime horaLlegadaReal;
-            Currency precioPorAsiento;
+            BigDecimal precioPorAsiento;
             int[] fecha = new int[5];
 
             if (evento.isStartElement()) {
@@ -224,7 +224,7 @@ public class DAOCirculacion extends AbstractDAO {
                                         return;
                                     }
                                     if (evento.isCharacters()) {
-                                        precioPorAsiento = Currency.getInstance("EUR");
+                                        precioPorAsiento = new BigDecimal(evento.asCharacters().getData());
                                         this.logger.debug("Precio por asiento: {}", precioPorAsiento);
                                     }
                                 }
@@ -346,7 +346,7 @@ public class DAOCirculacion extends AbstractDAO {
     }
 
     @Nullable
-    private Circulacion fabricarCirculacion(String trenId, java.util.UUID uuid, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, Currency precioPorAsiento) {
+    private Circulacion fabricarCirculacion(String trenId, java.util.UUID uuid, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, BigDecimal precioPorAsiento) {
         this.logger.debug("INICIO PROCESADO DE UNA CIRCULACIÓN");
 
         // Proceso la data

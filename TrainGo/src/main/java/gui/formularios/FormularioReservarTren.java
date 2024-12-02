@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Currency;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -69,7 +69,7 @@ public class FormularioReservarTren extends JFrame {
                                 )
                                 , EnumCirculacion.PROGRAMADO
                                 , LocalDateTime.parse("2025-06-01T08:00:00")
-                                , Currency.getInstance("EUR")
+                                , BigDecimal.valueOf(58.22)
                         )
         );
     }

@@ -107,6 +107,7 @@ public class FachadaDAO {
         return this.daoUsuario.encontrarUsuarioPorEmail(email);
     }
 
+    @Deprecated(since = "1.0", forRemoval = true)
     public List<Estacion> getEstaciones() {
         return this.daoEstacion.estaciones();
     }

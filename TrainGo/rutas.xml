@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rutas>
+    <ruta>
+        <origen>A Coruña</origen>
+        <destino>Madrid</destino>
+        <distancia>600</distancia>
+    </ruta>
+</rutas>

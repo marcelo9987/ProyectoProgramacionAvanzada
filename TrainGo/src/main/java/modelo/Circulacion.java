@@ -1,10 +1,12 @@
 package modelo;
 
 import modelo.Enums.EnumCirculacion;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Currency;
 import java.util.UUID;
 
 /**
@@ -20,10 +22,10 @@ public final class Circulacion {
     private final EnumCirculacion estado;
     private final LocalDateTime horaSalida;
     private LocalDateTime horaLlegadaReal;
-    private final Currency precioPorAsiento;
+    private final BigDecimal precioPorAsiento;
 
 
-    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, LocalDateTime horaLlegadaReal, Currency precioPorAsiento) {
+    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, LocalDateTime horaLlegadaReal, BigDecimal precioPorAsiento) {
         super();
         this.id = id;
         this.tren = tren;
@@ -34,7 +36,7 @@ public final class Circulacion {
         this.precioPorAsiento = precioPorAsiento;
     }
 
-    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, Currency precioPorAsiento) {
+    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, BigDecimal precioPorAsiento) {
         super();
         this.id = id;
         this.tren = tren;
@@ -60,10 +62,12 @@ public final class Circulacion {
         return this.horaSalida.toLocalTime();
     }
 
-    public Currency getPrecioPorAsiento() {
+    public BigDecimal getPrecioPorAsiento() {
         return this.precioPorAsiento;
     }
 
+    @NotNull
+    @Contract(pure = true)
     @Override
     public String toString() {
         return "Circulacion{" +
