@@ -15,12 +15,12 @@ import java.util.UUID;
  */
 public final class Circulacion {
     private final UUID id;
-    private Tren tren;
-    private Ruta ruta;
-    private EnumCirculacion estado;
-    private LocalDateTime horaSalida;
+    private final Tren tren;
+    private final Ruta ruta;
+    private final EnumCirculacion estado;
+    private final LocalDateTime horaSalida;
     private LocalDateTime horaLlegadaReal;
-    private Currency precioPorAsiento;
+    private final Currency precioPorAsiento;
 
 
     public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, LocalDateTime horaLlegadaReal, Currency precioPorAsiento) {

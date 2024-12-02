@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.Currency;
@@ -26,14 +25,14 @@ public class FormularioReservarTren extends JFrame {
     private JButton btnCancelar;
     private JButton botonReservar;
 
-    private Ruta rutaEscogida;
-    private LocalDateTime fechaSalida;
+    private final Ruta rutaEscogida;
+    private final LocalDateTime fechaSalida;
 
     public FormularioReservarTren(@NotNull FachadaAplicacion fa, Ruta rutaEscogida, LocalDateTime fechaSalida) {
         super();
 
         this.fa = fa;
-        this.bundle = fa.getBundleInstance();
+        bundle = fa.getBundleInstance();
 
         this.rutaEscogida = rutaEscogida;
         this.fechaSalida = fechaSalida;
@@ -81,7 +80,7 @@ public class FormularioReservarTren extends JFrame {
         this.panelPrincipal.setLayout(new BorderLayout());
 
         this.tablaTrenesRuta = new JTable();
-        tablaTrenesRuta.setModel((TableModel) new ModeloTablaCirculaciones());
+        tablaTrenesRuta.setModel(new ModeloTablaCirculaciones());
 
         JScrollPane scrollPane = new JScrollPane(tablaTrenesRuta);
 
@@ -100,7 +99,7 @@ public class FormularioReservarTren extends JFrame {
 
         this.add(panelPrincipal);
         this.setSize(600, 400);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setVisible(true);
         this.setLocationRelativeTo(null);
 

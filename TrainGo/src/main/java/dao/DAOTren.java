@@ -44,7 +44,7 @@ public class DAOTren extends AbstractDAO {
     }
 
     public static void main(String[] args) {
-        DAOTren dao = DAOTren.getInstance();
+        DAOTren dao = getInstance();
         XMLEventReader xmlEvtRdr_lector = dao.obtenerXmlEventReader();
         dao.cargarArchivo(xmlEvtRdr_lector);
 

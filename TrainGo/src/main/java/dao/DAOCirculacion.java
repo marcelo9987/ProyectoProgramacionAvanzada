@@ -4,42 +4,47 @@ import modelo.Circulacion;
 import modelo.Enums.EnumCirculacion;
 import modelo.Ruta;
 import modelo.Tren;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.*;
 import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.time.LocalDateTime;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("HardCodedStringLiteral")
 public class DAOCirculacion extends AbstractDAO {
 
     @NonNls
     private static final String CIRCULACION = "circulacion";
+    @NonNls
     private static final String UUID = "uuid";
+    @NonNls
     private static final String TREN = "tren_id";
+    @NonNls
     private static final String RUTA = "ruta";
+    @NonNls
     private static final String ESTADO = "estado";
+    @NonNls
     private static final String HORA_SALIDA = "hora_salida";
+    @NonNls
     private static final String HORA_LLEGADA_REAL = "hora_llegada";
+    @NonNls
     private static final String PRECIO_POR_ASIENTO = "precio_por_asiento";
 
     private static DAOCirculacion instance = null; // Singleton pattern
-    private final FachadaDAO fadao;
+    private final FachadaDAO fa_dao;
     private final Map<Ruta, Circulacion> circulaciones;
 
-    private DAOCirculacion(FachadaDAO fadao) {
+    private DAOCirculacion(FachadaDAO fa_dao) {
         super();
-        this.fadao = fadao;
+        this.fa_dao = fa_dao;
         this.obtenerLogger();
         this.circulaciones = new HashMap<>();
     }
@@ -55,7 +60,7 @@ public class DAOCirculacion extends AbstractDAO {
     public static void main(String[] args) {
         FachadaDAO dao = FachadaDAO.getInstance();
         dao.cargaloTodo();
-        DAOCirculacion daoCirculacion = DAOCirculacion.getInstance(dao);
+        DAOCirculacion daoCirculacion = getInstance(dao);
         daoCirculacion.load();
 
         for (Circulacion circulacion : daoCirculacion.circulaciones().values()) {
@@ -63,14 +68,10 @@ public class DAOCirculacion extends AbstractDAO {
         }
     }
 
-    public Map<Ruta, Circulacion> circulaciones() {
+    private Map<Ruta, Circulacion> circulaciones() {
         return this.circulaciones;
     }
 
-//        dao.addRutaDesdeComponentes("Madrid", "Barcelona", 600);
-//        dao.addRutaDesdeComponentes("Barcelona", "Madrid", 600);
-//
-//        dao.save();
 
 
     @Nullable
@@ -83,7 +84,7 @@ public class DAOCirculacion extends AbstractDAO {
         try {
             XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
             writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("circulaciones.xml"));
-        } catch (Exception e) {
+        } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al volcar el archivo", e);
             return null;
         }
@@ -98,318 +99,386 @@ public class DAOCirculacion extends AbstractDAO {
         XMLEventReader reader;
         try {
             reader = xmlInputFactory.createXMLEventReader(new FileInputStream("circulaciones.xml"));
-        } catch (Exception e) {
+        } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al leer el archivo", e);
             return null;
         }
         return reader;
     }
 
-    @Contract(pure = true)
-    private void ponerANull(@NotNull Object... objetos) {
-        for (Object objeto : objetos) {
-            objeto = null;
-        }
-    }
+
 
     @Override
-    protected void cargarArchivo(XMLEventReader reader) {
+    protected void cargarArchivo(@NotNull XMLEventReader reader) {
         this.obtenerLogger();
         this.logger.trace("Cargando archivo...");
 
-        try {
-            while (reader.hasNext()) {
+
+        while (reader.hasNext()) {
                 XMLEvent evento;
-                try {
-                    evento = reader.nextEvent();
-                } catch (Exception e) {
-                    this.logger.error("Error al leer el siguiente evento", e);
-                    return;
-                }
+            try {
+                evento = reader.nextEvent();
+            } catch (XMLStreamException e) {
+                this.logger.error("Error al leer el siguiente evento", e);
+                return;
+            }
 
-                java.util.UUID uuid = null;
-                String trenId = null;
-                Ruta ruta = null;
-                EnumCirculacion estado = null;
-                LocalDateTime horaSalida = null;
-                LocalDateTime horaLlegadaReal = null;
-                Currency precioPorAsiento = null;
-                String anho = null, mes = null, dia = null, hora = null, minuto = null;
+            java.util.UUID uuid;
+            String trenId;
+            Ruta ruta;
+            EnumCirculacion estado;
+            LocalDateTime horaSalida;
+            LocalDateTime horaLlegadaReal;
+            Currency precioPorAsiento;
+            int[] fecha = new int[5];
 
-                if (evento.isStartElement()) {
-                    String nombreElemento = evento.asStartElement().getName().getLocalPart();
-                    if (nombreElemento.equals(CIRCULACION)) {
-                        uuid = null;
-                        trenId = null;
-                        ruta = null;
-                        estado = null;
-                        horaSalida = null;
-                        horaLlegadaReal = null;
-                        precioPorAsiento = null;
-                        anho = null;
-                        mes = null;
-                        dia = null;
-                        hora = null;
-                        minuto = null;
-                        while (reader.hasNext()) {
-                            try {
-                                evento = reader.nextEvent();
-                            } catch (Exception e) {
-                                this.logger.error("Error al leer el siguiente evento", e);
-                                return;
-                            }
-                            if (evento.isStartElement()) {
-                                String nombreElementoLeido = evento.asStartElement().getName().getLocalPart();
-                                this.logger.debug("Leyendo {}", nombreElementoLeido);
-                                switch (nombreElementoLeido) {
-                                    case UUID -> {
+            if (evento.isStartElement()) {
+                String nombreElemento = evento.asStartElement().getName().getLocalPart();
+                if (nombreElemento.equals(CIRCULACION)) {
+                    uuid = null;
+                    trenId = null;
+                    ruta = null;
+                    estado = null;
+                    horaSalida = null;
+                    horaLlegadaReal = null;
+                    precioPorAsiento = null;
+
+                    boolean lecturaIncorrecta = false;
+                    while (reader.hasNext()) {
+                        try {
+                            evento = reader.nextEvent();
+                        } catch (XMLStreamException e) {
+                            this.logger.error("Error al leer el siguiente evento", e);
+                            return;
+                        }
+                        if (lecturaIncorrecta) {
+                            this.logger.error("Lectura incorrecta");
+                            return;
+                        }
+
+
+                        if (evento.isStartElement()) {
+                            String nombreElementoLeido = evento.asStartElement().getName().getLocalPart();
+                            this.logger.debug("Leyendo {}", nombreElementoLeido);
+                            switch (nombreElementoLeido) {
+                                case UUID -> {
+                                    uuid = _procesarUuid(reader, evento);
+                                    lecturaIncorrecta = (uuid == null);
+                                }
+                                case TREN -> {
+                                    this.logger.debug("ENTRANDO EN TREN");
+                                    trenId = _procesarTren(reader, trenId);
+                                    lecturaIncorrecta = (trenId == null);
+
+                                }
+
+                                case RUTA -> {
+                                    ruta = _procesarRuta(reader);
+                                    lecturaIncorrecta = (ruta == null);
+                                }
+                                case ESTADO -> {
+                                    this.logger.debug("<cargarArchivo> ENTRANDO EN ESTADO");
+                                    estado = _procesarEstado(reader, estado);
+                                    lecturaIncorrecta = (null == estado);
+                                }
+                                case HORA_SALIDA -> {
+
+                                    this.logger.debug("ENTRO EN HORA DE SALIDA");
+
+                                    horaSalida = null;
+                                    while (reader.hasNext()) {
                                         try {
-                                            evento = reader.nextEvent();
-                                        } catch (Exception e) {
-                                            this.logger.error("Error al leer el UUID: probablemente no exista", e);
+                                            horaSalida = _gestionarYCrearLaHora(reader, fecha);
+                                        } catch (IllegalArgumentException e) {
+                                            this.logger.error("Error al gestionar y crear la hora", e);
+                                            lecturaIncorrecta = true;
                                         }
+                                        if (horaSalida != null) {
+                                            break;
+                                        }
+
+                                    }
+
+                                }
+                                case HORA_LLEGADA_REAL -> {
+                                    this.logger.debug("ENTRO EN HORA DE LLEGADA REAL");
+                                    horaLlegadaReal = null;
+                                    while (reader.hasNext()) {
                                         try {
-                                            uuid = java.util.UUID.fromString(evento.asCharacters().getData());
-                                        } catch (Exception e) {
-                                            this.logger.error("Error al leer el UUID: está mal formado", e);
-                                            return;
+                                            horaLlegadaReal = _gestionarYCrearLaHora(reader, fecha);
+                                        } catch (IllegalArgumentException e) {
+                                            this.logger.error("Error al gestionar y crear la hora de llegada real", e);
+                                            lecturaIncorrecta = true;
                                         }
-                                        this.logger.debug("UUID: {}", uuid);
-                                    }
-
-                                    case TREN -> {
-                                        this.logger.debug("ENTRANDO EN TREN");
-                                        try {
-                                            evento = reader.nextEvent();
-                                        } catch (Exception e) {
-                                            this.logger.error("Error al leer el tren", e);
-                                        }
-                                        if (evento.isCharacters()) {
-                                            trenId = evento.asCharacters().getData();
-                                        }
-                                        this.logger.debug("Añadido Tren: {}", trenId);
-                                    }
-
-                                    case RUTA -> {
-
-                                        this.logger.debug("ENTRANDO EN RUTA");
-
-                                        String origen = null;
-                                        String destino = null;
-
-//                                        this.logger.debug("Leyendo ruta. Cabecera: {}", evento);
-
-                                        while (reader.hasNext()) {
-                                            try {
-                                                evento = reader.nextEvent();
-                                            } catch (Exception e) {
-                                                this.logger.error("Error al leer el siguiente evento", e);
-                                                return;
-                                            }
-
-
-                                            if (evento.isStartElement()) {
-                                                @NonNls String nombreElementoInterno = evento.asStartElement().getName().getLocalPart();
-                                                try {
-                                                    evento = reader.nextEvent();
-                                                } catch (Exception e) {
-                                                    this.logger.error("Error al leer el siguiente evento", e);
-                                                    return;
-                                                }
-
-                                                if (evento.isCharacters()) {
-                                                    String valor = evento.asCharacters().getData();
-                                                    this.logger.debug("<<ruta>> Valor: {}", valor);
-                                                    switch (nombreElementoInterno) {
-                                                        case "origen" -> origen = valor;
-                                                        case "destino" -> destino = valor;
-                                                    }
-                                                }
-                                            }
-                                            else if (evento.isEndElement()) {
-                                                @NonNls String nombreElementoInterno = evento.asEndElement().getName().getLocalPart();
-                                                if (nombreElementoInterno.equals("ruta")) {
-                                                    this.logger.debug("<<ruta>> Fin de la ruta");
-                                                    break;
-                                                }
-                                            }
-
-                                        }
-
-                                        if (origen != null && destino != null) {
-                                            if (fadao.existeRuta(origen, destino)) {
-                                                try {
-                                                    ruta = fadao.buscarRutaPorNombres(origen, destino);
-                                                    this.logger.debug("Ruta encontrada: {}", ruta);
-                                                } catch (Exception e) {
-                                                    this.logger.error("La ruta no existe o ha pasado algo inesperado", e);
-                                                }
-                                            }
-                                            else {
-                                                this.logger.error("No se ha encontrado la ruta de origen {} a destino {}", origen, destino);
-                                                ponerANull(uuid, trenId, ruta, estado, horaSalida, horaLlegadaReal, precioPorAsiento);
-                                            }
+                                        if (horaLlegadaReal != null) {
+                                            break;
                                         }
                                     }
-                                    case ESTADO -> {
-                                        this.logger.debug("ENTRANDO EN ESTADO");
-                                        try {
-                                            evento = reader.nextEvent();
-                                        } catch (Exception e) {
-                                            this.logger.error("Error al leer el estado", e);
-                                            ponerANull(uuid, trenId, ruta, estado, horaSalida, horaLlegadaReal, precioPorAsiento);
-                                            return;
-                                        }
-                                        if (evento.isCharacters()) {
-                                            estado = EnumCirculacion.valueOf(evento.asCharacters().getData());
-                                            this.logger.debug("Asignado Estado: {}", estado);
-                                        }
+                                }
+
+                                case PRECIO_POR_ASIENTO -> {
+                                    try {
+                                        evento = reader.nextEvent();
+                                    } catch (XMLStreamException e) {
+                                        this.logger.error("Error al leer el precio por asiento", e);
+                                        return;
                                     }
-                                    case HORA_SALIDA -> {
-                                        this.logger.debug("ENTRO EN HORA DE SALIDA");
-
-                                        while (reader.hasNext()) {
-                                            try {
-                                                evento = reader.nextEvent();
-                                                this.logger.debug("Leyendo hora de salida");
-                                                this.logger.debug("Evento: {}", evento);
-                                            } catch (Exception e) {
-                                                this.logger.error("Error al leer el siguiente evento", e);
-                                                return;
-                                            }
-                                            if (evento.isStartElement()) {
-                                                @NonNls String nombreElementoInterno = evento.asStartElement().getName().getLocalPart();
-                                                try {
-                                                    evento = reader.nextEvent();
-                                                } catch (Exception e) {
-                                                    this.logger.error("Error al leer el siguiente evento", e);
-                                                    return;
-                                                }
-
-                                                if (evento.isCharacters()) {
-                                                    String valor = evento.asCharacters().getData();
-                                                    switch (nombreElementoInterno) {
-                                                        case "año" -> anho = valor == null ? "2" : valor;
-                                                        case "mes" -> mes = valor == null ? "55" : valor;
-                                                        case "dia" -> dia = valor == null ? "55" : valor;
-                                                        case "hora" -> hora = valor == null ? "55" : valor;
-                                                        case "minutos" -> minuto = valor == null ? "55" : valor;
-                                                    }
-                                                }
-                                            }
-                                            else if (evento.isEndElement()) {
-                                                @NonNls String nombreElementoInterno = evento.asEndElement().getName().getLocalPart();
-                                                if (nombreElementoInterno.equals(HORA_SALIDA)) {
-                                                    this.logger.debug("Fin de la hora de salida");
-                                                    this.logger.debug("Valores: {} {} {} {} {}", anho, mes, dia, hora, minuto);
-                                                    break;
-                                                }
-
-                                            }
-
-                                        }
-
-                                    }
-                                    case HORA_LLEGADA_REAL -> {
-                                        // de momento nada hazme: modularizar?
-                                        this.logger.debug("Hora de llegada real detectada, pasando de largo");
-                                    }
-
-                                    case PRECIO_POR_ASIENTO -> {
-                                        try {
-                                            evento = reader.nextEvent();
-                                        } catch (Exception e) {
-                                            this.logger.error("Error al leer el precio por asiento", e);
-                                            ponerANull(uuid, trenId, ruta, estado, horaSalida, horaLlegadaReal
-                                                    , precioPorAsiento);
-                                            return;
-                                        }
-                                        if (evento.isCharacters()) {
-                                            precioPorAsiento = Currency.getInstance("EUR");
-                                            this.logger.debug("Precio por asiento: {}", precioPorAsiento);
-                                        }
+                                    if (evento.isCharacters()) {
+                                        precioPorAsiento = Currency.getInstance("EUR");
+                                        this.logger.debug("Precio por asiento: {}", precioPorAsiento);
                                     }
                                 }
                             }
-                            else if (evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals(CIRCULACION)) {
-                                this.logger.debug("FINAL DE UN ELEMENTO A CONTINUACION");
-                                this.logger.debug("Fin de un elemento: {}", evento.asEndElement().getName().getLocalPart());
-                                if (evento.asEndElement().getName().getLocalPart().equals(CIRCULACION)) {
+                        }
+                        else {
+                            if (evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals(CIRCULACION)) {
+                                Circulacion circulacion = fabricarCirculacion(trenId, uuid, ruta, estado, horaSalida, precioPorAsiento);
+                                lecturaIncorrecta = (circulacion == null);
+                                this.circulaciones.put(ruta, circulacion);
+                                this.logger.debug("Circulación añadida: {}", circulacion);
 
-                                    this.logger.debug("INICIO PROCESADO DE UNA CIRCULACIÓN");
-
-                                    // Proceso la data
-                                    horaSalida = LocalDateTime.of(Integer.parseInt(anho), Integer.parseInt(mes), Integer.parseInt(dia), Integer.parseInt(hora), Integer.parseInt(minuto));
-
-
-                                    Tren tren = fadao.localizarTren(trenId);
-                                    if (tren == null) {
-                                        this.logger.error("No se ha encontrado el tren {}", trenId);
-                                        ponerANull(uuid, trenId, ruta, estado, horaSalida, horaLlegadaReal
-                                                , precioPorAsiento);
-                                        continue;
-                                    }
-                                    else {
-                                        this.logger.trace("Tren encontrado: {}", tren);
-                                    }
-
-//                        LocalDateTime timeHoraLlegadaReal = null;
-//                        if (horaLlegadaReal != null) {
-//                            timeHoraLlegadaReal = LocalDateTime.parse(horaLlegadaReal);
-//                        }
-
-
-                                    Circulacion circulacion = new Circulacion(uuid, tren, ruta, estado, horaSalida, null, precioPorAsiento);
-                                    this.circulaciones.put(ruta, circulacion);
-
-                                }
-                                else {
-                                    this.logger.error("no he leido lo esperado, leido: {}", evento.asEndElement().getName().getLocalPart());
-                                }
                             }
 
                         }
+
                     }
                 }
-
-
             }
 
 
-        } catch (Exception e) {
-            this.logger.error("Error al leer el archivo", e);
         }
+
     }
 
-//    private void addRutaDesdeComponentes(String origen, String destino, int distancia) {
-//        Estacion estacionOrigen = null;
-//        Estacion estacionDestino = null;
-//        for (Estacion estacion : FachadaDAO.getInstance().getEstaciones()) {
-//            if (estacion.ciudad().equals(origen)) {
-//                estacionOrigen = estacion;
-//            }
-//            if (estacion.ciudad().equals(destino)) {
-//                estacionDestino = estacion;
-//            }
-//        }
-//        if (estacionOrigen == null) {
-//            this.logger.error("No se ha encontrado la estación de origen {}", origen);
-//            if (estacionDestino == null) {
-//                this.logger.error("No se ha encontrado la estación de destino {}", destino);
-//            }
-//            return;
-//        }
-//        if (estacionDestino == null) {
-//            this.logger.error("No se ha encontrado la estación de destino {}", destino);
-//            return;
-//        }
-//        this.ci  rutas().putIfAbsent(estacionOrigen, new HashMap<Estacion, Ruta>());
-//        this
-//                .rutas
-//                .get(estacionOrigen)
-//                .put(estacionDestino, new Ruta(estacionOrigen, estacionDestino, distancia));
-//    }
+    @Nullable
+    private java.util.UUID _procesarUuid(@NotNull XMLEventReader reader, XMLEvent evento) {
+        try {
+            evento = reader.nextEvent();
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al leer el UUID: probablemente no exista", e);
+        }
+        java.util.UUID uuid;
+        try {
+            uuid = java.util.UUID.fromString(evento.asCharacters().getData());
+        } catch (RuntimeException e) {
+            this.logger.error("Error al leer el UUID: está mal formado", e);
+            return null;
+        }
+        this.logger.debug("UUID: {}", uuid);
+        return uuid;
+    }
 
+    @Nullable
+    private String _procesarTren(@NotNull XMLEventReader reader, String trenId) {
+        XMLEvent evento;
+        try {
+            evento = reader.nextEvent();
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al leer el tren: probablemente no exista", e);
+            return null;
+        }
+        if (evento.isCharacters()) {
+            trenId = evento.asCharacters().getData();
+        }
+        this.logger.debug("Añadido Tren: {}", trenId);
+        return trenId;
+    }
+
+    @Nullable
+    private Ruta _procesarRuta(@NotNull XMLEventReader reader) {
+        StringBuffer origenSB = new StringBuffer();
+        StringBuffer destinoSB = new StringBuffer();
+        if (!_procesarRuta(reader, origenSB, destinoSB)) {
+            this.logger.error("Error al procesar la ruta");
+            return null;
+        }
+        Ruta ruta;
+        try {
+            ruta = _comprobarYBuscarRuta(origenSB.toString(), destinoSB.toString());
+        } catch (RuntimeException e) {
+            this.logger.error("Error al comprobar y buscar la ruta", e);
+            return null;
+        }
+        return ruta;
+    }
+
+    @Nullable
+    private EnumCirculacion _procesarEstado(@NotNull XMLEventReader reader, EnumCirculacion estado) {
+        XMLEvent evento;
+        try {
+            evento = reader.nextEvent();
+        } catch (XMLStreamException e) {
+            this.logger.error(" <estado> Error al leer el estado", e);
+            return null;
+        }
+        if (evento.isCharacters()) {
+            estado = EnumCirculacion.valueOf(evento.asCharacters().getData());
+            this.logger.debug("<estado> Asignado Estado: {}", estado);
+        }
+        return estado;
+    }
+
+    @Nullable
+    private LocalDateTime _gestionarYCrearLaHora(@NotNull XMLEventReader reader, int[] fecha) {
+        XMLEvent evento;
+        try {
+            evento = reader.nextEvent();
+            this.logger.debug("Leyendo hora de salida");
+            this.logger.debug("Evento: {}", evento);
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al leer el siguiente evento", e);
+            return null;
+        }
+
+        LocalDateTime horaSalida = null;
+        if (evento.isStartElement()) {
+            if (!_gestionarDatosEntrantesFecha(reader, evento, fecha)) {
+                this.logger.error("Error al gestionar los datos entrantes de la fecha");
+                throw new IllegalArgumentException("Error al gestionar los datos entrantes de la fecha");
+            }
+        }
+        if (evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals(HORA_SALIDA)) {
+            horaSalida = _crearFechaHoraYcomprobarValidez(evento, fecha[0], fecha[1], fecha[2], fecha[3], fecha[4]);
+        }
+
+
+        return horaSalida;
+    }
+
+    @Nullable
+    private Circulacion fabricarCirculacion(String trenId, java.util.UUID uuid, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, Currency precioPorAsiento) {
+        this.logger.debug("INICIO PROCESADO DE UNA CIRCULACIÓN");
+
+        // Proceso la data
+
+
+        Tren tren = fa_dao.localizarTren(trenId);
+        if (tren == null) {
+            this.logger.error("No se ha encontrado el tren {}: Error al crear la circulación", trenId);
+
+            return null;
+        }
+        this.logger.trace("Tren encontrado: {}", tren);
+
+
+        return new Circulacion(uuid, tren, ruta, estado, horaSalida, null, precioPorAsiento);
+    }
+
+    private boolean _procesarRuta(@NotNull XMLEventReader reader, StringBuffer origen, StringBuffer destino) {
+        this.logger.debug("procesando una ruta");
+
+        while (reader.hasNext()) {
+            XMLEvent evento;
+            try {
+                evento = reader.nextEvent();
+            } catch (XMLStreamException e) {
+                this.logger.error("Error al leer el siguiente evento", e);
+                return false;
+            }
+
+
+            if (evento.isStartElement()) {
+                @NonNls String nombreElementoInterno = evento.asStartElement().getName().getLocalPart();
+                try {
+                    evento = reader.nextEvent();
+                } catch (XMLStreamException e) {
+                    this.logger.error("Error al leer el siguiente evento", e);
+                    return false;
+                }
+
+                if (evento.isCharacters()) {
+                    String valor = evento.asCharacters().getData();
+                    switch (nombreElementoInterno) {
+                        case "origen" -> origen.append(valor);
+                        case "destino" -> destino.append(valor);
+                    }
+                }
+            }
+            else if (evento.isEndElement()) {
+                @NonNls String nombreElementoInterno = evento.asEndElement().getName().getLocalPart();
+                if (nombreElementoInterno.equals("ruta")) {
+                    this.logger.debug("<<ruta>> Fin de la ruta");
+                    break;
+                }
+            }
+
+        }
+        return true;
+    }
+
+    @Nullable
+    private Ruta _comprobarYBuscarRuta(String origen, String destino) {
+        Ruta ruta;
+        if (fa_dao.existeRuta(origen, destino)) {
+            ruta = fa_dao.buscarRutaPorNombres(origen, destino);
+            this.logger.debug("Ruta encontrada: {}", ruta);
+        }
+        else {
+            return null;
+        }
+
+        return ruta;
+    }
+
+    private boolean _gestionarDatosEntrantesFecha(@NotNull XMLEventReader reader, @NotNull XMLEvent evento, int[] fecha) {
+        @NonNls String nombreElementoInterno = evento.asStartElement().getName().getLocalPart();
+        try {
+            evento = reader.nextEvent();
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al leer el siguiente evento", e);
+            return false;
+        }
+
+        if (evento.isCharacters()) {
+            String valor = evento.asCharacters().getData();
+            switch (nombreElementoInterno) {
+                case "año" -> fecha[0] = Integer.parseInt(valor);
+                case "mes" -> fecha[1] = Integer.parseInt(valor);
+                case "dia" -> fecha[2] = Integer.parseInt(valor);
+                case "hora" -> fecha[3] = Integer.parseInt(valor);
+                case "minutos" -> fecha[4] = Integer.parseInt(valor);
+            }
+
+        }
+        return true;
+    }
+
+    @Nullable
+    private LocalDateTime _crearFechaHoraYcomprobarValidez(@NotNull XMLEvent evento, int anho, int mes, int dia, int hora, int minuto) {
+        @NonNls String nombreElementoInterno = evento.asEndElement().getName().getLocalPart();
+        this.logger.debug("Procesando hora de salida");
+        this.logger.debug("Elemento: {}", nombreElementoInterno);
+
+        if (nombreElementoInterno.equals(HORA_SALIDA)) {
+            if (comprobarParametrosDeFechaSonMayoresQueCero(anho, mes, dia, hora, minuto)) {
+                this.logger.debug("Hora de salida correcta");
+            }
+            else {
+                this.logger.error("Hora de salida incorrecta");
+                return null;
+            }
+            this.logger.debug("Fin de la hora de salida");
+            this.logger.debug("Valores: {} {} {} {} {}", anho, mes, dia, hora, minuto);
+            return LocalDateTime.of(anho, mes, dia, hora, minuto);
+        }
+        // no debería llegar aquí, pero de ser así, es un error
+        return null;
+    }
+
+    private static boolean comprobarParametrosDeFechaSonMayoresQueCero(int anho, int mes, int dia, int hora, int minuto) {
+        System.out.println("Comprobando que los parámetros de la fecha son mayores que cero");
+        System.out.println("Año: " + anho + " Mes: " + mes + " Día: " + dia + " Hora: " + hora + " Minuto: " + minuto);
+        if (anho > 0) {
+            if (mes > 0) {
+                if (dia > 0) {
+                    if (hora >= 0) {
+                        return minuto >= 0;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     @Override
     protected void guardarArchivo(XMLStreamWriter writer) {

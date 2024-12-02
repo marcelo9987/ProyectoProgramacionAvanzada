@@ -120,6 +120,9 @@ public class FachadaDAO {
     }
 
     public boolean existeRuta(String origen, String destino) {
+        if (origen == null || destino == null) {
+            return false;
+        }
         return daoRuta.confirmarEnlace(origen, destino);
     }
 

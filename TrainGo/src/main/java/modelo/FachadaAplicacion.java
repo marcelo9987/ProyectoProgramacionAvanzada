@@ -14,9 +14,9 @@ public final class FachadaAplicacion {
     // Atributos
 
     private ResourceBundle bundle;
-    private Internacionalizacion itz;
-    private FachadaGui fgui;
-    private FachadaDAO fdao;
+    private final Internacionalizacion itz;
+    private final FachadaGui fgui;
+    private final FachadaDAO fdao;
     private Usuario usuario;
 
     public FachadaAplicacion() {

@@ -38,7 +38,7 @@ public class DAORuta extends AbstractDAO {
     }
 
     public static void main(String[] args) {
-        DAORuta dao = DAORuta.getInstance(FachadaDAO.getInstance());
+        DAORuta dao = getInstance(FachadaDAO.getInstance());
         dao.fadao.cargaloTodo(); // ..-.. --- .-.. --- -.-. --- - ..- .-.. .-.. .-.-.-
         XMLEventReader xmlEvtRdr_lector = dao.obtenerXmlEventReader();
         dao.cargarArchivo(xmlEvtRdr_lector);
