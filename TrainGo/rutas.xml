@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rutas>
     <ruta>
+        <origen>Vigo</origen>
+        <destino>A Coruña</destino>
+    </ruta>
+    <ruta>
         <origen>A Coruña</origen>
         <destino>Madrid</destino>
         <distancia>600</distancia>
+    </ruta>
+    <ruta>
+        <origen>Oporto</origen>
+        <destino>Vigo</destino>
+        <distancia>150</distancia>
     </ruta>
 </rutas>

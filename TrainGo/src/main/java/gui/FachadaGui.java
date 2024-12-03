@@ -1,8 +1,8 @@
 package gui;
 
+import aplicacion.FachadaAplicacion;
 import gui.formularios.FormularioAutenticacion;
 import gui.formularios.FormularioPrincipal;
-import modelo.FachadaAplicacion;
 
 public class FachadaGui {
 

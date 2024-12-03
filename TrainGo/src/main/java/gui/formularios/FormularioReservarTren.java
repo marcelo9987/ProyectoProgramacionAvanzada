@@ -1,33 +1,30 @@
 package gui.formularios;
 
+import aplicacion.Circulacion;
+import aplicacion.Estacion;
+import aplicacion.FachadaAplicacion;
+import aplicacion.Ruta;
+import dao.FachadaDAO;
 import gui.modelos.ModeloTablaCirculaciones;
-import modelo.*;
-import modelo.Enums.EnumCirculacion;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 public class FormularioReservarTren extends JFrame {
-    private static final Logger logger = LoggerFactory.getLogger(FormularioReservarTren.class);
-    private static ResourceBundle bundle;
-
+    private static final Logger         logger = LoggerFactory.getLogger(FormularioReservarTren.class);
+    private static       ResourceBundle bundle;
+    private final        Ruta           rutaEscogida;
+    private final        LocalDateTime  fechaSalida;
     FachadaAplicacion fa;
-
     private JPanel panelPrincipal;
     private JTable tablaTrenesRuta;
     private JButton btnCancelar;
     private JButton botonReservar;
-
-    private final Ruta rutaEscogida;
-    private final LocalDateTime fechaSalida;
-
     public FormularioReservarTren(@NotNull FachadaAplicacion fa, Ruta rutaEscogida, LocalDateTime fechaSalida) {
         super();
 
@@ -37,44 +34,14 @@ public class FormularioReservarTren extends JFrame {
         this.rutaEscogida = rutaEscogida;
         this.fechaSalida = fechaSalida;
 
+
         this.setTitle("Reservar tren");
 
-        this.desplegarVentana();
+        this.desplegarVentana(rutaEscogida, fechaSalida);
+
     }
 
-    public static void main(String[] args) {
-        FachadaAplicacion fa = new FachadaAplicacion();
-        FormularioReservarTren frt = new FormularioReservarTren(fa, new Ruta(new Estacion("Madrid"), new Estacion("Barcelona"), 444), LocalDateTime.now());
-        ModeloTablaCirculaciones modelocircu = (ModeloTablaCirculaciones) frt.tablaTrenesRuta.getModel();
-        modelocircu.addCirculacion(
-                new Circulacion
-                        (
-                                UUID.randomUUID() //UUID
-                                , new Tren
-                                (
-                                        UUID.randomUUID()
-                                        , 22
-                                )
-                                , new Ruta
-                                (
-                                        new Estacion
-                                                (
-                                                        "Madrid"
-                                                )
-                                        , new Estacion
-                                        (
-                                                "Barcelona"
-                                        )
-                                        , 444
-                                )
-                                , EnumCirculacion.PROGRAMADO
-                                , LocalDateTime.parse("2025-06-01T08:00:00")
-                                , BigDecimal.valueOf(58.22)
-                        )
-        );
-    }
-
-    private void desplegarVentana() {
+    private void desplegarVentana(Ruta ruta, LocalDateTime fechaSaida) {
         this.panelPrincipal = new JPanel();
 
         this.panelPrincipal.setLayout(new BorderLayout());
@@ -82,9 +49,13 @@ public class FormularioReservarTren extends JFrame {
         this.tablaTrenesRuta = new JTable();
         tablaTrenesRuta.setModel(new ModeloTablaCirculaciones());
 
-        JScrollPane scrollPane = new JScrollPane(tablaTrenesRuta);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setViewportView(tablaTrenesRuta);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         this.panelPrincipal.add(scrollPane, BorderLayout.CENTER);
+
+        this.establecerCirculaciones(ruta, fechaSaida);
 
         // Panel para los botones
         JPanel panelBotones = new JPanel();
@@ -106,4 +77,28 @@ public class FormularioReservarTren extends JFrame {
 
     }
 
+    private void establecerCirculaciones(Ruta rutaEscogida, LocalDateTime fechaSalida) {
+        FachadaDAO               fd          = FachadaDAO.getInstance();
+        ModeloTablaCirculaciones modelocircu = (ModeloTablaCirculaciones) this.tablaTrenesRuta.getModel();
+
+        modelocircu.setListaCirculaciones(fd.obtenerCirculacionesRutaEnFecha(rutaEscogida, fechaSalida.toLocalDate()));
+    }
+
+    public static void main(String[] args) {
+        FachadaAplicacion fa = new FachadaAplicacion();
+        FachadaDAO        fd = FachadaDAO.getInstance();
+        fd.cargaloTodo();
+        FormularioReservarTren   frt         = new FormularioReservarTren(fa, new Ruta(new Estacion("Vigo"), new Estacion("A Coruña"), 444), LocalDateTime.now());
+        ModeloTablaCirculaciones modelocircu = (ModeloTablaCirculaciones) frt.tablaTrenesRuta().getModel();
+
+        modelocircu.setListaCirculaciones(fd.__dbg_obtenerTodasLasCirculaciones());
+
+        for (Circulacion circulacion : fd.__dbg_obtenerTodasLasCirculaciones()) {
+            logger.info(circulacion.toString());
+        }
+    }
+
+    public JTable tablaTrenesRuta() {
+        return tablaTrenesRuta;
+    }
 }

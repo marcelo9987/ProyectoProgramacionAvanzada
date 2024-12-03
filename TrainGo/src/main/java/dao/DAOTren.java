@@ -1,6 +1,6 @@
 package dao;
 
-import modelo.Tren;
+import aplicacion.Tren;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

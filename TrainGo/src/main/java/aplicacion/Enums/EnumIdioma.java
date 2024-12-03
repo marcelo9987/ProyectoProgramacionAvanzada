@@ -1,4 +1,4 @@
-package modelo.Enums;
+package aplicacion.Enums;
 
 /**
  * Enumerado que representa los idiomas en los que se puede mostrar la aplicación

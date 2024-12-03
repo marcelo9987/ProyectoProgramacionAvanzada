@@ -1,16 +1,15 @@
 package dao;
 
-import modelo.Estacion;
+import aplicacion.Estacion;
+import aplicacion.excepciones.LecturaSiguienteEventoException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.*;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,8 +70,8 @@ public class DAOEstacion extends AbstractDAO {
         XMLEventReader xmlReader = null;
         try {
             xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("estaciones.xml"));
-        } catch (Exception e) {
-            this.logger.error("Error al leer el archivo: ", e);
+        } catch (FileNotFoundException | XMLStreamException e) {
+            throw new LecturaSiguienteEventoException();
         }
         return xmlReader;
     }
@@ -83,13 +82,7 @@ public class DAOEstacion extends AbstractDAO {
         Estacion estacion;
         String nombre = "err";
         while (reader.hasNext()) {
-            XMLEvent evento = null;
-            try {
-                evento = reader.nextEvent();
-            } catch (Exception e) {
-                //super.logger.error("Error al leer el archivo", e);
-                continue;
-            }
+            XMLEvent evento = getNextXmlEvent(reader);
             if (evento.isStartElement()) {
                 StartElement elementoInicio = evento.asStartElement();
                 try {
@@ -162,8 +155,7 @@ public class DAOEstacion extends AbstractDAO {
         return xmlWriter;
     }
 
-    @Deprecated(forRemoval = true)
-    protected List<Estacion> estaciones() {
+    List<Estacion> estaciones() {
         return estaciones;
     }
 

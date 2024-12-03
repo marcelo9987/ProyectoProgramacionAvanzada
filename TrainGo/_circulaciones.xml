@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<circulaciones>
+    <circulacion>
+        <uuid>8524c904-aa00-4403-b00c-714c54ba67d1</uuid>
+        <tren_id>42f851c3-84b0-408b-9a5a-6e4a5fa6f442</tren_id>
+        <ruta>
+            <origen>Oporto</origen>
+            <destino>Vigo</destino>
+        </ruta>
+        <estado>EN_TRANSITO</estado>
+        <hora_salida>
+            <año>2024</año>
+            <mes>10</mes>
+            <dia>22</dia>
+            <hora>15</hora>
+            <minutos>45</minutos>
+        </hora_salida>
+        <precio_por_asiento>25.75</precio_por_asiento>
+    </circulacion>
+    <circulacion>
+        <uuid>29cff1c6-68f3-4ccd-b55a-4a544dd5b9be</uuid>
+        <tren_id>0d11f043-157c-46f9-a356-763e2c01ea44</tren_id>
+        <ruta>
+            <origen>A Coruña</origen>
+            <destino>Madrid</destino>
+        </ruta>
+        <estado>FINALIZADO</estado>
+        <hora_salida>
+            <año>2021</año>
+            <mes>10</mes>
+            <dia>22</dia>
+            <hora>12</hora>
+            <minutos>30</minutos>
+        </hora_salida>
+        <hora_llegada>
+            <año>2021</año>
+            <mes>10</mes>
+            <dia>22</dia>
+            <hora>18</hora>
+            <minutos>45</minutos>
+        </hora_llegada>
+        <precio_por_asiento>50.25</precio_por_asiento>
+    </circulacion>
+</circulaciones>

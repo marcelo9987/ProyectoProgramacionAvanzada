@@ -1,7 +1,7 @@
 package dao;
 
-import modelo.Usuario;
-import modelo.excepciones.UsuarioNoEncontradoException;
+import aplicacion.Usuario;
+import aplicacion.excepciones.UsuarioNoEncontradoException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -356,7 +356,7 @@ public class DAOUsuario extends AbstractDAO {
         return false;
     }
 
-    public void actualizarUsuario(@NonNls String correoAntiguo, Usuario usuario) {
+    public void actualizarUsuario(@NonNls String correoAntiguo, Usuario usuario) throws UsuarioNoEncontradoException {
         Usuario usuarioActualizar = this.usuarios.stream().filter(u -> u.correo().equals(correoAntiguo)).findFirst().orElse(null);
         if (usuarioActualizar == null) {
             this.logger.warn("No se ha encontrado el usuario con correo: {}", correoAntiguo);

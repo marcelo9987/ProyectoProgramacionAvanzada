@@ -1,12 +1,14 @@
 package dao;
 
-import modelo.Circulacion;
-import modelo.Enums.EnumCirculacion;
-import modelo.Ruta;
-import modelo.Tren;
+import aplicacion.Circulacion;
+import aplicacion.Enums.EnumCirculacion;
+import aplicacion.Ruta;
+import aplicacion.excepciones.LecturaSiguienteEventoException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
+import org.slf4j.helpers.CheckReturnValue;
 
 import javax.xml.stream.*;
 import javax.xml.stream.events.XMLEvent;
@@ -14,9 +16,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings("HardCodedStringLiteral")
 public class DAOCirculacion extends AbstractDAO {
@@ -40,7 +42,7 @@ public class DAOCirculacion extends AbstractDAO {
 
     private static DAOCirculacion instance = null; // Singleton pattern
     private final FachadaDAO fa_dao;
-    private final Map<Ruta, Circulacion> circulaciones;
+    private final Map<Ruta, List<Circulacion>> circulaciones;
 
     private DAOCirculacion(FachadaDAO fa_dao) {
         super();
@@ -57,20 +59,23 @@ public class DAOCirculacion extends AbstractDAO {
         return instance;
     }
 
+    @TestOnly
     public static void main(String[] args) {
         FachadaDAO dao = FachadaDAO.getInstance();
         dao.cargaloTodo();
         DAOCirculacion daoCirculacion = getInstance(dao);
         daoCirculacion.load();
 
-        for (Circulacion circulacion : daoCirculacion.circulaciones().values()) {
-            System.out.println(circulacion);
+        for (Ruta r : daoCirculacion.circulaciones().keySet()) {
+            for (Circulacion c : daoCirculacion.circulaciones().get(r)) {
+                System.out.println(c);
+            }
         }
+
+        daoCirculacion.save();
     }
 
-    private Map<Ruta, Circulacion> circulaciones() {
-        return this.circulaciones;
-    }
+
 
 
 
@@ -106,211 +111,241 @@ public class DAOCirculacion extends AbstractDAO {
         return reader;
     }
 
+    Map<Ruta, List<Circulacion>> circulaciones() {
+        return this.circulaciones;
+    }
 
+    @Override
+    protected void guardarArchivo(@NotNull XMLStreamWriter writer) {
+        try {
+            writer.writeStartDocument();
+            writer.writeStartElement("circulaciones");
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al escribir la cabecera", e);
+            throw new IllegalArgumentException("Error al escribir la cabecera");
+        }
+
+        ArrayList<List<Circulacion>> circulacionesApiladas = new ArrayList<>(this.circulaciones().values());
+
+        ArrayList<Circulacion> circulacionesSinApilar = new ArrayList<>();
+        for (Iterator<List<Circulacion>> it = circulacionesApiladas.iterator(); it.hasNext(); ) {
+            List<Circulacion> participanteNoApilada = it.next();
+            circulacionesSinApilar.addAll(participanteNoApilada);
+        }
+
+        for (Circulacion circulacion : circulacionesSinApilar) {
+            try {
+                writer.writeStartElement(CIRCULACION);
+                writer.writeStartElement(UUID);
+                writer.writeCharacters(circulacion.id().toString());
+                writer.writeEndElement();
+
+                writer.writeStartElement(TREN);
+                writer.writeCharacters(String.valueOf(circulacion.trenId()));
+                writer.writeEndElement();
+
+                writer.writeStartElement(RUTA);
+                writer.writeStartElement("origen");
+                writer.writeCharacters(String.valueOf(circulacion.nombreCiudadOrigen()));
+                writer.writeEndElement();
+                writer.writeStartElement("destino");
+                writer.writeCharacters(String.valueOf(circulacion.nombreCiudadDestino()));
+                writer.writeEndElement();
+                writer.writeEndElement();
+
+                //  ----------------- ESTADO -----------------
+
+                writer.writeStartElement(ESTADO);
+                writer.writeCharacters(circulacion.estado().toString());
+                writer.writeEndElement();
+
+                //  ----------------- HORA SALIDA -----------------
+
+                writer.writeStartElement(HORA_SALIDA);
+
+                writer.writeStartElement("año");
+                writer.writeCharacters(String.valueOf(circulacion.horaSalida().getYear()));
+                writer.writeEndElement();
+
+                writer.writeStartElement("mes");
+                writer.writeCharacters(String.valueOf(circulacion.horaSalida().getMonthValue()));
+                writer.writeEndElement();
+
+                writer.writeStartElement("dia");
+                writer.writeCharacters(String.valueOf(circulacion.horaSalida().getDayOfMonth()));
+                writer.writeEndElement();
+
+                writer.writeStartElement("hora");
+                writer.writeCharacters(String.valueOf(circulacion.horaSalida().getHour()));
+                writer.writeEndElement();
+
+                writer.writeStartElement("minutos");
+                writer.writeCharacters(String.valueOf(circulacion.horaSalida().getMinute()));
+                writer.writeEndElement();
+
+                writer.writeEndElement();
+
+                if (circulacion.horaLlegadaReal() != null) {
+                    writer.writeStartElement(HORA_LLEGADA_REAL);
+
+                    writer.writeStartElement("año");
+                    writer.writeCharacters(String.valueOf(circulacion.horaLlegadaReal().getYear()));
+                    writer.writeEndElement();
+
+                    writer.writeStartElement("mes");
+                    writer.writeCharacters(String.valueOf(circulacion.horaLlegadaReal().getMonthValue()));
+                    writer.writeEndElement();
+
+                    writer.writeStartElement("dia");
+                    writer.writeCharacters(String.valueOf(circulacion.horaLlegadaReal().getDayOfMonth()));
+                    writer.writeEndElement();
+
+                    writer.writeStartElement("hora");
+                    writer.writeCharacters(String.valueOf(circulacion.horaLlegadaReal().getHour()));
+                    writer.writeEndElement();
+
+                    writer.writeStartElement("minutos");
+                    writer.writeCharacters(String.valueOf(circulacion.horaLlegadaReal().getMinute()));
+                    writer.writeEndElement();
+
+                    writer.writeEndElement();
+                }
+                writer.writeStartElement(PRECIO_POR_ASIENTO);
+                writer.writeCharacters(circulacion.precioPorAsiento().toString());
+                writer.writeEndElement();
+                writer.writeEndElement();
+
+            } catch (XMLStreamException e) {
+                this.logger.error("Error al escribir la circulación", e);
+                throw new IllegalArgumentException("Error al escribir la circulación");
+            }
+        }
+        try {
+            writer.writeEndDocument();
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al cerrar el archivo", e);
+            throw new IllegalArgumentException("Error al cerrar el archivo");
+        }
+
+        this.logger.info("Archivo guardado de forma satisfactoria");
+    }
 
     @Override
     protected void cargarArchivo(@NotNull XMLEventReader reader) {
-        this.obtenerLogger();
         this.logger.trace("Cargando archivo...");
 
 
         while (reader.hasNext()) {
-                XMLEvent evento;
-            try {
-                evento = reader.nextEvent();
-            } catch (XMLStreamException e) {
-                this.logger.error("Error al leer el siguiente evento", e);
-                return;
+            XMLEvent evento = getNextXmlEvent(reader);
+
+            if (evento.isStartElement() && evento.asStartElement().getName().getLocalPart().equals(CIRCULACION)) {
+                _procesarCirculacion(reader);
             }
 
-            java.util.UUID uuid;
-            String trenId;
-            Ruta ruta;
-            EnumCirculacion estado;
-            LocalDateTime horaSalida;
-            LocalDateTime horaLlegadaReal;
-            BigDecimal precioPorAsiento;
-            int[] fecha = new int[5];
+        }
 
-            if (evento.isStartElement()) {
-                String nombreElemento = evento.asStartElement().getName().getLocalPart();
-                if (nombreElemento.equals(CIRCULACION)) {
-                    uuid = null;
-                    trenId = null;
-                    ruta = null;
-                    estado = null;
-                    horaSalida = null;
-                    horaLlegadaReal = null;
-                    precioPorAsiento = null;
-
-                    boolean lecturaIncorrecta = false;
-                    while (reader.hasNext()) {
-                        try {
-                            evento = reader.nextEvent();
-                        } catch (XMLStreamException e) {
-                            this.logger.error("Error al leer el siguiente evento", e);
-                            return;
-                        }
-                        if (lecturaIncorrecta) {
-                            this.logger.error("Lectura incorrecta");
-                            return;
-                        }
-
-
-                        if (evento.isStartElement()) {
-                            String nombreElementoLeido = evento.asStartElement().getName().getLocalPart();
-                            this.logger.debug("Leyendo {}", nombreElementoLeido);
-                            switch (nombreElementoLeido) {
-                                case UUID -> {
-                                    uuid = _procesarUuid(reader, evento);
-                                    lecturaIncorrecta = (uuid == null);
-                                }
-                                case TREN -> {
-                                    this.logger.debug("ENTRANDO EN TREN");
-                                    trenId = _procesarTren(reader, trenId);
-                                    lecturaIncorrecta = (trenId == null);
-
-                                }
-
-                                case RUTA -> {
-                                    ruta = _procesarRuta(reader);
-                                    lecturaIncorrecta = (ruta == null);
-                                }
-                                case ESTADO -> {
-                                    this.logger.debug("<cargarArchivo> ENTRANDO EN ESTADO");
-                                    estado = _procesarEstado(reader, estado);
-                                    lecturaIncorrecta = (null == estado);
-                                }
-                                case HORA_SALIDA -> {
-
-                                    this.logger.debug("ENTRO EN HORA DE SALIDA");
-
-                                    horaSalida = null;
-                                    while (reader.hasNext()) {
-                                        try {
-                                            horaSalida = _gestionarYCrearLaHora(reader, fecha);
-                                        } catch (IllegalArgumentException e) {
-                                            this.logger.error("Error al gestionar y crear la hora", e);
-                                            lecturaIncorrecta = true;
-                                        }
-                                        if (horaSalida != null) {
-                                            break;
-                                        }
-
-                                    }
-
-                                }
-                                case HORA_LLEGADA_REAL -> {
-                                    this.logger.debug("ENTRO EN HORA DE LLEGADA REAL");
-                                    horaLlegadaReal = null;
-                                    while (reader.hasNext()) {
-                                        try {
-                                            horaLlegadaReal = _gestionarYCrearLaHora(reader, fecha);
-                                        } catch (IllegalArgumentException e) {
-                                            this.logger.error("Error al gestionar y crear la hora de llegada real", e);
-                                            lecturaIncorrecta = true;
-                                        }
-                                        if (horaLlegadaReal != null) {
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                case PRECIO_POR_ASIENTO -> {
-                                    try {
-                                        evento = reader.nextEvent();
-                                    } catch (XMLStreamException e) {
-                                        this.logger.error("Error al leer el precio por asiento", e);
-                                        return;
-                                    }
-                                    if (evento.isCharacters()) {
-                                        precioPorAsiento = new BigDecimal(evento.asCharacters().getData());
-                                        this.logger.debug("Precio por asiento: {}", precioPorAsiento);
-                                    }
-                                }
-                            }
-                        }
-                        else {
-                            if (evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals(CIRCULACION)) {
-                                Circulacion circulacion = fabricarCirculacion(trenId, uuid, ruta, estado, horaSalida, precioPorAsiento);
-                                lecturaIncorrecta = (circulacion == null);
-                                this.circulaciones.put(ruta, circulacion);
-                                this.logger.debug("Circulación añadida: {}", circulacion);
-
-                            }
-
-                        }
-
-                    }
-                }
+        for (Ruta r : circulaciones.keySet()) {
+            for (Circulacion c : circulaciones.get(r)) {
+                this.logger.debug("Circulación cargada: {}", c);
             }
-
-
         }
 
     }
 
-    @Nullable
-    private java.util.UUID _procesarUuid(@NotNull XMLEventReader reader, XMLEvent evento) {
-        try {
-            evento = reader.nextEvent();
-        } catch (XMLStreamException e) {
-            this.logger.error("Error al leer el UUID: probablemente no exista", e);
+    private void _procesarCirculacion(@NotNull XMLEventReader reader) {
+        UUID            uuid             = null;
+        String          trenId           = null;
+        Ruta            ruta             = null;
+        EnumCirculacion estado           = null;
+        LocalDateTime   horaSalida       = null, horaLlegadaReal = null;
+        BigDecimal      precioPorAsiento = null;
+        int[]           fecha            = new int[5];
+
+        while (reader.hasNext()) {
+            XMLEvent evento = getNextXmlEvent(reader);
+
+
+            if (evento.isStartElement()) {
+                switch (evento.asStartElement().getName().getLocalPart()) {
+                    case UUID -> uuid = _procesarUuid(reader);
+                    case TREN -> trenId = _procesarTren(reader, trenId);
+                    case RUTA -> ruta = _procesarRuta(reader);
+                    case ESTADO -> estado = _procesarEstado(reader, estado);
+                    case HORA_SALIDA -> horaSalida = _gestionarYCrearLaHora(reader, fecha);
+                    case HORA_LLEGADA_REAL -> horaLlegadaReal = _gestionarYCrearLaHora(reader, fecha);
+                    case PRECIO_POR_ASIENTO -> precioPorAsiento = _procesarPrecioPorAsiento(reader);
+
+                    default -> throw new IllegalStateException("Unexpected value: " + evento.asStartElement().getName().getLocalPart());
+                }
+            }
+            else if (evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals(CIRCULACION)) {
+                _crearEinsertarCirculacion(trenId, uuid, ruta, estado, horaSalida, horaLlegadaReal, precioPorAsiento);
+                break;
+            }
+
         }
-        java.util.UUID uuid;
+    }
+
+    @NotNull
+    private UUID _procesarUuid(@NotNull XMLEventReader reader) {
+
+        XMLEvent evento = getNextXmlEvent(reader);
+
+        UUID uuid;
         try {
             uuid = java.util.UUID.fromString(evento.asCharacters().getData());
         } catch (RuntimeException e) {
             this.logger.error("Error al leer el UUID: está mal formado", e);
-            return null;
+            throw new IllegalArgumentException("Error al leer el UUID: está mal formado");
         }
         this.logger.debug("UUID: {}", uuid);
         return uuid;
     }
 
-    @Nullable
+    @NotNull
     private String _procesarTren(@NotNull XMLEventReader reader, String trenId) {
-        XMLEvent evento;
-        try {
-            evento = reader.nextEvent();
-        } catch (XMLStreamException e) {
-            this.logger.error("Error al leer el tren: probablemente no exista", e);
-            return null;
-        }
+        XMLEvent evento = this.getNextXmlEvent(reader);
+
         if (evento.isCharacters()) {
             trenId = evento.asCharacters().getData();
         }
+
         this.logger.debug("Añadido Tren: {}", trenId);
         return trenId;
     }
 
-    @Nullable
+    @NotNull
     private Ruta _procesarRuta(@NotNull XMLEventReader reader) {
         StringBuffer origenSB = new StringBuffer();
         StringBuffer destinoSB = new StringBuffer();
-        if (!_procesarRuta(reader, origenSB, destinoSB)) {
-            this.logger.error("Error al procesar la ruta");
-            return null;
+
+        _procesarRuta(reader, origenSB, destinoSB);
+
+        if (origenSB.isEmpty() || destinoSB.isEmpty()) {
+            this.logger.error("Error al procesar la ruta, origen o destino vacíos");
+            throw new IllegalArgumentException("Error al procesar la ruta, origen o destino vacíos");
         }
+
         Ruta ruta;
         try {
             ruta = _comprobarYBuscarRuta(origenSB.toString(), destinoSB.toString());
         } catch (RuntimeException e) {
             this.logger.error("Error al comprobar y buscar la ruta", e);
-            return null;
+            this.logger.error("Error al comprobar y buscar la ruta: No existe la ruta");
+            throw new IllegalArgumentException("Error al comprobar y buscar la ruta: No existe la ruta");
+        }
+        if (ruta == null) {
+            this.logger.error("Error al comprobar y buscar la ruta: Ruta nula");
+            throw new IllegalArgumentException("Error al comprobar y buscar la ruta: Ruta nula");
         }
         return ruta;
     }
 
-    @Nullable
+    @NotNull
     private EnumCirculacion _procesarEstado(@NotNull XMLEventReader reader, EnumCirculacion estado) {
-        XMLEvent evento;
-        try {
-            evento = reader.nextEvent();
-        } catch (XMLStreamException e) {
-            this.logger.error(" <estado> Error al leer el estado", e);
-            return null;
-        }
+
+        XMLEvent evento = this.getNextXmlEvent(reader);
+
         if (evento.isCharacters()) {
             estado = EnumCirculacion.valueOf(evento.asCharacters().getData());
             this.logger.debug("<estado> Asignado Estado: {}", estado);
@@ -318,73 +353,71 @@ public class DAOCirculacion extends AbstractDAO {
         return estado;
     }
 
-    @Nullable
+    @NotNull
     private LocalDateTime _gestionarYCrearLaHora(@NotNull XMLEventReader reader, int[] fecha) {
-        XMLEvent evento;
-        try {
-            evento = reader.nextEvent();
-            this.logger.debug("Leyendo hora de salida");
-            this.logger.debug("Evento: {}", evento);
-        } catch (XMLStreamException e) {
-            this.logger.error("Error al leer el siguiente evento", e);
-            return null;
-        }
 
-        LocalDateTime horaSalida = null;
-        if (evento.isStartElement()) {
-            if (!_gestionarDatosEntrantesFecha(reader, evento, fecha)) {
-                this.logger.error("Error al gestionar los datos entrantes de la fecha");
-                throw new IllegalArgumentException("Error al gestionar los datos entrantes de la fecha");
+        XMLEvent evento;// = this.getNextXmlEvent(reader);
+
+        LocalDateTime horaSalida;
+
+        do {
+            if (!reader.hasNext()) {
+                throw new LecturaSiguienteEventoException();
             }
-        }
-        if (evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals(HORA_SALIDA)) {
-            horaSalida = _crearFechaHoraYcomprobarValidez(evento, fecha[0], fecha[1], fecha[2], fecha[3], fecha[4]);
-        }
+            evento = this.getNextXmlEvent(reader);
+
+            if (evento.isStartElement()) {
+                _gestionarDatosEntrantesFecha(reader, evento, fecha);
+            }
+
+        } while (_comprobarDentroDeHora(evento));
+
+
+        horaSalida = _crearFechaHoraYcomprobarValidez(evento, fecha[0], fecha[1], fecha[2], fecha[3], fecha[4]);
 
 
         return horaSalida;
     }
 
-    @Nullable
-    private Circulacion fabricarCirculacion(String trenId, java.util.UUID uuid, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, BigDecimal precioPorAsiento) {
-        this.logger.debug("INICIO PROCESADO DE UNA CIRCULACIÓN");
-
-        // Proceso la data
-
-
-        Tren tren = fa_dao.localizarTren(trenId);
-        if (tren == null) {
-            this.logger.error("No se ha encontrado el tren {}: Error al crear la circulación", trenId);
-
-            return null;
+    @NotNull
+    private BigDecimal _procesarPrecioPorAsiento(@NotNull XMLEventReader reader) {
+        BigDecimal precioPorAsiento;
+        XMLEvent   evento;
+        evento = getNextXmlEvent(reader);
+        if (!evento.isCharacters()) {
+            this.logger.error("Error al leer el precio por asiento: no es un número");
+            throw new IllegalArgumentException("Error al leer el precio por asiento: no es un número");
         }
-        this.logger.trace("Tren encontrado: {}", tren);
 
+        precioPorAsiento = new BigDecimal(evento.asCharacters().getData());
+        this.logger.debug("Precio por asiento: {}", precioPorAsiento);
 
-        return new Circulacion(uuid, tren, ruta, estado, horaSalida, null, precioPorAsiento);
+        return precioPorAsiento;
     }
 
-    private boolean _procesarRuta(@NotNull XMLEventReader reader, StringBuffer origen, StringBuffer destino) {
+    private void _crearEinsertarCirculacion(String trenId, java.util.UUID uuid, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, LocalDateTime horaLlegadaReal, BigDecimal precioPorAsiento) {
+        Circulacion circulacion = Circulacion.fabricarCirculacion(trenId, uuid, ruta, estado, horaSalida, horaLlegadaReal, precioPorAsiento);
+        if (circulacion == null) {
+            this.logger.error("Error al crear la circulación: circulación nula");
+            throw new IllegalArgumentException("Error al crear la circulación: circulación nula");
+        }
+
+        this.circulaciones.putIfAbsent(ruta, new ArrayList<>());
+        this.circulaciones.get(ruta).add(circulacion);
+        this.logger.debug("Circulación añadida: {}", circulacion);
+    }
+
+    private void _procesarRuta(@NotNull XMLEventReader reader, StringBuffer origen, StringBuffer destino) {
         this.logger.debug("procesando una ruta");
 
         while (reader.hasNext()) {
-            XMLEvent evento;
-            try {
-                evento = reader.nextEvent();
-            } catch (XMLStreamException e) {
-                this.logger.error("Error al leer el siguiente evento", e);
-                return false;
-            }
 
+            XMLEvent evento = this.getNextXmlEvent(reader);
 
             if (evento.isStartElement()) {
                 @NonNls String nombreElementoInterno = evento.asStartElement().getName().getLocalPart();
-                try {
-                    evento = reader.nextEvent();
-                } catch (XMLStreamException e) {
-                    this.logger.error("Error al leer el siguiente evento", e);
-                    return false;
-                }
+
+                evento = this.getNextXmlEvent(reader);
 
                 if (evento.isCharacters()) {
                     String valor = evento.asCharacters().getData();
@@ -403,31 +436,29 @@ public class DAOCirculacion extends AbstractDAO {
             }
 
         }
-        return true;
     }
 
     @Nullable
     private Ruta _comprobarYBuscarRuta(String origen, String destino) {
         Ruta ruta;
-        if (fa_dao.existeRuta(origen, destino)) {
-            ruta = fa_dao.buscarRutaPorNombres(origen, destino);
-            this.logger.debug("Ruta encontrada: {}", ruta);
+        if (!fa_dao.existeRuta(origen, destino)) {
+            this.logger.error("Ruta no encontrada");
+            throw new IllegalArgumentException("Ruta no encontrada");
         }
-        else {
-            return null;
-        }
+
+        ruta = fa_dao.buscarRutaPorNombres(origen, destino);
+        this.logger.debug("Ruta encontrada: {}", ruta);
 
         return ruta;
     }
 
-    private boolean _gestionarDatosEntrantesFecha(@NotNull XMLEventReader reader, @NotNull XMLEvent evento, int[] fecha) {
+    @CheckReturnValue
+    private void _gestionarDatosEntrantesFecha(@NotNull XMLEventReader reader, @NotNull XMLEvent evento, int[] fecha) {
         @NonNls String nombreElementoInterno = evento.asStartElement().getName().getLocalPart();
-        try {
-            evento = reader.nextEvent();
-        } catch (XMLStreamException e) {
-            this.logger.error("Error al leer el siguiente evento", e);
-            return false;
-        }
+
+        evento = this.getNextXmlEvent(reader);
+
+        this.logger.debug("Leyendo {}", evento.asCharacters().getData());
 
         if (evento.isCharacters()) {
             String valor = evento.asCharacters().getData();
@@ -440,29 +471,37 @@ public class DAOCirculacion extends AbstractDAO {
             }
 
         }
+    }
+
+    private boolean _comprobarDentroDeHora(@NotNull XMLEvent evento) {
+        if (evento.isEndElement()) {
+            return !evento.asEndElement().getName().getLocalPart().equals(HORA_SALIDA)
+                    && !evento.asEndElement().getName().getLocalPart().equals(HORA_LLEGADA_REAL);
+        }
         return true;
     }
 
-    @Nullable
+    @NotNull
     private LocalDateTime _crearFechaHoraYcomprobarValidez(@NotNull XMLEvent evento, int anho, int mes, int dia, int hora, int minuto) {
         @NonNls String nombreElementoInterno = evento.asEndElement().getName().getLocalPart();
-        this.logger.debug("Procesando hora de salida");
+        this.logger.debug("Procesando" + nombreElementoInterno);
         this.logger.debug("Elemento: {}", nombreElementoInterno);
 
-        if (nombreElementoInterno.equals(HORA_SALIDA)) {
+        if (nombreElementoInterno.equals(HORA_SALIDA) || nombreElementoInterno.equals(HORA_LLEGADA_REAL)) {
             if (comprobarParametrosDeFechaSonMayoresQueCero(anho, mes, dia, hora, minuto)) {
-                this.logger.debug("Hora de salida correcta");
+                this.logger.debug("Hora correcta");
             }
             else {
-                this.logger.error("Hora de salida incorrecta");
-                return null;
+                this.logger.error("Hora incorrecta");
+                throw new IllegalArgumentException("Formato de fecha incorrecto");
             }
-            this.logger.debug("Fin de la hora de salida");
+            this.logger.debug("Fin de la hora");
             this.logger.debug("Valores: {} {} {} {} {}", anho, mes, dia, hora, minuto);
             return LocalDateTime.of(anho, mes, dia, hora, minuto);
         }
         // no debería llegar aquí, pero de ser así, es un error
-        return null;
+        this.logger.error("Error al crear la fecha y hora");
+        throw new IllegalArgumentException("Error al crear la fecha y hora");
     }
 
     private static boolean comprobarParametrosDeFechaSonMayoresQueCero(int anho, int mes, int dia, int hora, int minuto) {
@@ -480,48 +519,26 @@ public class DAOCirculacion extends AbstractDAO {
         return false;
     }
 
-    @Override
-    protected void guardarArchivo(XMLStreamWriter writer) {
-//        this.logger.trace("Guardando contenido en el archivo...");
-//        try {
-//            writer.writeStartDocument();
-//            writer.writeStartElement("rutas");
-//        } catch (Exception e) {
-//            this.logger.error("Error al escribir cabecera. Es posible que el haya dejado de existir (o el acceso a mutex haya sido revocado)", e);
-//        }
-//
-//        for (Map<Estacion, Ruta> ruta : rutas.values()) {
-//            for (Ruta r : ruta.values()) {
-//                try {
-//                    writer.writeStartElement("ruta");
-//
-//                    writer.writeStartElement("origen");
-//                    writer.writeCharacters(r.ciudadOrigen());
-//                    writer.writeEndElement();
-//
-//                    writer.writeStartElement("destino");
-//                    writer.writeCharacters(r.ciudadDestino());
-//                    writer.writeEndElement();
-//
-//                    writer.writeStartElement("distancia");
-//                    writer.writeCharacters(String.valueOf(r.distancia()));
-//                    writer.writeEndElement();
-//
-//                    writer.writeEndElement();
-//                } catch (Exception e) {
-//                    this.logger.error("¡¡CRITICO!! --> Error al escribir la ruta. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
-//                }
-//            }
-//        }
-//
-//        try {
-//            writer.writeEndElement();
-//            writer.writeEndDocument();
-//        } catch (Exception e) {
-//            this.logger.error("¡¡CRITICO!! --> Error al escribir el final del documento. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
-//        }
-//
+    @TestOnly
+    List<Circulacion> __dbg_circulaciones() {
+        return new ArrayList<>(this.circulaciones.values().stream().flatMap(Collection::stream).toList());
     }
 
-
+    public List<Circulacion> obtenerCirculacionesRutaEnFecha(Ruta rutaEscogida, LocalDate fechaSalida) {
+        List<Circulacion> circulacionesEnRuta = this.circulaciones().values().stream().flatMap(Collection::stream).toList().stream().filter(circulacion -> circulacion.ruta().equals(rutaEscogida)).toList();
+        if (circulacionesEnRuta.isEmpty()) {
+            this.logger.error("No se han encontrado circulaciones para la ruta {}", rutaEscogida);
+            return List.of();
+        }
+        ArrayList<Circulacion> circulacionesEnFecha = new ArrayList<>();
+        for (Circulacion circulacion : circulacionesEnRuta) {
+            if (circulacion.horaSalida().toLocalDate().equals(fechaSalida)) {
+                circulacionesEnFecha.add(circulacion);
+            }
+        }
+        return circulacionesEnFecha;
+    }
 }
+
+
+

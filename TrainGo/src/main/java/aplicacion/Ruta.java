@@ -1,4 +1,4 @@
-package modelo;
+package aplicacion;
 
 public record Ruta(Estacion origen, Estacion destino, int distancia) {
     public String ciudadOrigen() {

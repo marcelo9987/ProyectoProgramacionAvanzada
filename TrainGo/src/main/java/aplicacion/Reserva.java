@@ -1,4 +1,4 @@
-package modelo;
+package aplicacion;
 
 public final class Reserva {
 //hazme: hacer la clase

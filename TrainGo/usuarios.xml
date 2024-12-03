@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<usuarios>
+    <usuario>
+        <DNI>2569685</DNI>
+        <nombre>a</nombre>
+        <correo>a@a.a</correo>
+        <contrasenha>L/vI63sgYic=</contrasenha>
+        <telefono>333333333</telefono>
+        <direccion>TEst 24</direccion>
+        <fechaNacimiento>
+            <dia>24</dia>
+            <mes>1</mes>
+            <anho>1999</anho>
+        </fechaNacimiento>
+    </usuario>
+    <usuario>
+        <DNI>1</DNI>
+        <nombre>Pepe</nombre>
+        <correo>pepef@incibe.cdi.net</correo>
+        <contrasenha>ihEW9uaYdsQ=</contrasenha>
+        <telefono>666666666</telefono>
+        <direccion>Calle Falsa 123</direccion>
+        <fechaNacimiento>
+            <dia>30</dia>
+            <mes>11</mes>
+            <anho>2007</anho>
+        </fechaNacimiento>
+    </usuario>
+</usuarios>

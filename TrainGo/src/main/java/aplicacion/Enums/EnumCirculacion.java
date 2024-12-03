@@ -1,4 +1,4 @@
-package modelo.Enums;
+package aplicacion.Enums;
 
 /**
  * Enumerado que representa los estados de una circulación

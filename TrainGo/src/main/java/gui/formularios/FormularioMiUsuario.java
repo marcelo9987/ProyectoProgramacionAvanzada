@@ -1,6 +1,7 @@
 package gui.formularios;
 
-import modelo.FachadaAplicacion;
+import aplicacion.FachadaAplicacion;
+import aplicacion.excepciones.UsuarioNoEncontradoException;
 import org.intellij.lang.annotations.MagicConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,8 +168,11 @@ public final class FormularioMiUsuario extends JDialog {
             this.txtTelefono.setEditable(false);
             this.txtDireccion.setEditable(false);
             logger.trace("CAMPOS DESHABILITADOS");
-
-            this.fa.actualizarUsuario(fa.getUsrCorreo(), txtCorreo.getText(), txtDireccion.getText(), Integer.parseInt(txtTelefono.getText()));
+            try {
+                this.fa.actualizarUsuario(fa.getUsrCorreo(), txtCorreo.getText(), txtDireccion.getText(), Integer.parseInt(txtTelefono.getText()));
+            } catch (UsuarioNoEncontradoException e) {
+                logger.error("Error al actualizar el usuario: El usuario no se ha encontrado", e);
+            }
             actualizarComponentesObsoletos();
         }
     }

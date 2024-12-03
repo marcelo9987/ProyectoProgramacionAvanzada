@@ -1,20 +1,21 @@
 package dao;
 
-import modelo.Estacion;
-import modelo.Ruta;
-import modelo.Tren;
-import modelo.Usuario;
+import aplicacion.*;
+import aplicacion.excepciones.UsuarioNoEncontradoException;
+import org.jetbrains.annotations.TestOnly;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class FachadaDAO {
     private static FachadaDAO instance = null; // Singleton pattern
 
-    private final DAOTren daoTren;
+    private final DAOTren    daoTren;
     private final DAOUsuario daoUsuario;
     private final DAOEstacion daoEstacion;
-    private final DAORuta daoRuta;
+    private final DAORuta    daoRuta;
 
+    private final DAOCirculacion daoCirculacion;
     // Constructor
 
     private FachadaDAO() {
@@ -27,6 +28,8 @@ public class FachadaDAO {
         daoEstacion = DAOEstacion.getInstance();
 
         daoRuta = DAORuta.getInstance(this);
+
+        daoCirculacion = DAOCirculacion.getInstance(this);
     }
 
     /**
@@ -92,10 +95,12 @@ public class FachadaDAO {
         this.daoTren.load();
         // Cargar usuarios
         this.daoUsuario.load();
-
+        // Cargar estaciones
         this.daoEstacion.load();
-
+        // Cargar rutas
         this.daoRuta.load();
+        // Cargar circulaciones
+        this.daoCirculacion.load();
 
     }
 
@@ -107,12 +112,11 @@ public class FachadaDAO {
         return this.daoUsuario.encontrarUsuarioPorEmail(email);
     }
 
-    @Deprecated(since = "1.0", forRemoval = true)
     public List<Estacion> getEstaciones() {
         return this.daoEstacion.estaciones();
     }
 
-    public void actualizarUsuario(String correoAntiguo, Usuario usuario) {
+    public void actualizarUsuario(String correoAntiguo, Usuario usuario) throws UsuarioNoEncontradoException {
         this.daoUsuario.actualizarUsuario(correoAntiguo, usuario);
     }
 
@@ -137,5 +141,14 @@ public class FachadaDAO {
 
     public Tren localizarTren(String trenId) {
         return daoTren.localizarTren(trenId);
+    }
+
+    @TestOnly
+    public List<Circulacion> __dbg_obtenerTodasLasCirculaciones() {
+        return daoCirculacion.__dbg_circulaciones();
+    }
+
+    public List<Circulacion> obtenerCirculacionesRutaEnFecha(Ruta rutaEscogida, LocalDate fechaSalida) {
+        return daoCirculacion.obtenerCirculacionesRutaEnFecha(rutaEscogida, LocalDate.of(fechaSalida.getYear(), fechaSalida.getMonth(), fechaSalida.getDayOfMonth()));
     }
 }

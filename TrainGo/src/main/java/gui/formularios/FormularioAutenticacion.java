@@ -1,6 +1,6 @@
 package gui.formularios;
 
-import modelo.FachadaAplicacion;
+import aplicacion.FachadaAplicacion;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

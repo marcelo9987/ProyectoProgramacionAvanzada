@@ -1,6 +1,6 @@
+import aplicacion.Tren;
+import aplicacion.Usuario;
 import dao.FachadaDAO;
-import modelo.Tren;
-import modelo.Usuario;
 
 import java.time.LocalDate;
 import java.util.UUID;

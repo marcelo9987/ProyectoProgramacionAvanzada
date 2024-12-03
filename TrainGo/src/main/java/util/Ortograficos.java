@@ -1,6 +1,6 @@
 package util;
 
-import modelo.Estacion;
+import aplicacion.Estacion;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

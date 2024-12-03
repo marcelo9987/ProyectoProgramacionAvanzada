@@ -1,6 +1,6 @@
 package gui.modelos;
 
-import modelo.Circulacion;
+import aplicacion.Circulacion;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.table.AbstractTableModel;
@@ -19,6 +19,8 @@ public class ModeloTablaCirculaciones extends AbstractTableModel {
     public ModeloTablaCirculaciones(List<Circulacion> listaCirculaciones) {
         super();
         this.listaCirculaciones = listaCirculaciones;
+        this.listaCirculaciones.sort(Circulacion::compareTo);
+        this.fireTableDataChanged();
     }
 
     public ModeloTablaCirculaciones() {
@@ -29,11 +31,13 @@ public class ModeloTablaCirculaciones extends AbstractTableModel {
     public void setListaCirculaciones(List<Circulacion> listaCirculaciones) {
         this.listaCirculaciones.clear();
         this.listaCirculaciones.addAll(listaCirculaciones);
+        this.listaCirculaciones.sort(Circulacion::compareTo);
         this.fireTableDataChanged();
     }
 
     public void addCirculacion(Circulacion circulacion) {
         this.listaCirculaciones.add(circulacion);
+        this.listaCirculaciones.sort(Circulacion::compareTo);
         this.fireTableDataChanged();
     }
 
@@ -60,7 +64,7 @@ public class ModeloTablaCirculaciones extends AbstractTableModel {
                 return circulacionSeleccionada.ciudadDestino();
             }
             case HORA_SALIDA -> {
-                return circulacionSeleccionada.getHoraSalida();
+                return circulacionSeleccionada.getCadenaHoraFechaSalida();
             }
             case PRECIO -> {
                 return circulacionSeleccionada.getPrecioPorAsiento();

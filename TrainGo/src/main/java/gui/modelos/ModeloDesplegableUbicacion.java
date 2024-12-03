@@ -1,7 +1,7 @@
 package gui.modelos;
 
-import modelo.Estacion;
-import modelo.FachadaAplicacion;
+import aplicacion.Estacion;
+import aplicacion.FachadaAplicacion;
 import org.jetbrains.annotations.NotNull;
 import util.Ortograficos;
 

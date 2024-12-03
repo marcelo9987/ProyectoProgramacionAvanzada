@@ -1,11 +1,13 @@
-package modelo;
+package aplicacion;
 
+import aplicacion.Enums.EnumIdioma;
+import aplicacion.excepciones.UsuarioNoEncontradoException;
 import dao.FachadaDAO;
 import gui.FachadaGui;
-import modelo.Enums.EnumIdioma;
 import util.Criptograficos;
 import util.Internacionalizacion;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -133,9 +135,17 @@ public final class FachadaAplicacion {
         return this.usuario.direccion();
     }
 
-    public void actualizarUsuario(String correoAntiguo, String nuevoCorreo, String nuevaDireccion, int nuevoTelefono) {
-        this.usuario.actualizarDatos(nuevoCorreo, nuevaDireccion, nuevoTelefono);
+    public void actualizarUsuario(String correoAntiguo, String nuevoCorreo, String nuevaDireccion, int nuevoTelefono) throws UsuarioNoEncontradoException {
         fdao.actualizarUsuario(correoAntiguo, this.usuario);
+        this.usuario.actualizarDatos(nuevoCorreo, nuevaDireccion, nuevoTelefono);
         fdao.guardarUsuarios();
+    }
+
+    public Ruta buscarRutaPorNombres(String origen, String destino) {
+        return fdao.buscarRutaPorNombres(origen, destino);
+    }
+
+    public List obtenerCirculacionesRuta(Ruta rutaEscogida, LocalDate fechaSalida) {
+        return fdao.obtenerCirculacionesRutaEnFecha(rutaEscogida, fechaSalida);
     }
 }

@@ -1,7 +1,7 @@
 package gui.formularios;
 
-import modelo.Enums.EnumIdioma;
-import modelo.FachadaAplicacion;
+import aplicacion.Enums.EnumIdioma;
+import aplicacion.FachadaAplicacion;
 
 import javax.swing.*;
 import java.util.Locale;

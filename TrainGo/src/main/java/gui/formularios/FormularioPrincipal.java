@@ -1,16 +1,19 @@
 package gui.formularios;
 
+import aplicacion.FachadaAplicacion;
+import aplicacion.Ruta;
+import aplicacion.formatos.FormatedFecha;
 import gui.modelos.ModeloDesplegableUbicacion;
-import modelo.FachadaAplicacion;
-import modelo.formatos.FormatedFecha;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 /**
  * Formulario (ventana) principal de la aplicación
@@ -178,9 +181,10 @@ public final class FormularioPrincipal extends JFrame {
             String destino = (String) comboDestino.getSelectedItem();
             assert txtformateado_aux != null;
             String fecha = txtformateado_aux.getText();
-            System.out.println("Origen: " + origen);
-            System.out.println("Destino: " + destino);
-            System.out.println("Fecha: " + fecha);
+            Ruta   ruta  = fa.buscarRutaPorNombres(origen, destino);
+            Logger.getLogger(FormularioPrincipal.class.getName()).info("Buscando ruta entre " + origen + " y " + destino + " para la fecha " + fecha);
+            FormularioReservarTren fbt = new FormularioReservarTren(fa, ruta, LocalDateTime.of(Integer.parseInt(fecha.substring(6, 10)), Integer.parseInt(fecha.substring(3, 5)), Integer.parseInt(fecha.substring(0, 2)), 0, 0));
+            Logger.getLogger(FormularioPrincipal.class.getName()).info("Fecha seleccionada: " + fecha);
         });
 
         // Evento en clic para salir
@@ -203,6 +207,7 @@ public final class FormularioPrincipal extends JFrame {
                 fmu.setVisible(true);
             }
         });
+
 
         // Lo posiciono en el centro de la pantalla
         setLocationRelativeTo(null);

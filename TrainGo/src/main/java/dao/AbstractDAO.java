@@ -1,10 +1,15 @@
 package dao;
 
+import aplicacion.excepciones.LecturaSiguienteEventoException;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.events.XMLEvent;
+
 
 public abstract class AbstractDAO implements IDAO {
 
@@ -80,5 +85,20 @@ public abstract class AbstractDAO implements IDAO {
         }
         return true;
     }
+
+    @NotNull
+    XMLEvent getNextXmlEvent(@NotNull XMLEventReader reader) {
+        XMLEvent evento = null;
+        try {
+            evento = reader.nextEvent();
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al procesar el siguiente evento", e);
+            throw new LecturaSiguienteEventoException();
+        }
+
+        // Jamás será null, ya que si hay un error, se lanza una excepción
+        return evento;
+    }
+
 
 }
