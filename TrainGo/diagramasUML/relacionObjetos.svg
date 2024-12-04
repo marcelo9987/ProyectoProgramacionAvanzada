@@ -1,0 +1,1196 @@
+<!--suppress ALL -->
+
+
+<svg aria-roledescription="class" role="graphics-document document" viewBox="0 0 1231.433349609375 1777" style="max-width: 1231.433349609375px;" class="classDiagram" xmlns="http://www.w3.org/2000/svg" width="100%" id="export-svg">
+    @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"); p {margin: 0;}
+    <style>#export-svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:14px;fill:#333;}#export-svg .error-icon{fill:#ffffff;}#export-svg .error-text{fill:#000000;stroke:#000000;}#export-svg .edge-thickness-normal{stroke-width:1px;}#export-svg .edge-thickness-thick{stroke-width:3.5px;}#export-svg .edge-pattern-solid{stroke-dasharray:0;}#export-svg .edge-thickness-invisible{stroke-width:0;fill:none;}#export-svg .edge-pattern-dashed{stroke-dasharray:3;}#export-svg .edge-pattern-dotted{stroke-dasharray:2;}#export-svg .marker{fill:#000000;stroke:#000000;}#export-svg .marker.cross{stroke:#000000;}#export-svg svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:14px;}#export-svg p{margin:0;}#export-svg g.classGroup text{fill:#000000;stroke:none;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:10px;}#export-svg g.classGroup text .title{font-weight:bolder;}#export-svg .nodeLabel,#export-svg .edgeLabel{color:#333;}#export-svg .edgeLabel .label
+        rect{fill:#ffffff;}#export-svg .label text{fill:#333;}#export-svg .labelBkg{background:#ffffff;}#export-svg .edgeLabel .label span{background:#ffffff;}#export-svg .classTitle{font-weight:bolder;}#export-svg .node rect,#export-svg .node circle,#export-svg .node ellipse,#export-svg .node polygon,#export-svg .node path{fill:#ffffff;stroke:#000000;stroke-width:1px;}#export-svg .divider{stroke:#000000;stroke-width:1;}#export-svg g.clickable{cursor:pointer;}#export-svg g.classGroup rect{fill:#ffffff;stroke:#000000;}#export-svg g.classGroup line{stroke:#000000;stroke-width:1;}#export-svg .classLabel .box{stroke:none;stroke-width:0;fill:#ffffff;opacity:0.5;}#export-svg .classLabel .label{fill:#000000;font-size:10px;}#export-svg .relation{stroke:#000000;stroke-width:1;fill:none;}#export-svg .dashed-line{stroke-dasharray:3;}#export-svg .dotted-line{stroke-dasharray:1 2;}#export-svg #compositionStart,#export-svg
+        .composition{fill:#000000!important;stroke:#000000!important;stroke-width:1;}#export-svg #compositionEnd,#export-svg .composition{fill:#000000!important;stroke:#000000!important;stroke-width:1;}#export-svg #dependencyStart,#export-svg .dependency{fill:#000000!important;stroke:#000000!important;stroke-width:1;}#export-svg #dependencyStart,#export-svg .dependency{fill:#000000!important;stroke:#000000!important;stroke-width:1;}#export-svg #extensionStart,#export-svg .extension{fill:transparent!important;stroke:#000000!important;stroke-width:1;}#export-svg #extensionEnd,#export-svg .extension{fill:transparent!important;stroke:#000000!important;stroke-width:1;}#export-svg #aggregationStart,#export-svg .aggregation{fill:transparent!important;stroke:#000000!important;stroke-width:1;}#export-svg #aggregationEnd,#export-svg .aggregation{fill:transparent!important;stroke:#000000!important;stroke-width:1;}#export-svg #lollipopStart,#export-svg
+        .lollipop{fill:#ffffff!important;stroke:#000000!important;stroke-width:1;}#export-svg #lollipopEnd,#export-svg .lollipop{fill:#ffffff!important;stroke:#000000!important;stroke-width:1;}#export-svg .edgeTerminals{font-size:11px;line-height:initial;}#export-svg .classTitleText{text-anchor:middle;font-size:18px;fill:#333;}#export-svg .node .neo-node{stroke:#000000;}#export-svg [data-look="neo"].node rect,#export-svg [data-look="neo"].cluster rect,#export-svg [data-look="neo"].node polygon{stroke:url(#export-svg-gradient);filter:drop-shadow( 0px 1px 2px rgba(0, 0, 0, 0.25));}#export-svg [data-look="neo"].node rect,#export-svg [data-look="neo"].node polygon,#export-svg [data-look="neo"].node path{stroke:url(#export-svg-gradient);filter:drop-shadow( 0px 1px 2px rgba(0, 0, 0, 0.25));}#export-svg [data-look="neo"].node .neo-line path{stroke:hsl(0, 0%, 70%);filter:none;}#export-svg [data-look="neo"].node circle{stroke:url(#export-svg-gradient);filter:drop-shadow( 0px 1px 2px rgba(0, 0,
+        0, 0.25));}#export-svg [data-look="neo"].node circle .state-start{fill:#000000;}#export-svg [data-look="neo"].statediagram-cluster rect{fill:#ffffff;stroke:url(#export-svg-gradient);stroke-width:1px;}#export-svg [data-look="neo"].icon-shape .icon{fill:url(#export-svg-gradient);filter:drop-shadow( 0px 1px 2px rgba(0, 0, 0, 0.25));}#export-svg [data-look="neo"].icon-shape .icon-neo path{stroke:url(#export-svg-gradient);filter:drop-shadow( 0px 1px 2px rgba(0, 0, 0, 0.25));}#export-svg :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}
+    </style>
+    <g>
+        <defs>
+            <marker orient="auto" markerHeight="240" markerWidth="190" refY="7" refX="18" class="marker aggregation class" id="export-svg_class-aggregationStart">
+                <path d="M 18,7 L9,13 L1,7 L9,1 Z"/>
+            </marker>
+        </defs>
+        <defs>
+            <marker orient="auto" markerHeight="28" markerWidth="20" refY="7" refX="1" class="marker aggregation class" id="export-svg_class-aggregationEnd">
+                <path d="M 18,7 L9,13 L1,7 L9,1 Z"/>
+            </marker>
+        </defs>
+        <defs>
+            <marker orient="auto" markerHeight="240" markerWidth="190" refY="7" refX="18" class="marker extension class" id="export-svg_class-extensionStart">
+                <path d="M 1,7 L18,13 V 1 Z"/>
+            </marker>
+        </defs>
+        <defs>
+            <marker orient="auto" markerHeight="28" markerWidth="20" refY="7" refX="1" class="marker extension class" id="export-svg_class-extensionEnd">
+                <path d="M 1,1 V 13 L18,7 Z"/>
+            </marker>
+        </defs>
+        <defs>
+            <marker orient="auto" markerHeight="240" markerWidth="190" refY="7" refX="18" class="marker composition class" id="export-svg_class-compositionStart">
+                <path d="M 18,7 L9,13 L1,7 L9,1 Z"/>
+            </marker>
+        </defs>
+        <defs>
+            <marker orient="auto" markerHeight="28" markerWidth="20" refY="7" refX="1" class="marker composition class" id="export-svg_class-compositionEnd">
+                <path d="M 18,7 L9,13 L1,7 L9,1 Z"/>
+            </marker>
+        </defs>
+        <defs>
+            <marker orient="auto" markerHeight="240" markerWidth="190" refY="7" refX="6" class="marker dependency class" id="export-svg_class-dependencyStart">
+                <path d="M 5,7 L9,13 L1,7 L9,1 Z"/>
+            </marker>
+        </defs>
+        <defs>
+            <marker orient="auto" markerHeight="28" markerWidth="20" refY="7" refX="13" class="marker dependency class" id="export-svg_class-dependencyEnd">
+                <path d="M 18,7 L9,13 L14,7 L9,1 Z"/>
+            </marker>
+        </defs>
+        <defs>
+            <marker orient="auto" markerHeight="240" markerWidth="190" refY="7" refX="13" class="marker lollipop class" id="export-svg_class-lollipopStart">
+                <circle r="6" cy="7" cx="7" fill="transparent" stroke="black"/>
+            </marker>
+        </defs>
+        <defs>
+            <marker orient="auto" markerHeight="240" markerWidth="190" refY="7" refX="1" class="marker lollipop class" id="export-svg_class-lollipopEnd">
+                <circle r="6" cy="7" cx="7" fill="transparent" stroke="black"/>
+            </marker>
+        </defs>
+        <g class="root">
+            <g class="clusters"/>
+            <g class="edgePaths">
+                <path marker-end="url(#export-svg_class-dependencyEnd)" marker-start="url(#export-svg_class-compositionStart)" data-points="W3sieCI6MjkwLjc4MTU5MDI5NjA0NDcsInkiOjEyNzN9LHsieCI6MjgyLjIxMDQyNjMzMDU2NjQsInkiOjEyOTh9LHsieCI6MjgyLjIxMDQyNjMzMDU2NjQsInkiOjEzMjN9XQ==" data-id="id_Circulacion_Ruta_1" data-et="edge" data-edge="true" style=";" class="edge-thickness-normal edge-pattern-solid relation" id="id_Circulacion_Ruta_1" d="M284.944,1290.027L282.21,1298L282.21,1310.5L282.21,1317"/>
+                <path marker-end="url(#export-svg_class-dependencyEnd)" marker-start="url(#export-svg_class-compositionStart)" data-points="W3sieCI6NTI0LjI2MDA5NjcxNTY3NDEsInkiOjEyNzN9LHsieCI6NTMyLjgzMTI2MDY4MTE1MjMsInkiOjEyOTh9LHsieCI6NTMyLjgzMTI2MDY4MTE1MjMsInkiOjEzNDR9XQ==" data-id="id_Circulacion_Tren_2" data-et="edge" data-edge="true" style=";" class="edge-thickness-normal edge-pattern-solid relation" id="id_Circulacion_Tren_2" d="M530.098,1290.027L532.831,1298L532.831,1321L532.831,1338"/>
+                <path marker-end="url(#export-svg_class-dependencyEnd)" marker-start="url(#export-svg_class-compositionStart)" data-points="W3sieCI6MTAyMS40MDQyMDUzMjIyNjU2LCJ5Ijo1NDJ9LHsieCI6MTAyMS40MDQyMDUzMjIyNjU2LCJ5Ijo1Njd9LHsieCI6MTAxOC4xMzQ3MTE0NzgyMTYzLCJ5Ijo2ODYuNX1d" data-id="id_FachadaAplicacion_Usuario_3" data-et="edge" data-edge="true" style=";" class="edge-thickness-normal edge-pattern-solid relation" id="id_FachadaAplicacion_Usuario_3" d="M1021.404,560L1021.404,567L1019.769,626.75L1018.299,680.502"/>
+                <path marker-end="url(#export-svg_class-dependencyEnd)" marker-start="url(#export-svg_class-compositionStart)" data-points="W3sieCI6MjgyLjIxMDQyNjMzMDU2NjQsInkiOjE1ODR9LHsieCI6MjgyLjIxMDQyNjMzMDU2NjQsInkiOjE2MDl9LHsieCI6MjgyLjIxMDQyNjMzMDU2NjQsInkiOjE2MzR9XQ==" data-id="id_Ruta_Estacion_4" data-et="edge" data-edge="true" style=";" class="edge-thickness-normal edge-pattern-solid relation" id="id_Ruta_Estacion_4" d="M282.21,1602L282.21,1609L282.21,1621.5L282.21,1628"/>
+                <path marker-end="url(#export-svg_class-dependencyEnd)" marker-start="url(#export-svg_class-compositionStart)" data-points="W3sieCI6NDE2LjEzMzg1NzIwNDQ4OTUsInkiOjMxNS41fSx7IngiOjQwNy41MjA4NDM1MDU4NTk0LCJ5Ijo1Njd9LHsieCI6NDA3LjUyMDg0MzUwNTg1OTQsInkiOjU5Mn1d" data-id="id_Reserva_Circulacion_5" data-et="edge" data-edge="true" style=";" class="edge-thickness-normal edge-pattern-solid relation" id="id_Reserva_Circulacion_5" d="M415.518,333.489L407.521,567L407.521,579.5L407.521,586"/>
+                <path marker-end="url(#export-svg_class-dependencyEnd)" marker-start="url(#export-svg_class-compositionStart)" data-points="W3sieCI6NDU2Ljc2MjUxMjIwNzAzMTI1LCJ5IjozMTIuOTQ5NjA0MTI5NzY1Mn0seyJ4Ijo3MTkuNDYyNTI0NDE0MDYyNSwieSI6NTY3fSx7IngiOjg1Ny4wNDE2ODcwMTE3MTg4LCJ5Ijo3MzkuMjQzOTM1MDY2MTA5M31d" data-id="id_Reserva_Usuario_6" data-et="edge" data-edge="true" style=";" class="edge-thickness-normal edge-pattern-solid relation" id="id_Reserva_Usuario_6" d="M469.702,325.463L719.463,567L788.252,653.122L853.297,734.556"/>
+            </g>
+            <g class="edgeLabels">
+                <g class="edgeLabel">
+                    <g transform="translate(0, -10.5)" data-id="id_Circulacion_Ruta_1" class="label">
+                        <foreignObject height="21" width="0">
+                            <div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 200px; text-align: center;">
+                                <span class="edgeLabel" style=";display: inline-block"></span>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </g>
+                <g class="edgeLabel">
+                    <g transform="translate(0, -10.5)" data-id="id_Circulacion_Tren_2" class="label">
+                        <foreignObject height="21" width="0">
+                            <div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 200px; text-align: center;">
+                                <span class="edgeLabel" style=";display: inline-block"></span>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </g>
+                <g class="edgeLabel">
+                    <g transform="translate(0, -10.5)" data-id="id_FachadaAplicacion_Usuario_3" class="label">
+                        <foreignObject height="21" width="0">
+                            <div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 200px; text-align: center;">
+                                <span class="edgeLabel" style=";display: inline-block"></span>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </g>
+                <g class="edgeLabel">
+                    <g transform="translate(0, -10.5)" data-id="id_Ruta_Estacion_4" class="label">
+                        <foreignObject height="21" width="0">
+                            <div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 200px; text-align: center;">
+                                <span class="edgeLabel" style=";display: inline-block"></span>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </g>
+                <g class="edgeLabel">
+                    <g transform="translate(0, -10.5)" data-id="id_Reserva_Circulacion_5" class="label">
+                        <foreignObject height="21" width="0">
+                            <div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 200px; text-align: center;">
+                                <span class="edgeLabel" style=";display: inline-block"></span>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </g>
+                <g class="edgeLabel">
+                    <g transform="translate(0, -10.5)" data-id="id_Reserva_Usuario_6" class="label">
+                        <foreignObject height="21" width="0">
+                            <div class="labelBkg" xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 200px; text-align: center;">
+                                <span class="edgeLabel" style=";display: inline-block"></span>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </g>
+                <g transform="translate(271.9622144932336, 1286.0751238050625)" class="edgeTerminals">
+                    <g transform="translate(0, 0)" class="inner">
+                        <foreignObject style="width: 9px; height: 12px;">
+                            <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; padding-right: 1px; white-space: nowrap;">
+                                <span style=";display: inline-block" class="edgeLabel">1</span>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </g>
+                <g transform="translate(514.0118830131285, 1293.4963874094587)" class="edgeTerminals">
+                    <g transform="translate(0, 0)" class="inner">
+                        <foreignObject style="width: 9px; height: 12px;">
+                            <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; padding-right: 1px; white-space: nowrap;">
+                                <span style=";display: inline-block" class="edgeLabel">1</span>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </g>
+                <g transform="translate(1006.2679156953337, 559.3809087722524)" class="edgeTerminals">
+                    <g transform="translate(0, 0)" class="inner">
+                        <foreignObject style="width: 9px; height: 12px;">
+                            <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; padding-right: 1px; white-space: nowrap;">
+                                <span style=";display: inline-block" class="edgeLabel">1</span>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </g>
+                <g transform="translate(267.21042816528325, 1601.5000015726143)" class="edgeTerminals">
+                    <g transform="translate(0, 0)" class="inner">
+                        <foreignObject style="width: 9px; height: 12px;">
+                            <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; padding-right: 1px; white-space: nowrap;">
+                                <span style=";display: inline-block" class="edgeLabel">1</span>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </g>
+                <g transform="translate(400.54368207404275, 332.47634757431166)" class="edgeTerminals">
+                    <g transform="translate(0, 0)" class="inner">
+                        <foreignObject style="width: 9px; height: 12px;">
+                            <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; padding-right: 1px; white-space: nowrap;">
+                                <span style=";display: inline-block" class="edgeLabel">1</span>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </g>
+                <g transform="translate(458.9146424682484, 335.8977707993685)" class="edgeTerminals">
+                    <g transform="translate(0, 0)" class="inner">
+                        <foreignObject style="width: 9px; height: 12px;">
+                            <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; padding-right: 1px; white-space: nowrap;">
+                                <span style=";display: inline-block" class="edgeLabel">1</span>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </g>
+                <g transform="translate(293.76600905774785, 1302.175768430683)" class="edgeTerminals">
+                    <g transform="translate(0, 0)" class="inner"/>
+                    <foreignObject style="width: 54px; height: 12px;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; padding-right: 1px; white-space: nowrap;">
+                            <span style=";display: inline-block" class="edgeLabel">ruta 1</span>
+                        </div>
+                    </foreignObject>
+                </g>
+                <g transform="translate(542.8312603405761, 1321.4999997080777)" class="edgeTerminals">
+                    <g transform="translate(0, 0)" class="inner"/>
+                    <foreignObject style="width: 54px; height: 12px;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; padding-right: 1px; white-space: nowrap;">
+                            <span style=";display: inline-block" class="edgeLabel">tren 1</span>
+                        </div>
+                    </foreignObject>
+                </g>
+                <g transform="translate(1028.6077196562337, 664.416790051137)" class="edgeTerminals">
+                    <g transform="translate(0, 0)" class="inner"/>
+                    <foreignObject style="width: 81px; height: 12px;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; padding-right: 1px; white-space: nowrap;">
+                            <span style=";display: inline-block" class="edgeLabel">usuario 1</span>
+                        </div>
+                    </foreignObject>
+                </g>
+                <g transform="translate(292.21042816528313, 1611.5000015726143)" class="edgeTerminals">
+                    <g transform="translate(0, 0)" class="inner"/>
+                    <foreignObject style="width: 72px; height: 12px;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; padding-right: 1px; white-space: nowrap;">
+                            <span style=";display: inline-block" class="edgeLabel">origen 1</span>
+                        </div>
+                    </foreignObject>
+                </g>
+                <g transform="translate(417.691259341604, 569.6496331870551)" class="edgeTerminals">
+                    <g transform="translate(0, 0)" class="inner"/>
+                    <foreignObject style="width: 99px; height: 12px;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; padding-right: 1px; white-space: nowrap;">
+                            <span style=";display: inline-block" class="edgeLabel">circulacion</span>
+                        </div>
+                    </foreignObject>
+                </g>
+                <g transform="translate(852.8401814970999, 711.20891115963)" class="edgeTerminals">
+                    <g transform="translate(0, 0)" class="inner"/>
+                    <foreignObject style="width: 63px; height: 12px;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; padding-right: 1px; white-space: nowrap;">
+                            <span style=";display: inline-block" class="edgeLabel">usuario</span>
+                        </div>
+                    </foreignObject>
+                </g>
+            </g>
+            <g class="nodes">
+                <g transform="translate(407.5208435058594, 932.5)" data-look="neo" data-et="node" data-node="true" data-id="Circulacion" id="classId-Circulacion-101" class="node default">
+                    <g class="basic label-container">
+                        <path style="" fill="#ffffff" stroke-width="0" stroke="none" d="M-399.5208435058594 -340.5 L399.5208435058594 -340.5 L399.5208435058594 340.5 L-399.5208435058594 340.5"/>
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000"
+                              d="M-399.5208435058594 -340.5 C-177.99844136491436 -340.5, 43.52396077603066 -340.5, 399.5208435058594 -340.5 M-399.5208435058594 -340.5 C-199.28475973442713 -340.5, 0.9513240370051221 -340.5, 399.5208435058594 -340.5 M399.5208435058594 -340.5 C399.5208435058594 -169.86909601848473, 399.5208435058594 0.7618079630305488, 399.5208435058594 340.5 M399.5208435058594 -340.5 C399.5208435058594 -157.95186180635255, 399.5208435058594 24.596276387294893, 399.5208435058594 340.5 M399.5208435058594 340.5 C151.51327857369142 340.5, -96.49428635847653 340.5, -399.5208435058594 340.5 M399.5208435058594 340.5 C89.16949972876972 340.5, -221.18184404831993 340.5, -399.5208435058594 340.5 M-399.5208435058594 340.5 C-399.5208435058594 75.35594752636308, -399.5208435058594 -189.78810494727384, -399.5208435058594 -340.5 M-399.5208435058594 340.5 C-399.5208435058594 145.50485466561332, -399.5208435058594 -49.490290668773355, -399.5208435058594 -340.5"/>
+                    </g>
+                    <g transform="translate(0, -316.5)" class="annotation-group text"/>
+                    <g transform="translate(-38.10832977294922, -316.5)" class="label-group text">
+                        <g transform="translate(0,-10.5)" style="font-weight: bolder" class="label">
+                            <foreignObject height="21" width="76.21665954589844">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 129px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>Circulacion</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-387.5208435058594, -271.5)" class="members-group text">
+                        <g transform="translate(0,-10.5)" style="" class="label">
+                            <foreignObject height="21" width="64.81666564941406">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 129px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- Tren tren</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,10.5)" style="" class="label">
+                            <foreignObject height="21" width="66.11666870117188">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 130px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- Ruta ruta</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,31.5)" style="" class="label">
+                            <foreignObject height="21" width="212.6999969482422">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 298px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- LocalDateTime horaLlegadaReal</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,52.5)" style="" class="label">
+                            <foreignObject height="21" width="57.56666564941406">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 120px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- UUID id</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,73.5)" style="" class="label">
+                            <foreignObject height="21" width="173">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 252px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- LocalDateTime horaSalida</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,94.5)" style="" class="label">
+                            <foreignObject height="21" width="160.28334045410156">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 238px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- EnumCirculacion estado</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,115.5)" style="" class="label">
+                            <foreignObject height="21" width="189.85000610351562">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 271px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- BigDecimal precioPorAsiento</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-387.5208435058594, -100.5)" class="methods-group text">
+                        <g transform="translate(0,-10.5)" style="" class="label">
+                            <foreignObject height="21" width="157.53334045410156">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 235px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ compareTo(Object) : int</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,10.5)" style="" class="label">
+                            <foreignObject height="21" width="117.85000610351562">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 189px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ toString() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,31.5)" style="" class="label">
+                            <foreignObject height="21" width="185.8333282470703">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 267px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ getHoraSalida() : LocalTime</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,52.5)" style="" class="label">
+                            <foreignObject height="21" width="85.43333435058594">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 152px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ tren() : Tren</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,73.5)" style="" class="label">
+                            <foreignObject height="21" width="193.61666870117188">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 276px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ horaSalida() : LocalDateTime</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,94.5)" style="" class="label">
+                            <foreignObject height="21" width="241.10000610351562">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 330px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ horaLlegadaReal() : LocalDateTime?</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,115.5)" style="" class="label">
+                            <foreignObject height="21" width="158.3333282470703">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 235px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ ciudadDestino() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,136.5)" style="" class="label">
+                            <foreignObject height="21" width="111.64999389648438">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 182px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ hashCode() : int</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,157.5)" style="" class="label">
+                            <foreignObject height="21" width="210.46665954589844">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 295px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ precioPorAsiento() : BigDecimal</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,178.5)" style="" class="label">
+                            <foreignObject height="21" width="211.25">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 296px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ nombreCiudadOrigen() : String?</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,199.5)" style="" class="label">
+                            <foreignObject height="21" width="86.73333740234375">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 154px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ ruta() : Ruta</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,220.5)" style="" class="label">
+                            <foreignObject height="21" width="152.88333129882812">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 229px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ ciudadOrigen() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,241.5)" style="" class="label">
+                            <foreignObject height="21" width="164.56666564941406">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 243px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ equals(Object) : boolean</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,262.5)" style="" class="label">
+                            <foreignObject height="21" width="216.6999969482422">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 302px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ nombreCiudadDestino() : String?</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,283.5)" style="" class="label">
+                            <foreignObject height="21" width="207.36666870117188">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 292px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ getCadenaHoraSalida() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,304.5)" style="" class="label">
+                            <foreignObject height="21" width="103.06666564941406">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 172px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ trenId() : UUID</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,325.5)" style="" class="label">
+                            <foreignObject height="21" width="736.933349609375">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 897px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ fabricarCirculacion(String, UUID, Ruta, EnumCirculacion, LocalDateTime, LocalDateTime, BigDecimal) : Circulacion?</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,346.5)" style="" class="label">
+                            <foreignObject height="21" width="231.46665954589844">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 319px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ getPrecioPorAsiento() : BigDecimal</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,367.5)" style="" class="label">
+                            <foreignObject height="21" width="78.18333435058594">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 144px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ id() : UUID</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,388.5)" style="" class="label">
+                            <foreignObject height="21" width="246.26666259765625">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 336px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ getCadenaHoraFechaSalida() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,409.5)" style="" class="label">
+                            <foreignObject height="21" width="180.89999389648438">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 261px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ estado() : EnumCirculacion</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-399.5208435058594 -295.5 C-217.07796363612044 -295.4997716728891, -34.63508376638151 -295.49954334577825, 399.5208435058594 -295.499 M-399.5208435058594 -295.5 C-180.09833504205827 -295.499725392915, 39.32417342174284 -295.49945078583, 399.5208435058594 -295.499"/>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-399.5208435058594 -124.5 C-94.5725906612193 -124.49961835751776, 210.3756621834208 -124.49923671503552, 399.5208435058594 -124.499 M-399.5208435058594 -124.5 C-151.16181750597966 -124.4996891788876, 97.19720849390006 -124.49937835777523, 399.5208435058594 -124.499"/>
+                    </g>
+                </g>
+                <g transform="translate(282.2104263305664, 1701.5)" data-look="neo" data-et="node" data-node="true" data-id="Estacion" id="classId-Estacion-102" class="node default">
+                    <g class="basic label-container">
+                        <path style="" fill="#ffffff" stroke-width="0" stroke="none" d="M-82.01666259765625 -67.5 L82.01666259765625 -67.5 L82.01666259765625 67.5 L-82.01666259765625 67.5"/>
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000"
+                              d="M-82.01666259765625 -67.5 C-31.244864197102345 -67.5, 19.52693420345156 -67.5, 82.01666259765625 -67.5 M-82.01666259765625 -67.5 C-39.339195382923364 -67.5, 3.3382718318095215 -67.5, 82.01666259765625 -67.5 M82.01666259765625 -67.5 C82.01666259765625 -32.03505929887703, 82.01666259765625 3.4298814022459396, 82.01666259765625 67.5 M82.01666259765625 -67.5 C82.01666259765625 -31.474955702476194, 82.01666259765625 4.550088595047612, 82.01666259765625 67.5 M82.01666259765625 67.5 C37.76522075478275 67.5, -6.486221088090744 67.5, -82.01666259765625 67.5 M82.01666259765625 67.5 C45.52313882707919 67.5, 9.029615056502124 67.5, -82.01666259765625 67.5 M-82.01666259765625 67.5 C-82.01666259765625 14.666002606791565, -82.01666259765625 -38.16799478641687, -82.01666259765625 -67.5 M-82.01666259765625 67.5 C-82.01666259765625 25.55535213060923, -82.01666259765625 -16.38929573878154, -82.01666259765625 -67.5"/>
+                    </g>
+                    <g transform="translate(0, -43.5)" class="annotation-group text"/>
+                    <g transform="translate(-29.166664123535156, -43.5)" class="label-group text">
+                        <g transform="translate(0,-10.5)" style="font-weight: bolder" class="label">
+                            <foreignObject height="21" width="58.33332824707031">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 111px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>Estacion</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-70.01666259765625, 1.5)" class="members-group text">
+                        <g transform="translate(0,-10.5)" style="" class="label">
+                            <foreignObject height="21" width="90.25">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 158px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- String ciudad</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-70.01666259765625, 46.5)" class="methods-group text">
+                        <g transform="translate(0,-10.5)" style="" class="label">
+                            <foreignObject height="21" width="110.86666870117188">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 181px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ ciudad() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-82.01666259765625 -22.5 C-46.188931280380814 -22.499781582606616, -10.361199963105378 -22.49956316521323, 82.01666259765625 -22.499 M-82.01666259765625 -22.5 C-27.161873403905197 -22.499665587531506, 27.692915789845856 -22.499331175063013, 82.01666259765625 -22.499"/>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-82.01666259765625 22.5 C-46.0580875414504 22.500219215058973, -10.099512485244546 22.500438430117946, 82.01666259765625 22.501 M-82.01666259765625 22.5 C-24.0902435178929 22.500353138113923, 33.83617556187045 22.500706276227845, 82.01666259765625 22.501"/>
+                    </g>
+                </g>
+                <g transform="translate(1021.4042053222656, 275)" data-look="neo" data-et="node" data-node="true" data-id="FachadaAplicacion" id="classId-FachadaAplicacion-103" class="node default">
+                    <g class="basic label-container">
+                        <path style="" fill="#ffffff" stroke-width="0" stroke="none" d="M-202.02915954589844 -267 L202.02915954589844 -267 L202.02915954589844 267 L-202.02915954589844 267"/>
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000"
+                              d="M-202.02915954589844 -267 C-103.47533057291777 -267, -4.921501599937102 -267, 202.02915954589844 -267 M-202.02915954589844 -267 C-53.9650971345275 -267, 94.09896527684344 -267, 202.02915954589844 -267 M202.02915954589844 -267 C202.02915954589844 -135.15982446535324, 202.02915954589844 -3.319648930706478, 202.02915954589844 267 M202.02915954589844 -267 C202.02915954589844 -58.776914680111815, 202.02915954589844 149.44617063977637, 202.02915954589844 267 M202.02915954589844 267 C66.24240086839663 267, -69.54435780910518 267, -202.02915954589844 267 M202.02915954589844 267 C80.05221383946096 267, -41.924731866976515 267, -202.02915954589844 267 M-202.02915954589844 267 C-202.02915954589844 64.23946684440759, -202.02915954589844 -138.52106631118482, -202.02915954589844 -267 M-202.02915954589844 267 C-202.02915954589844 128.78702340933046, -202.02915954589844 -9.425953181339082, -202.02915954589844 -267"/>
+                    </g>
+                    <g transform="translate(0, -243)" class="annotation-group text"/>
+                    <g transform="translate(-63.775001525878906, -243)" class="label-group text">
+                        <g transform="translate(0,-10.5)" style="font-weight: bolder" class="label">
+                            <foreignObject height="21" width="127.55000305175781">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 185px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>FachadaAplicacion</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-190.02915954589844, -198)" class="members-group text">
+                        <g transform="translate(0,-10.5)" style="" class="label">
+                            <foreignObject height="21" width="124.46665954589844">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 197px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- FachadaDAO fdao</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,10.5)" style="" class="label">
+                            <foreignObject height="21" width="150.1666717529297">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 226px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- Internacionalizacion itz</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,31.5)" style="" class="label">
+                            <foreignObject height="21" width="111.25">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 182px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- FachadaGui fgui</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,52.5)" style="" class="label">
+                            <foreignObject height="21" width="157.96665954589844">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 235px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- ResourceBundle bundle</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,73.5)" style="" class="label">
+                            <foreignObject height="21" width="106.60000610351562">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 176px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- Usuario usuario</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-190.02915954589844, -69)" class="methods-group text">
+                        <g transform="translate(0,-10.5)" style="" class="label">
+                            <foreignObject height="21" width="225.23333740234375">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 312px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ autenticar(String, String) : boolean</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,10.5)" style="" class="label">
+                            <foreignObject height="21" width="169.21665954589844">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 248px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ getUsrDireccion() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,31.5)" style="" class="label">
+                            <foreignObject height="21" width="133.4166717529297">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 207px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ main(String[]) : void</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,52.5)" style="" class="label">
+                            <foreignObject height="21" width="252.48333740234375">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 343px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ getBundleInstance() : ResourceBundle</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,73.5)" style="" class="label">
+                            <foreignObject height="21" width="229.13333129882812">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 316px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ cambiarIdioma(EnumIdioma) : void</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,94.5)" style="" class="label">
+                            <foreignObject height="21" width="205.36666870117188">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 289px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- extraerDatosPorDefecto() : void</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,115.5)" style="" class="label">
+                            <foreignObject height="21" width="141.98333740234375">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 217px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ getUsrTelefono() : int</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,136.5)" style="" class="label">
+                            <foreignObject height="21" width="293.683349609375">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 390px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ buscarRutaPorNombres(String, String) : Ruta</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,157.5)" style="" class="label">
+                            <foreignObject height="21" width="314.683349609375">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 414px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ actualizarUsuario(String, String, String, int) : void</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,178.5)" style="" class="label">
+                            <foreignObject height="21" width="180.46665954589844">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 261px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- lanzaInterfazGrafica() : void</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,199.5)" style="" class="label">
+                            <foreignObject height="21" width="153.64999389648438">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 230px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ getUsrCorreo() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,220.5)" style="" class="label">
+                            <foreignObject height="21" width="212.8000030517578">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 331px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ getEstaciones() : List&lt;Estacion&gt;</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,241.5)" style="" class="label">
+                            <foreignObject height="21" width="160.64999389648438">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 238px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ getUsrNombre() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,262.5)" style="" class="label">
+                            <foreignObject height="21" width="110.08332824707031">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 180px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ getUsrDni() : int</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,283.5)" style="" class="label">
+                            <foreignObject height="21" width="134.1999969482422">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 208px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ relanzarGUI() : void</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,304.5)" style="" class="label">
+                            <foreignObject height="21" width="316.2833251953125">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 416px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ obtenerCirculacionesRuta(Ruta, LocalDate) : List</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-202.02915954589844 -222 C-86.12253369916287 -221.99971314382017, 29.784092147572693 -221.99942628764032, 202.02915954589844 -221.999 M-202.02915954589844 -222 C-91.24589576935554 -221.99972582357907, 19.537368007187354 -221.99945164715814, 202.02915954589844 -221.999"/>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-202.02915954589844 -93 C-94.99701494285773 -92.99973510718739, 12.035129660182974 -92.99947021437478, 202.02915954589844 -92.999 M-202.02915954589844 -93 C-102.52123278316081 -92.99975372880087, -3.0133060204231867 -92.99950745760172, 202.02915954589844 -92.999"/>
+                    </g>
+                </g>
+                <g transform="translate(417.5208435058594, 275)" data-look="neo" data-et="node" data-node="true" data-id="Reserva" id="classId-Reserva-104" class="node default">
+                    <g class="basic label-container">
+                        <path style="" fill="#ffffff" stroke-width="0" stroke="none" d="M-39.241668701171875 -40.5 L39.241668701171875 -40.5 L39.241668701171875 40.5 L-39.241668701171875 40.5"/>
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000"
+                              d="M-39.241668701171875 -40.5 C-13.859635877351451 -40.5, 11.522396946468973 -40.5, 39.241668701171875 -40.5 M-39.241668701171875 -40.5 C-19.921775223343936 -40.5, -0.6018817455159962 -40.5, 39.241668701171875 -40.5 M39.241668701171875 -40.5 C39.241668701171875 -8.306640649014533, 39.241668701171875 23.886718701970935, 39.241668701171875 40.5 M39.241668701171875 -40.5 C39.241668701171875 -9.433960753528506, 39.241668701171875 21.632078492942988, 39.241668701171875 40.5 M39.241668701171875 40.5 C23.50761189161303 40.5, 7.773555082054187 40.5, -39.241668701171875 40.5 M39.241668701171875 40.5 C13.008612510452345 40.5, -13.224443680267186 40.5, -39.241668701171875 40.5 M-39.241668701171875 40.5 C-39.241668701171875 8.776261947089868, -39.241668701171875 -22.947476105820265, -39.241668701171875 -40.5 M-39.241668701171875 40.5 C-39.241668701171875 15.453271188190467, -39.241668701171875 -9.593457623619067, -39.241668701171875 -40.5"/>
+                    </g>
+                    <g transform="translate(0, -16.5)" class="annotation-group text"/>
+                    <g transform="translate(-27.241668701171875, -16.5)" class="label-group text">
+                        <g transform="translate(0,-10.5)" style="font-weight: bolder" class="label">
+                            <foreignObject height="21" width="54.48333740234375">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 110px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>Reserva</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-27.241668701171875, 28.5)" class="members-group text"/>
+                    <g transform="translate(-27.241668701171875, 46.5)" class="methods-group text"/>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-39.241668701171875 4.5 C-18.20518809441324 4.5002680375389605, 2.8312925123453923 4.500536075077922, 39.241668701171875 4.501 M-39.241668701171875 4.5 C-15.106675463695819 4.500307517417535, 9.028317773780238 4.50061503483507, 39.241668701171875 4.501"/>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-39.241668701171875 22.5 C-19.88611796756176 22.500246619873394, -0.5305672339516434 22.500493239746785, 39.241668701171875 22.501 M-39.241668701171875 22.5 C-18.989254182822176 22.500258047315377, 1.2631603355275232 22.50051609463075, 39.241668701171875 22.501"/>
+                    </g>
+                </g>
+                <g transform="translate(282.2104263305664, 1453.5)" data-look="neo" data-et="node" data-node="true" data-id="Ruta" id="classId-Ruta-105" class="node default">
+                    <g class="basic label-container">
+                        <path style="" fill="#ffffff" stroke-width="0" stroke="none" d="M-98.94583129882812 -130.5 L98.94583129882812 -130.5 L98.94583129882812 130.5 L-98.94583129882812 130.5"/>
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000"
+                              d="M-98.94583129882812 -130.5 C-30.1211182122684 -130.5, 38.703594874291326 -130.5, 98.94583129882812 -130.5 M-98.94583129882812 -130.5 C-55.11404674310197 -130.5, -11.28226218737582 -130.5, 98.94583129882812 -130.5 M98.94583129882812 -130.5 C98.94583129882812 -75.4951356899216, 98.94583129882812 -20.49027137984318, 98.94583129882812 130.5 M98.94583129882812 -130.5 C98.94583129882812 -27.06021308364663, 98.94583129882812 76.37957383270674, 98.94583129882812 130.5 M98.94583129882812 130.5 C44.34704331513649 130.5, -10.251744668555148 130.5, -98.94583129882812 130.5 M98.94583129882812 130.5 C57.04992291476475 130.5, 15.154014530701374 130.5, -98.94583129882812 130.5 M-98.94583129882812 130.5 C-98.94583129882812 78.00706799540865, -98.94583129882812 25.51413599081731, -98.94583129882812 -130.5 M-98.94583129882812 130.5 C-98.94583129882812 39.49157653216376, -98.94583129882812 -51.516846935672476, -98.94583129882812 -130.5"/>
+                    </g>
+                    <g transform="translate(0, -106.5)" class="annotation-group text"/>
+                    <g transform="translate(-15.558334350585938, -106.5)" class="label-group text">
+                        <g transform="translate(0,-10.5)" style="font-weight: bolder" class="label">
+                            <foreignObject height="21" width="31.116668701171875">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 84px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>Ruta</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-86.94583129882812, -61.5)" class="members-group text">
+                        <g transform="translate(0,-10.5)" style="" class="label">
+                            <foreignObject height="21" width="111.25">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 182px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- Estacion destino</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,10.5)" style="" class="label">
+                            <foreignObject height="21" width="82.46665954589844">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 149px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- int distancia</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,31.5)" style="" class="label">
+                            <foreignObject height="21" width="105.03334045410156">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 175px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- Estacion origen</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-86.94583129882812, 25.5)" class="methods-group text">
+                        <g transform="translate(0,-10.5)" style="" class="label">
+                            <foreignObject height="21" width="152.88333129882812">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 229px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ ciudadOrigen() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,10.5)" style="" class="label">
+                            <foreignObject height="21" width="158.3333282470703">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 235px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ ciudadDestino() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,31.5)" style="" class="label">
+                            <foreignObject height="21" width="131.86666870117188">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 205px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ destino() : Estacion</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,52.5)" style="" class="label">
+                            <foreignObject height="21" width="125.64999389648438">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 198px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ origen() : Estacion</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,73.5)" style="" class="label">
+                            <foreignObject height="21" width="103.08332824707031">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 172px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ distancia() : int</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-98.94583129882812 -85.5 C-47.886966556420035 -85.49974198577104, 3.1718981859880557 -85.49948397154208, 98.94583129882812 -85.499 M-98.94583129882812 -85.5 C-39.46396588185269 -85.4996994220745, 20.01789953512275 -85.499398844149, 98.94583129882812 -85.499"/>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-98.94583129882812 1.5 C-36.44131824445317 1.5003158521800963, 26.063194809921782 1.5006317043601927, 98.94583129882812 1.501 M-98.94583129882812 1.5 C-43.42277950664449 1.5002805729714095, 12.100272285539148 1.500561145942819, 98.94583129882812 1.501"/>
+                    </g>
+                </g>
+                <g transform="translate(532.8312606811523, 1453.5)" data-look="neo" data-et="node" data-node="true" data-id="Tren" id="classId-Tren-106" class="node default">
+                    <g class="basic label-container">
+                        <path style="" fill="#ffffff" stroke-width="0" stroke="none" d="M-101.67500305175781 -109.5 L101.67500305175781 -109.5 L101.67500305175781 109.5 L-101.67500305175781 109.5"/>
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000"
+                              d="M-101.67500305175781 -109.5 C-24.353847891894517 -109.5, 52.96730726796878 -109.5, 101.67500305175781 -109.5 M-101.67500305175781 -109.5 C-32.899693333817766 -109.5, 35.87561638412228 -109.5, 101.67500305175781 -109.5 M101.67500305175781 -109.5 C101.67500305175781 -32.18091710724184, 101.67500305175781 45.13816578551632, 101.67500305175781 109.5 M101.67500305175781 -109.5 C101.67500305175781 -60.03510869364158, 101.67500305175781 -10.570217387283165, 101.67500305175781 109.5 M101.67500305175781 109.5 C38.44285940998916 109.5, -24.78928423177949 109.5, -101.67500305175781 109.5 M101.67500305175781 109.5 C29.005502070487836 109.5, -43.66399891078214 109.5, -101.67500305175781 109.5 M-101.67500305175781 109.5 C-101.67500305175781 64.4591323069262, -101.67500305175781 19.418264613852386, -101.67500305175781 -109.5 M-101.67500305175781 109.5 C-101.67500305175781 42.41856334462901, -101.67500305175781 -24.662873310741986, -101.67500305175781 -109.5"/>
+                    </g>
+                    <g transform="translate(0, -85.5)" class="annotation-group text"/>
+                    <g transform="translate(-14.783332824707031, -85.5)" class="label-group text">
+                        <g transform="translate(0,-10.5)" style="font-weight: bolder" class="label">
+                            <foreignObject height="21" width="29.566665649414062">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 82px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>Tren</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-89.67500305175781, -40.5)" class="members-group text">
+                        <g transform="translate(0,-10.5)" style="" class="label">
+                            <foreignObject height="21" width="57.56666564941406">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 120px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- UUID id</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,10.5)" style="" class="label">
+                            <foreignObject height="21" width="54.44999694824219">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 117px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- int num</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-89.67500305175781, 25.5)" class="methods-group text">
+                        <g transform="translate(0,-10.5)" style="" class="label">
+                            <foreignObject height="21" width="164.56666564941406">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 243px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ equals(Object) : boolean</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,10.5)" style="" class="label">
+                            <foreignObject height="21" width="111.64999389648438">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 182px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ hashCode() : int</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,31.5)" style="" class="label">
+                            <foreignObject height="21" width="75.06666564941406">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 140px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ num() : int</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,52.5)" style="" class="label">
+                            <foreignObject height="21" width="78.18333435058594">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 144px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ id() : UUID</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-101.67500305175781 -64.5 C-25.244227425418984 -64.49962414175887, 51.186548200919844 -64.49924828351776, 101.67500305175781 -64.499 M-101.67500305175781 -64.5 C-58.513839815735395 -64.49978774938805, -15.352676579712977 -64.4995754987761, 101.67500305175781 -64.499"/>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-101.67500305175781 1.5 C-60.2078039036098 1.5002039203240891, -18.74060475546179 1.5004078406481782, 101.67500305175781 1.501 M-101.67500305175781 1.5 C-58.85253078915317 1.5002105850552117, -16.03005852654853 1.5004211701104233, 101.67500305175781 1.501"/>
+                    </g>
+                </g>
+                <g transform="translate(1011.4042053222656, 932.5)" data-look="neo" data-et="node" data-node="true" data-id="Usuario" id="classId-Usuario-107" class="node default">
+                    <g class="basic label-container">
+                        <path style="" fill="#ffffff" stroke-width="0" stroke="none" d="M-154.36251831054688 -246 L154.36251831054688 -246 L154.36251831054688 246 L-154.36251831054688 246"/>
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000"
+                              d="M-154.36251831054688 -246 C-49.36558245471936 -246, 55.63135340110816 -246, 154.36251831054688 -246 M-154.36251831054688 -246 C-54.517108505420325 -246, 45.328301299706226 -246, 154.36251831054688 -246 M154.36251831054688 -246 C154.36251831054688 -89.87557881559576, 154.36251831054688 66.24884236880848, 154.36251831054688 246 M154.36251831054688 -246 C154.36251831054688 -123.85552682557173, 154.36251831054688 -1.7110536511434589, 154.36251831054688 246 M154.36251831054688 246 C48.381845731019155 246, -57.598826848508565 246, -154.36251831054688 246 M154.36251831054688 246 C76.10297169783166 246, -2.1565749148835494 246, -154.36251831054688 246 M-154.36251831054688 246 C-154.36251831054688 69.4593093194292, -154.36251831054688 -107.08138136114161, -154.36251831054688 -246 M-154.36251831054688 246 C-154.36251831054688 52.003454847480356, -154.36251831054688 -141.9930903050393, -154.36251831054688 -246"/>
+                    </g>
+                    <g transform="translate(0, -222)" class="annotation-group text"/>
+                    <g transform="translate(-26.058334350585938, -222)" class="label-group text">
+                        <g transform="translate(0,-10.5)" style="font-weight: bolder" class="label">
+                            <foreignObject height="21" width="52.116668701171875">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 105px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>Usuario</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-142.36251831054688, -177)" class="members-group text">
+                        <g transform="translate(0,-10.5)" style="" class="label">
+                            <foreignObject height="21" width="126.03334045410156">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 199px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- String contrasenha</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,10.5)" style="" class="label">
+                            <foreignObject height="21" width="179.73333740234375">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 260px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- LocalDate fechaNacimiento</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,31.5)" style="" class="label">
+                            <foreignObject height="21" width="51.33332824707031">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 113px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- int DNI</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,52.5)" style="" class="label">
+                            <foreignObject height="21" width="96.46665954589844">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 165px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- String nombre</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,73.5)" style="" class="label">
+                            <foreignObject height="21" width="77.01666259765625">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 143px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- int telefono</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,94.5)" style="" class="label">
+                            <foreignObject height="21" width="105.03334045410156">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 175px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- String direccion</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,115.5)" style="" class="label">
+                            <foreignObject height="21" width="88.68333435058594">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 156px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>- String correo</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(-142.36251831054688, -6)" class="methods-group text">
+                        <g transform="translate(0,-10.5)" style="" class="label">
+                            <foreignObject height="21" width="173.88333129882812">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 253px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ printReadyString() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,10.5)" style="" class="label">
+                            <foreignObject height="21" width="125.64999389648438">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 198px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ direccion() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,31.5)" style="" class="label">
+                            <foreignObject height="21" width="200.35000610351562">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 284px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ fechaNacimiento() : LocalDate</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,52.5)" style="" class="label">
+                            <foreignObject height="21" width="117.85000610351562">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 189px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ toString() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,73.5)" style="" class="label">
+                            <foreignObject height="21" width="258.66668701171875">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 350px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ actualizarDatos(String, String, int) : void</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,94.5)" style="" class="label">
+                            <foreignObject height="21" width="164.56666564941406">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 243px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ equals(Object) : boolean</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,115.5)" style="" class="label">
+                            <foreignObject height="21" width="146.64999389648438">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 222px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ contrasenha() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,136.5)" style="" class="label">
+                            <foreignObject height="21" width="111.64999389648438">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 182px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ hashCode() : int</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,157.5)" style="" class="label">
+                            <foreignObject height="21" width="109.30000305175781">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 179px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ correo() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,178.5)" style="" class="label">
+                            <foreignObject height="21" width="97.63333129882812">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 166px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ telefono() : int</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,199.5)" style="" class="label">
+                            <foreignObject height="21" width="71.94999694824219">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 137px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ DNI() : int</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                        <g transform="translate(0,220.5)" style="" class="label">
+                            <foreignObject height="21" width="117.08332824707031">
+                                <div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: normal; line-height: 1.5; max-width: 188px; text-align: center;">
+                                    <span style="" class="nodeLabel markdown-node-label">
+                                        <p>+ nombre() : String</p>
+                                    </span>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-154.36251831054688 -201 C-37.136820838263304 -200.99962029092697, 80.08887663402027 -200.99924058185397, 154.36251831054688 -200.999 M-154.36251831054688 -201 C-85.37217192470384 -200.99977653141727, -16.381825538860795 -200.99955306283454, 154.36251831054688 -200.999"/>
+                    </g>
+                    <g style="" class="divider">
+                        <path style="" fill="none" stroke-width="1.3" stroke="#000000" d="M-154.36251831054688 -30 C-64.23315964497614 -29.999708059444572, 25.896199020594594 -29.999416118889144, 154.36251831054688 -29.999 M-154.36251831054688 -30 C-54.060745501041865 -29.999675109690138, 46.241027308463146 -29.99935021938028, 154.36251831054688 -29.999"/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+    <linearGradient y2="0%" x2="100%" y1="0%" x1="0%" gradientUnits="objectBoundingBox" id="export-svg-gradient">
+        <stop stop-opacity="1" stop-color="#0042eb" offset="0%"/>
+        <stop stop-opacity="1" stop-color="#eb0042" offset="100%"/>
+    </linearGradient>
+</svg>

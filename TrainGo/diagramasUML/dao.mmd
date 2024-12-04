@@ -1,0 +1,129 @@
+classDiagram
+    direction BT
+    class AbstractDAO {
+        # obtenerXMLStreamWriter() XMLStreamWriter
+        + load() boolean
+        ~ obtenerLogger() void
+        - cerrarArchivo(XMLStreamWriter) void
+        + save() boolean
+        - cerrarArchivo(XMLEventReader) void
+        # guardarArchivo(XMLStreamWriter) void
+        # cargarArchivo(XMLEventReader) void
+        # obtenerXmlEventReader() XMLEventReader
+        ~ getNextXmlEvent(XMLEventReader) XMLEvent
+    }
+    class DAOCirculacion {
+        - _procesarPrecioPorAsiento(XMLEventReader) BigDecimal
+        # cargarArchivo(XMLEventReader) void
+        ~ __dbg_circulaciones() List~Circulacion~
+        - _procesarRuta(XMLEventReader, StringBuffer, StringBuffer) void
+        - _comprobarDentroDeHora(XMLEvent) boolean
+        - _crearFechaHoraYcomprobarValidez(XMLEvent, int, int, int, int, int) LocalDateTime
+        + main(String[]) void
+        - _gestionarDatosEntrantesFecha(XMLEventReader, XMLEvent, int[]) void
+        - _gestionarYCrearLaHora(XMLEventReader, int[]) LocalDateTime
+        - _procesarCirculacion(XMLEventReader) void
+        - _procesarRuta(XMLEventReader) Ruta
+        - comprobarParametrosDeFechaSonMayoresQueCero(int, int, int, int, int) boolean
+        - _comprobarYBuscarRuta(String, String) Ruta?
+        # obtenerXMLStreamWriter() XMLStreamWriter?
+        # obtenerXmlEventReader() XMLEventReader?
+        - _crearEinsertarCirculacion(String, UUID, Ruta, EnumCirculacion, LocalDateTime, LocalDateTime, BigDecimal) void
+        + obtenerCirculacionesRutaEnFecha(Ruta, LocalDate) List~Circulacion~
+        ~ circulaciones() Map~Ruta, List~ Circulacion~~
+        # guardarArchivo(XMLStreamWriter) void
+        - _procesarTren(XMLEventReader, String) String
+        - _procesarUuid(XMLEventReader) UUID
+        + getInstance(FachadaDAO) DAOCirculacion
+        - _procesarEstado(XMLEventReader, EnumCirculacion) EnumCirculacion
+    }
+    class DAOEstacion {
+        + buscaEstacionPorNombre(String) Estacion
+        # obtenerXmlEventReader() XMLEventReader
+        # guardarArchivo(XMLStreamWriter) void
+        + getInstance() DAOEstacion
+        + main(String[]) void
+        ~ estaciones() List~Estacion~
+        # cargarArchivo(XMLEventReader) void
+        # obtenerXMLStreamWriter() XMLStreamWriter
+        - addEstacion(Estacion) void
+    }
+    class DAORuta {
+        # obtenerXmlEventReader() XMLEventReader?
+        - addRutaDesdeComponentes(String, String, int) void
+        + buscarRutaPorNombres(String, String) Ruta
+        + getRutas() Map~Estacion, Map~ Estacion, Ruta~~
+        + getInstance(FachadaDAO) DAORuta
+        # obtenerXMLStreamWriter() XMLStreamWriter?
+        + main(String[]) void
+        # guardarArchivo(XMLStreamWriter) void
+        # cargarArchivo(XMLEventReader) void
+        + confirmarEnlace(String, String) boolean
+    }
+    class DAOTren {
+        ~ addTren(Tren) void
+        # cargarArchivo(XMLEventReader) void
+        + localizarTren(String) Tren?
+        + getInstance() DAOTren
+        + deleteTren(Tren) void
+        # obtenerXMLStreamWriter() XMLStreamWriter?
+        + updateTren(Tren) void
+        # obtenerXmlEventReader() XMLEventReader
+        + main(String[]) void
+        + getTrenes() List~Tren~
+        # guardarArchivo(XMLStreamWriter) void
+    }
+    class DAOUsuario {
+        + addUser(Usuario) void
+        + autenticar(String, String) boolean
+        # obtenerXmlEventReader() XMLEventReader
+        # cargarArchivo(XMLEventReader) void
+        + actualizarUsuario(String, Usuario) void
+        - comprobarHayUsuariosEnOrigen() boolean
+        + main(String[]) void
+        + encontrarUsuarioPorEmail(String) Usuario
+        # obtenerXMLStreamWriter() XMLStreamWriter
+        + getInstance() DAOUsuario
+        # guardarArchivo(XMLStreamWriter) void
+        - usuarios() Collection~Usuario~
+    }
+    class FachadaDAO {
+        + obtenerCirculacionesRutaEnFecha(Ruta, LocalDate) List~Circulacion~
+        + localizarTren(String) Tren
+        + autenticar(String, String) boolean
+        + buscaEstacionPorNombre(String) Estacion
+        + addUser(Usuario) void
+        + encontrarUsuarioPorEmail(String) Usuario
+        + buscarRutaPorNombres(String, String) Ruta
+        + guardarTrenes() void
+        + __dbg_obtenerTodasLasCirculaciones() List~Circulacion~
+        + existeRuta(String, String) boolean
+        + actualizarUsuario(String, Usuario) void
+        + guardarUsuarios() void
+        + loadUsers() void
+        + updateTren(Tren) void
+        + addTren(Tren) void
+        + cargaloTodo() void
+        + getInstance() FachadaDAO
+        + deleteTren(Tren) void
+        + saveUsers() void
+        + loadTren() void
+        + saveTren() void
+        + getEstaciones() List~Estacion~
+    }
+    class IDAO {
+        <<Interface>>
+        + save() boolean
+        + load(File) Boolean
+        + save(File) Boolean
+        + save(String) Boolean
+        + load(String) Boolean
+        + load() boolean
+    }
+
+    AbstractDAO ..> IDAO
+    DAOCirculacion --> AbstractDAO
+    DAOEstacion --> AbstractDAO
+    DAORuta --> AbstractDAO
+    DAOTren --> AbstractDAO
+    DAOUsuario --> AbstractDAO

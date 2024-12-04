@@ -1,0 +1,52 @@
+classDiagram
+    direction TB
+    class FachadaAplicacion {
+        + autenticar(String, String) boolean
+        + main(String[]) void
+        + cambiarIdioma(EnumIdioma) void
+        - extraerDatosPorDefecto() void
+        + buscarRutaPorNombres(String, String) Ruta
+        + actualizarUsuario(String, String, String, int) void
+        - lanzaInterfazGrafica() void
+        + relanzarGUI() void
+        + obtenerCirculacionesRuta(Ruta, LocalDate) List
+        String usrCorreo
+        String usrDireccion
+        ResourceBundle bundleInstance
+        List~Estacion~ estaciones
+        String usrNombre
+        int usrTelefono
+        int usrDni
+    }
+    class FachadaDAO {
+        - FachadaDAO instance
+        + obtenerCirculacionesRutaEnFecha(Ruta, LocalDate) List~Circulacion~
+        + localizarTren(String) Tren
+        + autenticar(String, String) boolean
+        + buscaEstacionPorNombre(String) Estacion
+        + addUser(Usuario) void
+        + encontrarUsuarioPorEmail(String) Usuario
+        + buscarRutaPorNombres(String, String) Ruta
+        + guardarTrenes() void
+        + existeRuta(String, String) boolean
+        + actualizarUsuario(String, Usuario) void
+        + guardarUsuarios() void
+        + loadUsers() void
+        + updateTren(Tren) void
+        + addTren(Tren) void
+        + cargaloTodo() void
+        + deleteTren(Tren) void
+        + saveUsers() void
+        + loadTren() void
+        + saveTren() void
+        FachadaDAO instance
+        List~Estacion~ estaciones
+    }
+    class FachadaGui {
+        + ponerEnMarcha() void
+        + ponerEnMarchaNoAuth() void
+    }
+
+    FachadaAplicacion "1" *--> "fdao 1" FachadaDAO
+    FachadaAplicacion "1" *--> "fgui 1" FachadaGui
+    FachadaGui "1" *--> "fa 1" FachadaAplicacion
