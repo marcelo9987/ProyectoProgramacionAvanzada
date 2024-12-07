@@ -7,10 +7,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.*;
 import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,17 +26,9 @@ public class DAORuta extends AbstractDAO {
         this.rutas = new HashMap<>();
     }
 
-    public static DAORuta getInstance(FachadaDAO fadao)// Singleton
-    {
-        if (instance == null) {
-            instance = new DAORuta(fadao);
-        }
-        return instance;
-    }
-
     public static void main(String[] args) {
         DAORuta dao = getInstance(FachadaDAO.getInstance());
-        dao.fadao.cargaloTodo(); // ..-.. --- .-.. --- -.-. --- - ..- .-.. .-.. .-.-.-
+        FachadaDAO.getInstance().cargaloTodo();
         XMLEventReader xmlEvtRdr_lector = dao.obtenerXmlEventReader();
         dao.cargarArchivo(xmlEvtRdr_lector);
 
@@ -55,8 +44,45 @@ public class DAORuta extends AbstractDAO {
 //        dao.save();
     }
 
+    public static DAORuta getInstance(FachadaDAO fadao)// Singleton
+    {
+        if (instance == null) {
+            instance = new DAORuta(fadao);
+        }
+        return instance;
+    }
+
     public Map<Estacion, Map<Estacion, Ruta>> getRutas() {
         return this.rutas;
+    }
+
+    private void addRutaDesdeComponentes(String origen, String destino, int distancia) {
+        Estacion estacionOrigen  = null;
+        Estacion estacionDestino = null;
+        for (Estacion estacion : FachadaDAO.getInstance().getEstaciones()) {
+            if (estacion.ciudad().equals(origen)) {
+                estacionOrigen = estacion;
+            }
+            if (estacion.ciudad().equals(destino)) {
+                estacionDestino = estacion;
+            }
+        }
+        if (estacionOrigen == null) {
+            this.logger.error("No se ha encontrado la estación de origen {}", origen);
+            if (estacionDestino == null) {
+                this.logger.error("No se ha encontrado la estación de destino {}", destino);
+            }
+            return;
+        }
+        if (estacionDestino == null) {
+            this.logger.error("No se ha encontrado la estación de destino {}", destino);
+            return;
+        }
+        this.rutas.putIfAbsent(estacionOrigen, new HashMap<>());
+        this
+                .rutas
+                .get(estacionOrigen)
+                .put(estacionDestino, new Ruta(estacionOrigen, estacionDestino, distancia));
     }
 
     @Nullable
@@ -75,6 +101,31 @@ public class DAORuta extends AbstractDAO {
         }
 
         return writer;
+    }
+
+    @Override
+    protected void guardarArchivo(@NotNull XMLStreamWriter writer) {
+        this.logger.trace("Guardando contenido en el archivo...");
+        try {
+            writer.writeStartDocument();
+            writer.writeStartElement("rutas");
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al escribir cabecera. Es posible que el haya dejado de existir (o el acceso a mutex haya sido revocado)", e);
+        }
+
+        for (Map<Estacion, Ruta> ruta : rutas.values()) {
+            for (Ruta r : ruta.values()) {
+                escribirRuta(writer, r);
+            }
+        }
+
+        try {
+            writer.writeEndElement();
+            writer.writeEndDocument();
+        } catch (Exception e) {
+            this.logger.error("¡¡CRITICO!! --> Error al escribir el final del documento. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
+        }
+
     }
 
     @Nullable
@@ -98,13 +149,7 @@ public class DAORuta extends AbstractDAO {
 
         try {
             while (reader.hasNext()) {
-                XMLEvent evento;
-                try {
-                    evento = reader.nextEvent();
-                } catch (Exception e) {
-                    this.logger.error("Error al leer el siguiente evento", e);
-                    return;
-                }
+                XMLEvent evento = this.getNextXmlEvent(reader);
 
                 if (evento.isStartElement()) {
                     String nombreElemento = evento.asStartElement().getName().getLocalPart();
@@ -114,21 +159,11 @@ public class DAORuta extends AbstractDAO {
                         int distancia = 0;
 
                         while (reader.hasNext()) {
-                            try {
-                                evento = reader.nextEvent();
-                            } catch (Exception e) {
-                                this.logger.error("Error al leer el siguiente evento", e);
-                                return;
-                            }
+                            evento = this.getNextXmlEvent(reader);
 
                             if (evento.isStartElement()) {
                                 @NonNls String nombreElementoInterno = evento.asStartElement().getName().getLocalPart();
-                                try {
-                                    evento = reader.nextEvent();
-                                } catch (Exception e) {
-                                    this.logger.error("Error al leer el siguiente evento", e);
-                                    return;
-                                }
+                                evento = this.getNextXmlEvent(reader);
 
                                 if (evento.isCharacters()) {
                                     String valor = evento.asCharacters().getData();
@@ -160,81 +195,23 @@ public class DAORuta extends AbstractDAO {
         }
     }
 
-    private void addRutaDesdeComponentes(String origen, String destino, int distancia) {
-        Estacion estacionOrigen = null;
-        Estacion estacionDestino = null;
-        for (Estacion estacion : FachadaDAO.getInstance().getEstaciones()) {
-            if (estacion.ciudad().equals(origen)) {
-                estacionOrigen = estacion;
-            }
-            if (estacion.ciudad().equals(destino)) {
-                estacionDestino = estacion;
-            }
-        }
-        if (estacionOrigen == null) {
-            this.logger.error("No se ha encontrado la estación de origen {}", origen);
-            if (estacionDestino == null) {
-                this.logger.error("No se ha encontrado la estación de destino {}", destino);
-            }
-            return;
-        }
-        if (estacionDestino == null) {
-            this.logger.error("No se ha encontrado la estación de destino {}", destino);
-            return;
-        }
-        this.rutas.putIfAbsent(estacionOrigen, new HashMap<Estacion, Ruta>());
-        this
-                .rutas
-                .get(estacionOrigen)
-                .put(estacionDestino, new Ruta(estacionOrigen, estacionDestino, distancia));
-    }
-
-
-    @Override
-    protected void guardarArchivo(XMLStreamWriter writer) {
-        this.logger.trace("Guardando contenido en el archivo...");
+    private void escribirRuta(@NotNull XMLStreamWriter writer, @NotNull Ruta ruta) {
         try {
-            writer.writeStartDocument();
-            writer.writeStartElement("rutas");
-        } catch (Exception e) {
-            this.logger.error("Error al escribir cabecera. Es posible que el haya dejado de existir (o el acceso a mutex haya sido revocado)", e);
-        }
+            writer.writeStartElement("ruta");
 
-        for (Map<Estacion, Ruta> ruta : rutas.values()) {
-            for (Ruta r : ruta.values()) {
-                try {
-                    writer.writeStartElement("ruta");
+            escribirElemento(writer, "origen", ruta.ciudadOrigen());
 
-                    writer.writeStartElement("origen");
-                    writer.writeCharacters(r.ciudadOrigen());
-                    writer.writeEndElement();
+            escribirElemento(writer, "destino", ruta.ciudadDestino());
 
-                    writer.writeStartElement("destino");
-                    writer.writeCharacters(r.ciudadDestino());
-                    writer.writeEndElement();
+            escribirElemento(writer, "distancia", String.valueOf(ruta.distancia()));
 
-                    writer.writeStartElement("distancia");
-                    writer.writeCharacters(String.valueOf(r.distancia()));
-                    writer.writeEndElement();
-
-                    writer.writeEndElement();
-                } catch (Exception e) {
-                    this.logger.error("¡¡CRITICO!! --> Error al escribir la ruta. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
-                }
-            }
-        }
-
-        try {
             writer.writeEndElement();
-            writer.writeEndDocument();
-        } catch (Exception e) {
-            this.logger.error("¡¡CRITICO!! --> Error al escribir el final del documento. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
+        } catch (XMLStreamException e) {
+            this.logger.error("¡¡CRITICO!! --> Error al escribir la ruta. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
         }
-
     }
 
-
-    public boolean confirmarEnlace(@NotNull String origen, @NonNls @NotNull String destino) {
+    boolean confirmarEnlace(@NotNull String origen, @NonNls @NotNull String destino) {
         if (origen.isEmpty() || destino.isEmpty()) {
             return false;
         }
@@ -247,7 +224,6 @@ public class DAORuta extends AbstractDAO {
         //        Estacion estacionDestino = this.rutas.get(estacionOrigen).keySet().stream().filter(e -> e.ciudad().equals(destino)).findFirst().get();
 
     }
-
 
     public Ruta buscarRutaPorNombres(@NonNls @NotNull String origen, @NotNull @NonNls String destino) {
         Estacion estacionOrigen = this.rutas.keySet().stream().filter(e -> e.ciudad().equals(origen)).findFirst().get();

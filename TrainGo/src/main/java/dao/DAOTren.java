@@ -114,13 +114,9 @@ public class DAOTren extends AbstractDAO {
             try {
                 writer.writeStartElement("tren");
 
-                writer.writeStartElement("id");
-                writer.writeCharacters(tren.id().toString());
-                writer.writeEndElement();
+                escribirElemento(writer, "id", tren.id().toString());
 
-                writer.writeStartElement("num");
-                writer.writeCharacters(String.valueOf(tren.num()));
-                writer.writeEndElement();
+                escribirElemento(writer, "num", String.valueOf(tren.num()));
 
                 writer.writeEndElement();
             } catch (Exception e) {
@@ -203,7 +199,7 @@ public class DAOTren extends AbstractDAO {
                         this.logger.warn("No se ha podido cargar el tren (Parámetro de entrada incorrecto) . ¿Está bien formado el archivo?");
                         continue;
                     }
-                    tren = new Tren(UUID.fromString(id), num);
+                    tren = new Tren(UUID.fromString(id), num.intValue());
                     trenes.add(tren);
                 }
             }

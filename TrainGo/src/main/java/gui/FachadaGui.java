@@ -3,15 +3,24 @@ package gui;
 import aplicacion.FachadaAplicacion;
 import gui.formularios.FormularioAutenticacion;
 import gui.formularios.FormularioPrincipal;
+import org.jetbrains.annotations.TestOnly;
 
 public class FachadaGui {
 
-    FormularioPrincipal vp;
-    FachadaAplicacion fa;
+    private static FachadaGui          instancia = null;
+    private final  FachadaAplicacion   fa;
+    private        FormularioPrincipal vp;
 
-    public FachadaGui(FachadaAplicacion fa) {
+    private FachadaGui(FachadaAplicacion fa) {
         super();
         this.fa = fa;
+    }
+
+    public static FachadaGui getInstance(FachadaAplicacion fa) {
+        if (instancia == null) {
+            instancia = new FachadaGui(fa);
+        }
+        return instancia;
     }
 
     /**
@@ -33,7 +42,8 @@ public class FachadaGui {
      * - Pruebas.
      * - Cambios de idioma.
      */
-    public void ponerEnMarchaNoAuth() // mírame: ¿Posible vulnerabilidad?
+    @TestOnly
+    public void ponerEnMarchaNoAuth()
     {
         vp.dispose();
         vp = new FormularioPrincipal(fa);

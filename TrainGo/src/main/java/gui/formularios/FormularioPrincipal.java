@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -19,8 +21,8 @@ import java.util.logging.Logger;
  * Formulario (ventana) principal de la aplicación
  */
 public final class FormularioPrincipal extends JFrame {
-    private final ResourceBundle bundle;
-    private FachadaAplicacion fa;
+    private final ResourceBundle    bundle;
+    private       FachadaAplicacion fa;
 
 
     public FormularioPrincipal(@NotNull FachadaAplicacion fa) {
@@ -33,52 +35,34 @@ public final class FormularioPrincipal extends JFrame {
     private FormularioPrincipal() {
         super();
 
+        this.fa = new FachadaAplicacion();
 
         this.bundle = fa.getBundleInstance();
         lanzarFormulario();
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        try { // Pruebas de estilo
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("IBM".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FormularioPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, "Ha habido un fallo estableciendo la estética del prograama", ex);
-        }
-
-
-        // Lanzo el formulario
-        java.awt.EventQueue.invokeLater(() -> new FormularioPrincipal().setVisible(true));
-    }
-
     private void lanzarFormulario() {
 
-        JPanel jPanel1 = new JPanel();
-        JLabel jLabel1 = new JLabel();
-        JPanel jPanel2 = new JPanel();
-        JComboBox<String> comboOrigen = new JComboBox<>();
-        JComboBox<String> comboDestino = new JComboBox<>();
-        JLabel formatoFechaIncorrecto = new JLabel();
-        JFormattedTextField txtformateado_fecha = null;
+        JPanel              jPanel1                = new JPanel();
+        JLabel              jLabel1                = new JLabel();
+        JPanel              jPanel2                = new JPanel();
+        JComboBox<String>   comboOrigen            = new JComboBox<>();
+        JComboBox<String>   comboDestino           = new JComboBox<>();
+        JLabel              formatoFechaIncorrecto = new JLabel();
+        JFormattedTextField txtformateado_fecha    = null;
         try {
             txtformateado_fecha = new JFormattedTextField(new FormatedFecha(formatoFechaIncorrecto));
         } catch (ParseException e) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error en el formato de la fecha");
         }
-        JPanel jPanel3 = new JPanel();
-        JButton btn_buscar = new JButton();
-        JButton btnSalir = new JButton();
-        JMenuBar jMenuBar1 = new JMenuBar();
-        JMenu menuConfiguracion = new JMenu();
-        JMenu jMenu2 = new JMenu();
-        JMenu jMenu3 = new JMenu();
+        JPanel   jPanel3           = new JPanel();
+        JButton  btn_buscar        = new JButton();
+        JButton  btnSalir          = new JButton();
+        JMenuBar menu              = new JMenuBar();
+        JMenu    menuConfiguracion = new JMenu();
+        JMenu    menuViajes        = new JMenu();
+        @Deprecated(forRemoval = true)
+        JMenu menuComprar = new JMenu();
         JMenu menuMiUsuario = new JMenu();
 
         BufferedImage myPicture = null;
@@ -97,6 +81,11 @@ public final class FormularioPrincipal extends JFrame {
         jLabel1.setText("jLabel1");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jLabel1.setMaximumSize(null);
+
+
+        if (myPicture == null) {
+            jLabel1.setText("Error al cargar la imagen");
+        }
 
 
         jPanel1.add(new JLabel(new ImageIcon(myPicture)));
@@ -158,44 +147,56 @@ public final class FormularioPrincipal extends JFrame {
         getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
 
         menuConfiguracion.setText(fa.getBundleInstance().getString("configuracion"));
-        jMenuBar1.add(menuConfiguracion);
+        menu.add(menuConfiguracion);
 
-        jMenu2.setText(bundle.getString("mis_viajes"));
-        jMenuBar1.add(jMenu2);
+        menuViajes.setText(bundle.getString("mis_viajes"));
+        menu.add(menuViajes);
 
-        jMenu3.setText("COMPRAR");
-        jMenuBar1.add(jMenu3);
+        menuComprar.setText("COMPRAR");
+        menu.add(menuComprar);
+
+        // Ya que está como pantalla de inicio, es absurdo poner un botón que no haga nada
+        menuComprar.setVisible(false);
 
         menuMiUsuario.setText(bundle.getString("mi_usuario"));
         menuMiUsuario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         menuMiUsuario.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jMenuBar1.add(menuMiUsuario);
+        menu.add(menuMiUsuario);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(menu);
 
         pack();
 
         JFormattedTextField txtformateado_aux = txtformateado_fecha;
-        btn_buscar.addActionListener(e -> {
-            String origen = (String) comboOrigen.getSelectedItem();
-            String destino = (String) comboDestino.getSelectedItem();
-            assert txtformateado_aux != null;
-            String fecha = txtformateado_aux.getText();
-            Ruta   ruta  = fa.buscarRutaPorNombres(origen, destino);
-            Logger.getLogger(FormularioPrincipal.class.getName()).info("Buscando ruta entre " + origen + " y " + destino + " para la fecha " + fecha);
-            FormularioReservarTren fbt = new FormularioReservarTren(fa, ruta, LocalDateTime.of(Integer.parseInt(fecha.substring(6, 10)), Integer.parseInt(fecha.substring(3, 5)), Integer.parseInt(fecha.substring(0, 2)), 0, 0));
-            Logger.getLogger(FormularioPrincipal.class.getName()).info("Fecha seleccionada: " + fecha);
+        btn_buscar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String origen  = (String) comboOrigen.getSelectedItem();
+                String destino = (String) comboDestino.getSelectedItem();
+                assert txtformateado_aux != null;
+                String fecha = txtformateado_aux.getText();
+                Ruta   ruta  = fa.buscarRutaPorNombres(origen, destino);
+                Logger.getLogger(FormularioPrincipal.class.getSimpleName()).info("Buscando ruta entre " + origen + " y " + destino + " para la fecha " + fecha);
+                FormularioReservarTren fbt = new FormularioReservarTren(fa, ruta, LocalDateTime.of(Integer.parseInt(fecha.substring(6, 10)), Integer.parseInt(fecha.substring(3, 5)), Integer.parseInt(fecha.substring(0, 2)), 0, 0));
+                Logger.getLogger(FormularioPrincipal.class.getSimpleName()).info("Fecha seleccionada: " + fecha);
+            }
         });
 
         // Evento en clic para salir
-        btnSalir.addActionListener(e -> System.exit(0));
+        btnSalir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        JFrame thisFrame = this;
 
         // Evento en clic para el menú de configuración
         menuConfiguracion.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                FormularioConfiguracion fc = new FormularioConfiguracion(fa);
-                fc.setVisible(true);
+                FormularioConfiguracion fc = new FormularioConfiguracion(fa, thisFrame, true);
             }
         });
 
@@ -203,16 +204,47 @@ public final class FormularioPrincipal extends JFrame {
         menuMiUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                FormularioMiUsuario fmu = new FormularioMiUsuario(fa);
-                fmu.setVisible(true);
+                FormularioMiUsuario fmu = new FormularioMiUsuario(thisFrame, fa);
             }
         });
 
+        menuViajes.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                FormularioMisReservas fm = new FormularioMisReservas(fa);
+
+            }
+        });
 
         // Lo posiciono en el centro de la pantalla
         setLocationRelativeTo(null);
 
         this.setVisible(true);
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        try { // Pruebas de estilo
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("IBM".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FormularioPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, "Ha habido un fallo estableciendo la estética del prograama", ex);
+        }
+
+
+        // Lanzo el formulario
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new FormularioPrincipal().setVisible(true);
+            }
+        });
     }
 
 

@@ -1,8 +1,8 @@
 package dao;
 
 import aplicacion.Circulacion;
-import aplicacion.Enums.EnumCirculacion;
 import aplicacion.Ruta;
+import aplicacion.enums.EnumCirculacion;
 import aplicacion.excepciones.LecturaSiguienteEventoException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -24,39 +24,31 @@ import java.util.*;
 public class DAOCirculacion extends AbstractDAO {
 
     @NonNls
-    private static final String CIRCULACION = "circulacion";
+    private static final String CIRCULACION       = "circulacion";
     @NonNls
-    private static final String UUID = "uuid";
+    private static final String UUID              = "uuid";
     @NonNls
-    private static final String TREN = "tren_id";
+    private static final String TREN              = "tren_id";
     @NonNls
-    private static final String RUTA = "ruta";
+    private static final String RUTA              = "ruta";
     @NonNls
-    private static final String ESTADO = "estado";
+    private static final String ESTADO            = "estado";
     @NonNls
-    private static final String HORA_SALIDA = "hora_salida";
+    private static final String HORA_SALIDA       = "hora_salida";
     @NonNls
     private static final String HORA_LLEGADA_REAL = "hora_llegada";
     @NonNls
     private static final String PRECIO_POR_ASIENTO = "precio_por_asiento";
 
-    private static DAOCirculacion instance = null; // Singleton pattern
-    private final FachadaDAO fa_dao;
-    private final Map<Ruta, List<Circulacion>> circulaciones;
+    private static DAOCirculacion               instance = null; // Singleton pattern
+    private final  FachadaDAO                   fa_dao;
+    private final  Map<Ruta, List<Circulacion>> circulaciones;
 
     private DAOCirculacion(FachadaDAO fa_dao) {
         super();
         this.fa_dao = fa_dao;
         this.obtenerLogger();
         this.circulaciones = new HashMap<>();
-    }
-
-    public static DAOCirculacion getInstance(FachadaDAO fadao)// Singleton
-    {
-        if (instance == null) {
-            instance = new DAOCirculacion(fadao);
-        }
-        return instance;
     }
 
     @TestOnly
@@ -75,44 +67,12 @@ public class DAOCirculacion extends AbstractDAO {
         daoCirculacion.save();
     }
 
-
-
-
-
-    @Nullable
-    @Override
-    protected XMLStreamWriter obtenerXMLStreamWriter() {
-        this.obtenerLogger();
-
-        XMLStreamWriter writer;
-
-        try {
-            XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
-            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("circulaciones.xml"));
-        } catch (FileNotFoundException | XMLStreamException e) {
-            this.logger.error("Error al volcar el archivo", e);
-            return null;
+    public static DAOCirculacion getInstance(FachadaDAO fadao)// Singleton
+    {
+        if (instance == null) {
+            instance = new DAOCirculacion(fadao);
         }
-
-        return writer;
-    }
-
-    @Nullable
-    @Override
-    protected XMLEventReader obtenerXmlEventReader() {
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        XMLEventReader reader;
-        try {
-            reader = xmlInputFactory.createXMLEventReader(new FileInputStream("circulaciones.xml"));
-        } catch (FileNotFoundException | XMLStreamException e) {
-            this.logger.error("Error al leer el archivo", e);
-            return null;
-        }
-        return reader;
-    }
-
-    Map<Ruta, List<Circulacion>> circulaciones() {
-        return this.circulaciones;
+        return instance;
     }
 
     @Override
@@ -136,83 +96,52 @@ public class DAOCirculacion extends AbstractDAO {
         for (Circulacion circulacion : circulacionesSinApilar) {
             try {
                 writer.writeStartElement(CIRCULACION);
-                writer.writeStartElement(UUID);
-                writer.writeCharacters(circulacion.id().toString());
-                writer.writeEndElement();
 
-                writer.writeStartElement(TREN);
-                writer.writeCharacters(String.valueOf(circulacion.trenId()));
-                writer.writeEndElement();
+                escribirElemento(writer, UUID, circulacion.id().toString());
+
+                escribirElemento(writer, TREN, String.valueOf(circulacion.trenId()));
 
                 writer.writeStartElement(RUTA);
-                writer.writeStartElement("origen");
-                writer.writeCharacters(String.valueOf(circulacion.nombreCiudadOrigen()));
-                writer.writeEndElement();
-                writer.writeStartElement("destino");
-                writer.writeCharacters(String.valueOf(circulacion.nombreCiudadDestino()));
-                writer.writeEndElement();
+                escribirElemento(writer, "origen", String.valueOf(circulacion.nombreCiudadOrigen()));
+                escribirElemento(writer, "destino", String.valueOf(circulacion.nombreCiudadDestino()));
                 writer.writeEndElement();
 
                 //  ----------------- ESTADO -----------------
 
-                writer.writeStartElement(ESTADO);
-                writer.writeCharacters(circulacion.estado().toString());
-                writer.writeEndElement();
+                escribirElemento(writer, ESTADO, circulacion.estado().toString());
 
                 //  ----------------- HORA SALIDA -----------------
 
                 writer.writeStartElement(HORA_SALIDA);
 
-                writer.writeStartElement("año");
-                writer.writeCharacters(String.valueOf(circulacion.horaSalida().getYear()));
-                writer.writeEndElement();
+                escribirElemento(writer, "año", String.valueOf(circulacion.horaSalida().getYear()));
 
-                writer.writeStartElement("mes");
-                writer.writeCharacters(String.valueOf(circulacion.horaSalida().getMonthValue()));
-                writer.writeEndElement();
+                escribirElemento(writer, "mes", String.valueOf(circulacion.horaSalida().getMonthValue()));
 
-                writer.writeStartElement("dia");
-                writer.writeCharacters(String.valueOf(circulacion.horaSalida().getDayOfMonth()));
-                writer.writeEndElement();
+                escribirElemento(writer, "dia", String.valueOf(circulacion.horaSalida().getDayOfMonth()));
 
-                writer.writeStartElement("hora");
-                writer.writeCharacters(String.valueOf(circulacion.horaSalida().getHour()));
-                writer.writeEndElement();
+                escribirElemento(writer, "hora", String.valueOf(circulacion.horaSalida().getHour()));
 
-                writer.writeStartElement("minutos");
-                writer.writeCharacters(String.valueOf(circulacion.horaSalida().getMinute()));
-                writer.writeEndElement();
+                escribirElemento(writer, "minutos", String.valueOf(circulacion.horaSalida().getMinute()));
 
                 writer.writeEndElement();
 
                 if (circulacion.horaLlegadaReal() != null) {
                     writer.writeStartElement(HORA_LLEGADA_REAL);
 
-                    writer.writeStartElement("año");
-                    writer.writeCharacters(String.valueOf(circulacion.horaLlegadaReal().getYear()));
-                    writer.writeEndElement();
+                    escribirElemento(writer, "año", String.valueOf(circulacion.horaLlegadaReal().getYear()));
 
-                    writer.writeStartElement("mes");
-                    writer.writeCharacters(String.valueOf(circulacion.horaLlegadaReal().getMonthValue()));
-                    writer.writeEndElement();
+                    escribirElemento(writer, "mes", String.valueOf(circulacion.horaLlegadaReal().getMonthValue()));
 
-                    writer.writeStartElement("dia");
-                    writer.writeCharacters(String.valueOf(circulacion.horaLlegadaReal().getDayOfMonth()));
-                    writer.writeEndElement();
+                    escribirElemento(writer, "dia", String.valueOf(circulacion.horaLlegadaReal().getDayOfMonth()));
 
-                    writer.writeStartElement("hora");
-                    writer.writeCharacters(String.valueOf(circulacion.horaLlegadaReal().getHour()));
-                    writer.writeEndElement();
+                    escribirElemento(writer, "hora", String.valueOf(circulacion.horaLlegadaReal().getHour()));
 
-                    writer.writeStartElement("minutos");
-                    writer.writeCharacters(String.valueOf(circulacion.horaLlegadaReal().getMinute()));
-                    writer.writeEndElement();
+                    escribirElemento(writer, "minutos", String.valueOf(circulacion.horaLlegadaReal().getMinute()));
 
                     writer.writeEndElement();
                 }
-                writer.writeStartElement(PRECIO_POR_ASIENTO);
-                writer.writeCharacters(circulacion.precioPorAsiento().toString());
-                writer.writeEndElement();
+                escribirElemento(writer, PRECIO_POR_ASIENTO, circulacion.precioPorAsiento().toString());
                 writer.writeEndElement();
 
             } catch (XMLStreamException e) {
@@ -228,6 +157,42 @@ public class DAOCirculacion extends AbstractDAO {
         }
 
         this.logger.info("Archivo guardado de forma satisfactoria");
+    }
+
+    @Nullable
+    @Override
+    protected XMLStreamWriter obtenerXMLStreamWriter() {
+        this.obtenerLogger();
+
+        XMLStreamWriter writer;
+
+        try {
+            XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("circulaciones.xml"));
+        } catch (FileNotFoundException | XMLStreamException e) {
+            this.logger.error("Error al volcar el archivo", e);
+            return null;
+        }
+
+        return writer;
+    }
+
+    private Map<Ruta, List<Circulacion>> circulaciones() {
+        return this.circulaciones;
+    }
+
+    @Nullable
+    @Override
+    protected XMLEventReader obtenerXmlEventReader() {
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        XMLEventReader  reader;
+        try {
+            reader = xmlInputFactory.createXMLEventReader(new FileInputStream("circulaciones.xml"));
+        } catch (FileNotFoundException | XMLStreamException e) {
+            this.logger.error("Error al leer el archivo", e);
+            return null;
+        }
+        return reader;
     }
 
     @Override
@@ -269,7 +234,7 @@ public class DAOCirculacion extends AbstractDAO {
                 switch (evento.asStartElement().getName().getLocalPart()) {
                     case UUID -> uuid = _procesarUuid(reader);
                     case TREN -> trenId = _procesarTren(reader, trenId);
-                    case RUTA -> ruta = _procesarRuta(reader);
+                    case RUTA -> ruta = _procesarEstacionesRuta(reader);
                     case ESTADO -> estado = _procesarEstado(reader, estado);
                     case HORA_SALIDA -> horaSalida = _gestionarYCrearLaHora(reader, fecha);
                     case HORA_LLEGADA_REAL -> horaLlegadaReal = _gestionarYCrearLaHora(reader, fecha);
@@ -315,11 +280,11 @@ public class DAOCirculacion extends AbstractDAO {
     }
 
     @NotNull
-    private Ruta _procesarRuta(@NotNull XMLEventReader reader) {
+    private Ruta _procesarEstacionesRuta(@NotNull XMLEventReader reader) {
         StringBuffer origenSB = new StringBuffer();
         StringBuffer destinoSB = new StringBuffer();
 
-        _procesarRuta(reader, origenSB, destinoSB);
+        _procesarEstacionesRuta(reader, origenSB, destinoSB);
 
         if (origenSB.isEmpty() || destinoSB.isEmpty()) {
             this.logger.error("Error al procesar la ruta, origen o destino vacíos");
@@ -382,8 +347,7 @@ public class DAOCirculacion extends AbstractDAO {
     @NotNull
     private BigDecimal _procesarPrecioPorAsiento(@NotNull XMLEventReader reader) {
         BigDecimal precioPorAsiento;
-        XMLEvent   evento;
-        evento = getNextXmlEvent(reader);
+        XMLEvent evento = getNextXmlEvent(reader);
         if (!evento.isCharacters()) {
             this.logger.error("Error al leer el precio por asiento: no es un número");
             throw new IllegalArgumentException("Error al leer el precio por asiento: no es un número");
@@ -407,7 +371,7 @@ public class DAOCirculacion extends AbstractDAO {
         this.logger.debug("Circulación añadida: {}", circulacion);
     }
 
-    private void _procesarRuta(@NotNull XMLEventReader reader, StringBuffer origen, StringBuffer destino) {
+    private void _procesarEstacionesRuta(@NotNull XMLEventReader reader, StringBuffer origen, StringBuffer destino) {
         this.logger.debug("procesando una ruta");
 
         while (reader.hasNext()) {

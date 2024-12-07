@@ -100,5 +100,11 @@ public abstract class AbstractDAO implements IDAO {
         return evento;
     }
 
+    void escribirElemento(@NotNull XMLStreamWriter writer, String name, String value) throws XMLStreamException {
+        writer.writeStartElement(name);
+        writer.writeCharacters(value);
+        writer.writeEndElement();
+    }
+
 
 }

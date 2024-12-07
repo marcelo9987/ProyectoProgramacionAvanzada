@@ -35,21 +35,6 @@ public final class Usuario {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    @NotNull
-    @Contract(pure = true)
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "DNI=" + DNI +
-                ", nombre='" + nombre + '\'' +
-                ", correo='" + correo + '\'' +
-                ", contrasenha='" + contrasenha + '\'' +
-                ", telefono=" + telefono +
-                ", direccion='" + direccion + '\'' +
-                ", fechaNacimiento=" + fechaNacimiento.toString() +
-                '}';
-    }
-
     /**
      * Devuelve una cadena con los datos del usuario listos para ser guardados en un archivo.
      *
@@ -61,7 +46,7 @@ public final class Usuario {
     @Deprecated
     public String printReadyString() {
         return "Usuario{"
-                + DNI + ","
+                + dni() + ","
                 + nombre + ","
                 + correo + ","
                 + contrasenha + ","
@@ -70,6 +55,14 @@ public final class Usuario {
                 + fechaNacimiento.toString().substring(0, 10) + fechaNacimiento.toString().substring(23) + '}';
     }
 
+    public int DNI() {
+        return dni();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Integer.valueOf(dni()));
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -77,11 +70,7 @@ public final class Usuario {
             return false;
         }
 
-        return DNI == usuario.DNI;
-    }
-
-    public int DNI() {
-        return DNI;
+        return dni() == usuario.dni();
     }
 
     public String contrasenha() {
@@ -115,11 +104,22 @@ public final class Usuario {
         this.telefono = nuevoTelefono;
     }
 
-
+    @NotNull
+    @Contract(pure = true)
     @Override
-    public int hashCode() {
-        return Objects.hash(Integer.valueOf(DNI));
+    public String toString() {
+        return "Usuario{" +
+                "DNI=" + dni() +
+                ", nombre='" + nombre + '\'' +
+                ", correo='" + correo + '\'' +
+                ", contrasenha='" + contrasenha + '\'' +
+                ", telefono=" + telefono +
+                ", direccion='" + direccion + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento.toString() +
+                '}';
     }
 
-
+    public int dni() {
+        return DNI;
+    }
 }

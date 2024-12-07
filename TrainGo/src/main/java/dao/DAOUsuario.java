@@ -1,13 +1,17 @@
 package dao;
 
 import aplicacion.Usuario;
+import aplicacion.excepciones.SituacionDeRutasInesperadaException;
 import aplicacion.excepciones.UsuarioNoEncontradoException;
+import aplicacion.excepciones.noHayUsuariosRegistradosException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.xml.stream.*;
 import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,15 +20,14 @@ import java.util.List;
 
 public class DAOUsuario extends AbstractDAO {
 
-    private final List<Usuario> usuarios;
+    private static DAOUsuario    instance = null;
+    private final  List<Usuario> usuarios;
 
     private DAOUsuario() {
         super();
         this.obtenerLogger();
         this.usuarios = new ArrayList<>();
     }
-
-    private static DAOUsuario instance = null;
 
     public static void main(String[] args) {
         DAOUsuario dao = getInstance();
@@ -42,10 +45,6 @@ public class DAOUsuario extends AbstractDAO {
 //        dao.save();
     }
 
-    private Collection<Usuario> usuarios() {
-        return this.usuarios;
-    }
-
     public static DAOUsuario getInstance() {
         if (instance == null) {
             instance = new DAOUsuario();
@@ -53,6 +52,11 @@ public class DAOUsuario extends AbstractDAO {
         return instance;
     }
 
+    private Collection<Usuario> usuarios() {
+        return this.usuarios;
+    }
+
+    @Nullable
     @Override
     protected XMLStreamWriter obtenerXMLStreamWriter() {
         this.obtenerLogger();
@@ -62,9 +66,12 @@ public class DAOUsuario extends AbstractDAO {
         try {
             XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
             writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("usuarios.xml"));
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
+            this.logger.error("El archivo no ha podido ser encontrado", e);
+            throw new SituacionDeRutasInesperadaException("El archivo no ha podido ser encontrado");
+        } catch (XMLStreamException e) {
             this.logger.error("Error al volcar el archivo", e);
-            return null;
+            throw new SituacionDeRutasInesperadaException("Error al volcar el archivo");
         }
 
         return writer;
@@ -76,77 +83,18 @@ public class DAOUsuario extends AbstractDAO {
 
         try {
             writer.writeStartDocument();
-        } catch (XMLStreamException e) {
-            this.logger.error("Error al escribir cabecera en el archivo", e);
-        }
 
-        try {
             writer.writeStartElement("usuarios");
-        } catch (XMLStreamException e) {
-            this.logger.error("Error al escribir inicio de usuarios en el archivo", e);
-        }
 
-        for (Usuario usuario : usuarios) {
-            try {
-                writer.writeStartElement("usuario");
+            for (Usuario usuario : usuarios) {
 
-                writer.writeStartElement("DNI");
-                writer.writeCharacters(String.valueOf(usuario.DNI()));
-                writer.writeEndElement();
-
-                writer.writeStartElement("nombre");
-                writer.writeCharacters(usuario.nombre());
-                writer.writeEndElement();
-
-                writer.writeStartElement("correo");
-                writer.writeCharacters(usuario.correo());
-                writer.writeEndElement();
-
-                writer.writeStartElement("contrasenha");
-                writer.writeCharacters(usuario.contrasenha());
-                writer.writeEndElement();
-
-                writer.writeStartElement("telefono");
-                writer.writeCharacters(String.valueOf(usuario.telefono()));
-                writer.writeEndElement();
-
-                writer.writeStartElement("direccion");
-                writer.writeCharacters(usuario.direccion());
-                writer.writeEndElement();
-
-                writer.writeStartElement("fechaNacimiento");
-
-                writer.writeStartElement("dia");
-                writer.writeCharacters(String.valueOf(usuario.fechaNacimiento().getDayOfMonth()));
-                writer.writeEndElement();
-
-                writer.writeStartElement("mes");
-                writer.writeCharacters(String.valueOf(usuario.fechaNacimiento().getMonthValue()));
-                writer.writeEndElement();
-
-                writer.writeStartElement("anho");
-                writer.writeCharacters(String.valueOf(usuario.fechaNacimiento().getYear()));
-                writer.writeEndElement();
-
-                writer.writeEndElement();
-
-                writer.writeEndElement();
-            } catch (XMLStreamException e) {
-                this.logger.error("Error al escribir en el archivo <Seccion Usuario(s)>", e);
+                escribirUsuario(writer, usuario);
             }
-        }
 
-
-        try {
             writer.writeEndElement();
-        } catch (XMLStreamException e) {
-            this.logger.error("Error al escribir fin de usuarios en el archivo", e);
-        }
 
-        try {
-            writer.writeEndDocument();
         } catch (XMLStreamException e) {
-            this.logger.error("Error al escribir fin de documento en el archivo", e);
+            this.logger.error("Error al escribir en el archivo", e);
         }
 
         try {
@@ -157,6 +105,24 @@ public class DAOUsuario extends AbstractDAO {
         }
     }
 
+    private void escribirUsuario(@NotNull XMLStreamWriter writer, @NotNull Usuario usuario) throws XMLStreamException {
+        writer.writeStartElement("usuario");
+
+        escribirElemento(writer, "DNI", String.valueOf(usuario.DNI()));
+        escribirElemento(writer, "nombre", usuario.nombre());
+        escribirElemento(writer, "correo", usuario.correo());
+        escribirElemento(writer, "contrasenha", usuario.contrasenha());
+        escribirElemento(writer, "telefono", String.valueOf(usuario.telefono()));
+        escribirElemento(writer, "direccion", usuario.direccion());
+
+        writer.writeStartElement("fechaNacimiento");
+        escribirElemento(writer, "dia", String.valueOf(usuario.fechaNacimiento().getDayOfMonth()));
+        escribirElemento(writer, "mes", String.valueOf(usuario.fechaNacimiento().getMonthValue()));
+        escribirElemento(writer, "anho", String.valueOf(usuario.fechaNacimiento().getYear()));
+        writer.writeEndElement();
+
+        writer.writeEndElement();
+    }
 
     @Override
     protected XMLEventReader obtenerXmlEventReader() {
@@ -176,22 +142,17 @@ public class DAOUsuario extends AbstractDAO {
     @Override
     protected void cargarArchivo(@NotNull XMLEventReader reader) {
         Usuario usr;
-        String nombre = "err";
-        String correo = "err";
-        String contrasenha = "err";
-        int telefono = 0;
-        String direccion = "err";
-        int[] fechaNacimiento = new int[3];
-        int DNI = 0;
+        String nombre          = "err";
+        String correo          = "err";
+        String contrasenha     = "err";
+        int    telefono        = 0;
+        String direccion       = "err";
+        int[]  fechaNacimiento = new int[3];
+        int    DNI             = 0;
 
         while (reader.hasNext()) {
             XMLEvent evento;
-            try {
-                evento = reader.nextEvent();
-            } catch (Exception e) {
-                this.logger.error("Error al obtener el siguiente evento (¿Puede que el archivo esté mal formado?)", e);
-                continue;
-            }
+            evento = this.getNextXmlEvent(reader);
 
             if (evento.isStartElement()) {
                 try {
@@ -200,22 +161,22 @@ public class DAOUsuario extends AbstractDAO {
                             this.logger.trace("Inicio de usuario");
                             break;
                         case "DNI":
-                            evento = reader.nextEvent();
+                            evento = this.getNextXmlEvent(reader);
                             DNI = Integer.parseInt(evento.asCharacters().getData());
                             this.logger.trace("DNI: {}", evento.asCharacters().getData());
                             break;
                         case "nombre":
-                            evento = reader.nextEvent();
+                            evento = this.getNextXmlEvent(reader);
                             nombre = evento.asCharacters().getData();
                             this.logger.trace("Nombre: {}", nombre);
                             break;
                         case "correo":
-                            evento = reader.nextEvent();
+                            evento = this.getNextXmlEvent(reader);
                             correo = evento.asCharacters().getData();
                             this.logger.trace("Correo: {}", correo);
                             break;
                         case "contrasenha":
-                            evento = reader.nextEvent();
+                            evento = this.getNextXmlEvent(reader);
                             contrasenha = evento.asCharacters().getData();
                             this.logger.trace("Contraseña: {}", contrasenha);
                             break;
@@ -225,17 +186,17 @@ public class DAOUsuario extends AbstractDAO {
                                 this.logger.error("Error al leer el archivo: el teléfono no es un número. Se asigna 0");
                                 break;
                             }
-                            evento = reader.nextEvent();
+                            evento = this.getNextXmlEvent(reader);
                             telefono = Integer.parseInt(evento.asCharacters().getData());
                             this.logger.trace("Teléfono: {}", telefono);
                             break;
                         case "direccion":
-                            evento = reader.nextEvent();
+                            evento = this.getNextXmlEvent(reader);
                             direccion = evento.asCharacters().getData();
                             this.logger.trace("Dirección: {}", direccion);
                             break;
                         case "fechaNacimiento":
-                            evento = reader.nextEvent();
+                            evento = this.getNextXmlEvent(reader);
                             while (reader.hasNext()) {
                                 if (evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals("fechaNacimiento")) {
                                     break;
@@ -244,26 +205,26 @@ public class DAOUsuario extends AbstractDAO {
                                     logger.debug("Inicio de campo de fecha de nacimiento de tipo: {}", evento.asStartElement().getName().getLocalPart());
                                     switch (evento.asStartElement().getName().getLocalPart()) {
                                         case "dia":
-                                            evento = reader.nextEvent();
+                                            evento = this.getNextXmlEvent(reader);
 //                                            fechaNacimiento.set(Calendar.DAY_OF_MONTH, Integer.parseInt(evento.asCharacters().getData()));
                                             fechaNacimiento[0] = Integer.parseInt(evento.asCharacters().getData());
                                             this.logger.trace("Día de nacimiento: {}", evento.asCharacters().getData());
                                             break;
                                         case "mes":
-                                            evento = reader.nextEvent();
+                                            evento = this.getNextXmlEvent(reader);
 //                                            fechaNacimiento.set(Calendar.MONTH, Integer.parseInt(evento.asCharacters().getData()));
                                             fechaNacimiento[1] = Integer.parseInt(evento.asCharacters().getData());
                                             this.logger.trace("Mes de nacimiento: {}", evento.asCharacters().getData());
                                             break;
                                         case "anho":
-                                            evento = reader.nextEvent();
+                                            evento = this.getNextXmlEvent(reader);
 //                                            fechaNacimiento.set(Calendar.YEAR, Integer.parseInt(evento.asCharacters().getData()));
                                             fechaNacimiento[2] = Integer.parseInt(evento.asCharacters().getData());
                                             this.logger.trace("Año de nacimiento: {}", evento.asCharacters().getData());
                                             break;
                                     }
                                 }
-                                evento = reader.nextEvent();
+                                evento = this.getNextXmlEvent(reader);
                             }
                             this.logger.trace("Fecha de nacimiento: {}", fechaNacimiento);
                             break;
@@ -336,7 +297,7 @@ public class DAOUsuario extends AbstractDAO {
      */
     public Usuario encontrarUsuarioPorEmail(String email) {
         if (comprobarHayUsuariosEnOrigen()) {
-            return null;
+            throw new noHayUsuariosRegistradosException();
         }
         Usuario usr = this.usuarios.stream().filter(u -> u.correo().equals(email)).findFirst().orElse(null);
         if (usr != null) {

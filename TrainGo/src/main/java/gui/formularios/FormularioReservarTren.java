@@ -15,24 +15,17 @@ import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
-public class FormularioReservarTren extends JFrame {
+public final class FormularioReservarTren extends JFrame {
     private static final Logger         logger = LoggerFactory.getLogger(FormularioReservarTren.class);
     private static       ResourceBundle bundle;
-    private final        Ruta           rutaEscogida;
-    private final        LocalDateTime  fechaSalida;
     FachadaAplicacion fa;
-    private JPanel panelPrincipal;
     private JTable tablaTrenesRuta;
-    private JButton btnCancelar;
-    private JButton botonReservar;
+
     public FormularioReservarTren(@NotNull FachadaAplicacion fa, Ruta rutaEscogida, LocalDateTime fechaSalida) {
         super();
 
         this.fa = fa;
         bundle = fa.getBundleInstance();
-
-        this.rutaEscogida = rutaEscogida;
-        this.fechaSalida = fechaSalida;
 
 
         this.setTitle("Reservar tren");
@@ -42,9 +35,9 @@ public class FormularioReservarTren extends JFrame {
     }
 
     private void desplegarVentana(Ruta ruta, LocalDateTime fechaSaida) {
-        this.panelPrincipal = new JPanel();
+        JPanel panelPrincipal = new JPanel();
 
-        this.panelPrincipal.setLayout(new BorderLayout());
+        panelPrincipal.setLayout(new BorderLayout());
 
         this.tablaTrenesRuta = new JTable();
         tablaTrenesRuta.setModel(new ModeloTablaCirculaciones());
@@ -53,20 +46,41 @@ public class FormularioReservarTren extends JFrame {
         scrollPane.setViewportView(tablaTrenesRuta);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        this.panelPrincipal.add(scrollPane, BorderLayout.CENTER);
+        panelPrincipal.add(scrollPane, BorderLayout.CENTER);
 
         this.establecerCirculaciones(ruta, fechaSaida);
 
         // Panel para los botones
         JPanel panelBotones = new JPanel();
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER));
-        this.btnCancelar = new JButton(bundle.getString("cancelar"));
-        this.botonReservar = new JButton(bundle.getString("reservar"));
+        JButton btnCancelar   = new JButton(bundle.getString("cancelar"));
+        JButton botonReservar = new JButton(bundle.getString("reservar"));
+
+        botonReservar.addActionListener(e -> {
+            ModeloTablaCirculaciones modelocircu = (ModeloTablaCirculaciones) this.tablaTrenesRuta.getModel();
+            Circulacion              circulacion = (Circulacion) modelocircu.getCirculacion(tablaTrenesRuta.getSelectedRow());
+            if (circulacion != null) {
+                try {
+                    LoggerFactory.getLogger(FormularioReservarTren.class).info("Reservando tren: {}", circulacion);
+                    fa.reservarTren(circulacion);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(this, bundle.getString("reserva.ya.existe"));
+                    return;
+                }
+                JOptionPane.showMessageDialog(this, bundle.getString("reserva.realizada.con.exito"));
+            }
+            else {
+                JOptionPane.showMessageDialog(this, bundle.getString("seleccione.una.circulacion"));
+            }
+        });
+
+        btnCancelar.addActionListener(e -> this.dispose());
+
 
         panelBotones.add(btnCancelar);
         panelBotones.add(botonReservar);
 
-        this.panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
 
         this.add(panelPrincipal);
         this.setSize(600, 400);

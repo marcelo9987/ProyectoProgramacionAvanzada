@@ -10,22 +10,21 @@ import javax.swing.*;
 import java.util.ResourceBundle;
 
 public final class FormularioMiUsuario extends JDialog {
-    private static final int MODIFICAR = 0;
-    private static final int GUARDAR = 1;
+    private static final int INICIO    = 0;
+    private static final int MODIFICAR = 1;
+    private static final int GUARDAR   = 2;
 
     private final Logger logger;
     private final FachadaAplicacion fa;
     private final ResourceBundle bundle;
 
-    private JLabel lblNombre;
-    private JLabel lblDNI;
     private JTextField txtCorreo, txtTelefono, txtDireccion;
     private JButton btnGuardar;
     private JButton btnModificar;
 
 
-    public FormularioMiUsuario(FachadaAplicacion fa) {
-        super();
+    public FormularioMiUsuario(JFrame parent, FachadaAplicacion fa) {
+        super(parent, true);
         this.logger = LoggerFactory.getLogger(FormularioMiUsuario.class);
         this.fa = fa;
         this.bundle = this.fa.getBundleInstance();
@@ -36,12 +35,12 @@ public final class FormularioMiUsuario extends JDialog {
         JPanel panelPrincipal = new JPanel();
 
 
-        lblNombre = new JLabel(fa.getUsrNombre());
+        JLabel lblNombre = new JLabel(fa.getUsrNombre());
 
         int i_dni = fa.getUsrDni();
         char c_dni = util.Criptograficos.calculateDniLetter(i_dni);
         String s_dni = Integer.toString(i_dni) + c_dni;
-        lblDNI = new JLabel(s_dni);
+        JLabel lblDNI = new JLabel(s_dni);
 
         JLabel lblCorreo = new JLabel(bundle.getString("correo"));
 
@@ -62,6 +61,8 @@ public final class FormularioMiUsuario extends JDialog {
         btnModificar = new JButton(bundle.getString("modificar"));
 
         btnGuardar = new JButton(bundle.getString("guardar"));
+
+        gestionarModificarYGuardar(INICIO);
 
         GroupLayout layout = new GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(layout);
@@ -132,14 +133,13 @@ public final class FormularioMiUsuario extends JDialog {
                 gestionarModificarYGuardar(GUARDAR)
         );
 
-        this.setVisible(true);
         this.setLocationRelativeTo(null);
-
+        this.setVisible(true);
 
     }
 
 
-    private void gestionarModificarYGuardar(@MagicConstant(intValues = {MODIFICAR, GUARDAR}) int accion) {
+    private void gestionarModificarYGuardar(@MagicConstant(intValues = {INICIO, MODIFICAR, GUARDAR}) int accion) {
         if (accion == MODIFICAR) {
             logger.trace("BOTÓN MODIFICAR PULSADO");
             if (!this.btnModificar.isEnabled()) {
@@ -174,6 +174,12 @@ public final class FormularioMiUsuario extends JDialog {
                 logger.error("Error al actualizar el usuario: El usuario no se ha encontrado", e);
             }
             actualizarComponentesObsoletos();
+        }
+        if (accion == INICIO) {
+            this.btnGuardar.setEnabled(false);
+            this.txtCorreo.setEditable(false);
+            this.txtTelefono.setEditable(false);
+            this.txtDireccion.setEditable(false);
         }
     }
 

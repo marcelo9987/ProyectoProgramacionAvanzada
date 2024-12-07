@@ -20,6 +20,7 @@ public final class Criptograficos {
 
     private static final String ALGORITMO = "DES";
     private static final String CLAVE = "82837445";
+    public static final int NUMERO_MAXIMO_DNI = 99999999;
 
     /**
      * Método que obtiene una clave secreta a partir de una cadena de texto.
@@ -131,7 +132,7 @@ public final class Criptograficos {
      * @return Letra del DNI
      */
     public static char calculateDniLetter(int dniNumber) throws IllegalArgumentException {
-        if (dniNumber < 0 || dniNumber > 99999999) {
+        if (dniNumber < 0 || dniNumber > NUMERO_MAXIMO_DNI) {
             throw new IllegalArgumentException("El número del DNI no puede ser negativo.");
         }
 

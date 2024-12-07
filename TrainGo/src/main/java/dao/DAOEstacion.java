@@ -64,16 +64,32 @@ public class DAOEstacion extends AbstractDAO {
     }
 
     @Override
-    protected XMLEventReader obtenerXmlEventReader() {
-        this.obtenerLogger();
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        XMLEventReader xmlReader = null;
+    protected void guardarArchivo(XMLStreamWriter writer) {
         try {
-            xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("estaciones.xml"));
-        } catch (FileNotFoundException | XMLStreamException e) {
-            throw new LecturaSiguienteEventoException();
+            writer.writeStartDocument();
+            writer.writeStartElement("estaciones");
+        } catch (Exception e) {
+            this.logger.error("Error al escribir la cabecera, es posible que el archivo haya dejado de existir (o el acceso a mutex haya sido revocado)", e);
         }
-        return xmlReader;
+
+        for (Estacion estacion : estaciones) {
+            try {
+                writer.writeStartElement("estacion");
+                escribirElemento(writer, "nombre", estacion.ciudad());
+                writer.writeEndElement();
+            } catch (Exception e) {
+                this.logger.error("¡¡CRITICO!! --> Error al escribir la estacion. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
+            }
+        }
+
+        try {
+            writer.writeEndElement();
+            writer.writeEndDocument();
+        } catch (Exception e) {
+            this.logger.error("¡¡CRITICO!! --> Error al escribir el final del documento. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
+        }
+
+        this.logger.trace("Contenido guardado en el archivo con éxito!");
     }
 
 
@@ -112,34 +128,16 @@ public class DAOEstacion extends AbstractDAO {
     }
 
     @Override
-    protected void guardarArchivo(XMLStreamWriter writer) {
+    protected XMLEventReader obtenerXmlEventReader() {
+        this.obtenerLogger();
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        XMLEventReader xmlReader;
         try {
-            writer.writeStartDocument();
-            writer.writeStartElement("estaciones");
-        } catch (Exception e) {
-            this.logger.error("Error al escribir la cabecera, es posible que el archivo haya dejado de existir (o el acceso a mutex haya sido revocado)", e);
+            xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("estaciones.xml"));
+        } catch (FileNotFoundException | XMLStreamException e) {
+            throw new LecturaSiguienteEventoException();
         }
-
-        for (Estacion estacion : estaciones) {
-            try {
-                writer.writeStartElement("estacion");
-                writer.writeStartElement("nombre");
-                writer.writeCharacters(estacion.ciudad());
-                writer.writeEndElement();
-                writer.writeEndElement();
-            } catch (Exception e) {
-                this.logger.error("¡¡CRITICO!! --> Error al escribir la estacion. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
-            }
-        }
-
-        try {
-            writer.writeEndElement();
-            writer.writeEndDocument();
-        } catch (Exception e) {
-            this.logger.error("¡¡CRITICO!! --> Error al escribir el final del documento. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
-        }
-
-        this.logger.trace("Contenido guardado en el archivo con éxito!");
+        return xmlReader;
     }
 
     @Override

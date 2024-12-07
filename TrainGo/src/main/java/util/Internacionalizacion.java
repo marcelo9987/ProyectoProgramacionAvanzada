@@ -1,6 +1,6 @@
 package util;
 
-import aplicacion.Enums.EnumIdioma;
+import aplicacion.enums.EnumIdioma;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;

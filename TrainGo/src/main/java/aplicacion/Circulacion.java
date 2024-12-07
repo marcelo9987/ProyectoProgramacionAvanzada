@@ -1,6 +1,7 @@
 package aplicacion;
 
-import aplicacion.Enums.EnumCirculacion;
+import aplicacion.anotaciones.NoNegativo;
+import aplicacion.enums.EnumCirculacion;
 import dao.FachadaDAO;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
@@ -9,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
@@ -19,19 +21,19 @@ import java.util.UUID;
  *
  * @apiNote Una circulación es el viaje de un tren por una ruta
  */
-
 public final class Circulacion implements Comparable {
     private final UUID            id;
     private final Tren            tren;
     private final Ruta            ruta;
     private final EnumCirculacion estado;
     private final LocalDateTime   horaSalida;
+    @NoNegativo
     private final BigDecimal      precioPorAsiento;
     @Nullable
     private       LocalDateTime   horaLlegadaReal;
 
 
-    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, @Nullable LocalDateTime horaLlegadaReal, BigDecimal precioPorAsiento) {
+    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, @Nullable LocalDateTime horaLlegadaReal, @NoNegativo BigDecimal precioPorAsiento) {
         super();
         this.id = id;
         this.tren = tren;
@@ -42,7 +44,7 @@ public final class Circulacion implements Comparable {
         this.precioPorAsiento = precioPorAsiento;
     }
 
-    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, BigDecimal precioPorAsiento) {
+    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, @NoNegativo BigDecimal precioPorAsiento) {
         super();
         this.id = id;
         this.tren = tren;
@@ -182,7 +184,7 @@ public final class Circulacion implements Comparable {
     public String getCadenaHoraSalida() {
         int hora   = horaSalida.getHour();
         int minuto = horaSalida.getMinute();
-        return new String(((hora < 10) ? "0" : "") + hora + ":" + ((minuto < 10) ? "0" : "") + minuto);
+        return ((hora < 10) ? "0" : "") + hora + ":" + ((minuto < 10) ? "0" : "") + minuto;
     }
 
     @Override
@@ -203,7 +205,7 @@ public final class Circulacion implements Comparable {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return id().hashCode();
     }
 
     @Override
@@ -212,7 +214,7 @@ public final class Circulacion implements Comparable {
             return false;
         }
 
-        return id.equals(that.id);
+        return id().equals(that.id());
     }
 
     @NotNull
@@ -220,7 +222,7 @@ public final class Circulacion implements Comparable {
     @Override
     public String toString() {
         return "Circulacion{" +
-                "id=" + id +
+                "id=" + id() +
                 ", tren=" + tren +
                 ", ruta=" + ruta +
                 ", estado=" + estado +
@@ -228,5 +230,15 @@ public final class Circulacion implements Comparable {
                 ", horaLlegadaReal=" + horaLlegadaReal +
                 ", precioPorAsiento=" + precioPorAsiento +
                 '}';
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    public BigInteger precio() {
+        return precioPorAsiento.toBigInteger();
+    }
+
+    public int trenNumero() {
+        return tren.num();
     }
 }

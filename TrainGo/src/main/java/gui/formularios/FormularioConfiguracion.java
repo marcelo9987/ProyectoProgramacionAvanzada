@@ -1,9 +1,11 @@
 package gui.formularios;
 
-import aplicacion.Enums.EnumIdioma;
 import aplicacion.FachadaAplicacion;
+import aplicacion.enums.EnumIdioma;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -13,6 +15,12 @@ public final class FormularioConfiguracion extends JDialog {
 
     public FormularioConfiguracion(FachadaAplicacion fa) {
         super();
+        this.fa = fa;
+        inicializarFormularioConfiguracion();
+    }
+
+    public FormularioConfiguracion(FachadaAplicacion fa, JFrame parent, boolean modal) {
+        super(parent, modal);
         this.fa = fa;
         inicializarFormularioConfiguracion();
     }
@@ -66,17 +74,21 @@ public final class FormularioConfiguracion extends JDialog {
         this.setResizable(false);
         this.add(panel);
 
-        btnAceptar.addActionListener(e -> {
-            String idiomaSeleccionado = Objects.requireNonNull(comboIdioma.getSelectedItem()).toString().equals("Español") ? "ESPANHOL" : comboIdioma.getSelectedItem().toString().toUpperCase().replace('É', 'E');
-            fa.cambiarIdioma(EnumIdioma.valueOf(idiomaSeleccionado));
-            fa.relanzarGUI();
-            this.dispose();
+        btnAceptar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String idiomaSeleccionado = Objects.requireNonNull(comboIdioma.getSelectedItem()).toString().equals("Español") ? "ESPANHOL" : comboIdioma.getSelectedItem().toString().toUpperCase().replace('É', 'E');
+                fa.cambiarIdioma(EnumIdioma.valueOf(idiomaSeleccionado));
+                fa.relanzarGUI();
+                FormularioConfiguracion.this.dispose();
+            }
         });
 
+        btnCancelar.addActionListener(e -> FormularioConfiguracion.this.dispose());
 
         this.pack();
-        this.setVisible(true);
         this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 
 }

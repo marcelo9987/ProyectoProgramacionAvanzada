@@ -1,6 +1,6 @@
 package aplicacion;
 
-import aplicacion.Enums.EnumIdioma;
+import aplicacion.enums.EnumIdioma;
 import aplicacion.excepciones.UsuarioNoEncontradoException;
 import dao.FachadaDAO;
 import gui.FachadaGui;
@@ -15,11 +15,11 @@ public final class FachadaAplicacion {
 
     // Atributos
 
-    private ResourceBundle bundle;
     private final Internacionalizacion itz;
-    private final FachadaGui fgui;
-    private final FachadaDAO fdao;
-    private Usuario usuario;
+    private final FachadaGui     fgui;
+    private final FachadaDAO     fdao;
+    private       ResourceBundle bundle;
+    private       Usuario        usuario;
 
     public FachadaAplicacion() {
         super();
@@ -30,7 +30,7 @@ public final class FachadaAplicacion {
 
         bundle = itz.getBundle();
 
-        fgui = new FachadaGui(this); //hazme: ¿debería ser un singleton? ¿Singleton con parámetros?
+        fgui = FachadaGui.getInstance(this);
 
     }
 
@@ -86,7 +86,7 @@ public final class FachadaAplicacion {
 
     /**
      * Reinicia la interfaz gráfica.
-     *      Está pensado para cuando se cambia el idioma. Puede ser útil en otros casos.
+     * Está pensado para cuando se cambia el idioma. Puede ser útil en otros casos.
      */
     public void relanzarGUI() {
         fgui.ponerEnMarchaNoAuth();
@@ -94,11 +94,12 @@ public final class FachadaAplicacion {
 
     /**
      * Método que permite cambiar el idioma de la aplicación.
+     *
      * @param idioma Idioma al que se quiere cambiar.
-     *                  Opciones:
-     *                     ESPAÑOL,
-     *                     GALEGO,
-     *                     INGLES.
+     *               Opciones:
+     *               ESPAÑOL,
+     *               GALEGO,
+     *               INGLES.
      * @see Internacionalizacion#cambiarIdioma(EnumIdioma)
      */
     public void cambiarIdioma(EnumIdioma idioma) {
@@ -147,5 +148,17 @@ public final class FachadaAplicacion {
 
     public List obtenerCirculacionesRuta(Ruta rutaEscogida, LocalDate fechaSalida) {
         return fdao.obtenerCirculacionesRutaEnFecha(rutaEscogida, fechaSalida);
+    }
+
+    public void reservarTren(Circulacion circulacion) {
+        fdao.reservarTren(this.usuario, circulacion);
+    }
+
+    public Usuario usuario() {
+        return usuario;
+    }
+
+    public List<Reserva> getReservasUsuario(Usuario usuario) {
+        return fdao.getReservasUsuario(usuario);
     }
 }

@@ -10,12 +10,13 @@ import java.util.List;
 public class FachadaDAO {
     private static FachadaDAO instance = null; // Singleton pattern
 
-    private final DAOTren    daoTren;
-    private final DAOUsuario daoUsuario;
+    private final DAOTren     daoTren;
+    private final DAOUsuario  daoUsuario;
     private final DAOEstacion daoEstacion;
-    private final DAORuta    daoRuta;
-
+    private final DAORuta     daoRuta;
     private final DAOCirculacion daoCirculacion;
+    private final DAOReserva  daoReserva;
+
     // Constructor
 
     private FachadaDAO() {
@@ -30,6 +31,8 @@ public class FachadaDAO {
         daoRuta = DAORuta.getInstance(this);
 
         daoCirculacion = DAOCirculacion.getInstance(this);
+
+        daoReserva = DAOReserva.getInstance();
     }
 
     /**
@@ -149,6 +152,14 @@ public class FachadaDAO {
     }
 
     public List<Circulacion> obtenerCirculacionesRutaEnFecha(Ruta rutaEscogida, LocalDate fechaSalida) {
-        return daoCirculacion.obtenerCirculacionesRutaEnFecha(rutaEscogida, LocalDate.of(fechaSalida.getYear(), fechaSalida.getMonth(), fechaSalida.getDayOfMonth()));
+        return daoCirculacion.obtenerCirculacionesRutaEnFecha(rutaEscogida, fechaSalida);
+    }
+
+    public void reservarTren(Usuario usuario, Circulacion circulacion) {
+        daoReserva.addReserva(usuario, new Reserva(usuario, circulacion));
+    }
+
+    public List<Reserva> getReservasUsuario(Usuario usuario) {
+        return daoReserva.localizarReservasUsuario(usuario);
     }
 }
