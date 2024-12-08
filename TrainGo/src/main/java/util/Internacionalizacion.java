@@ -12,6 +12,7 @@ public final class Internacionalizacion {
     private static Internacionalizacion instance;
 
     private Internacionalizacion() {
+        super();
 
         Locale.setDefault(Locale.of("es", "ES"));
 

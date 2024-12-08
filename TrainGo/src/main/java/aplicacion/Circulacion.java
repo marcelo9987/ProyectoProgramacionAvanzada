@@ -2,17 +2,13 @@ package aplicacion;
 
 import aplicacion.anotaciones.NoNegativo;
 import aplicacion.enums.EnumCirculacion;
-import dao.FachadaDAO;
+import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.UUID;
 
 /**
@@ -22,6 +18,7 @@ import java.util.UUID;
  * @apiNote Una circulación es el viaje de un tren por una ruta
  */
 public final class Circulacion implements Comparable {
+    @org.hibernate.validator.constraints.UUID
     private final UUID            id;
     private final Tren            tren;
     private final Ruta            ruta;
@@ -30,10 +27,22 @@ public final class Circulacion implements Comparable {
     @NoNegativo
     private final BigDecimal      precioPorAsiento;
     @Nullable
-    private       LocalDateTime   horaLlegadaReal;
+    private final LocalDateTime   horaLlegadaReal;
 
 
-    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, @Nullable LocalDateTime horaLlegadaReal, @NoNegativo BigDecimal precioPorAsiento) {
+    /**
+     * Constructor de Circulacion
+     *
+     * @param id               Identificador de la circulación
+     * @param tren             Tren que realiza la circulación
+     * @param ruta             Ruta por la que circula el tren (origen y destino)
+     * @param estado           Estado de la circulación. Puede ser EN_TRANSITO, PROGRAMADO, FINALIZADO o CANCELADO
+     * @param horaSalida       Hora de salida de la circulación
+     * @param horaLlegadaReal  Hora de llegada real de la circulación (opcional)
+     * @param precioPorAsiento Precio por asiento de la circulación
+     * @see EnumCirculacion
+     */
+    public Circulacion(@org.hibernate.validator.constraints.UUID UUID id, Tren tren, Ruta ruta, @MagicConstant(valuesFromClass = EnumCirculacion.class) EnumCirculacion estado, LocalDateTime horaSalida, @Nullable LocalDateTime horaLlegadaReal, @NoNegativo BigDecimal precioPorAsiento) {
         super();
         this.id = id;
         this.tren = tren;
@@ -44,134 +53,81 @@ public final class Circulacion implements Comparable {
         this.precioPorAsiento = precioPorAsiento;
     }
 
-    public Circulacion(UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, @NoNegativo BigDecimal precioPorAsiento) {
-        super();
-        this.id = id;
-        this.tren = tren;
-        this.ruta = ruta;
-        this.estado = estado;
-        this.horaSalida = horaSalida;
-        this.precioPorAsiento = precioPorAsiento;
-    }
 
-    @Nullable
-    public static Circulacion fabricarCirculacion(@NonNls String trenId, UUID id, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, LocalDateTime horaLlegadaReal, BigDecimal precioPorAsiento) {
-        FachadaDAO fa_dao        = FachadaDAO.getInstance();
-        Logger     static_logger = org.slf4j.LoggerFactory.getLogger(Circulacion.class);
-
-        static_logger.debug("Empiezo a parsear la circulación");
-        Tren tren = fa_dao.localizarTren(trenId);
-        if (tren == null) {
-            static_logger.error("No se ha encontrado el tren {}: Error al crear la circulación", trenId);
-
-            return null;
-        }
-
-        if (id == null) {
-            static_logger.error("El id de la circulación no puede ser nulo: Error al crear la circulación");
-
-            return null;
-        }
-
-        if (ruta == null) {
-            static_logger.error("La ruta de la circulación no puede ser nula: Error al crear la circulación");
-
-            return null;
-        }
-
-        if (estado == null) {
-            static_logger.error("El estado de la circulación no puede ser nulo: Error al crear la circulación");
-
-            return null;
-        }
-
-        if (horaSalida == null) {
-            static_logger.error("La hora de salida de la circulación no puede ser nula: Error al crear la circulación");
-
-            return null;
-        }
-
-        if (precioPorAsiento == null) {
-            static_logger.error("El precio por asiento de la circulación no puede ser nulo: Error al crear la circulación");
-
-            return null;
-        }
-
-        if (precioPorAsiento.compareTo(BigDecimal.ZERO) < 0) {
-            static_logger.error("El precio por asiento de la circulación no puede ser negativo: Error al crear la circulación");
-
-            return null;
-        }
-
-        if (horaLlegadaReal != null && horaLlegadaReal.isBefore(horaSalida)) {
-            static_logger.error("La hora de llegada real no puede ser anterior a la hora de salida: Error al crear la circulación");
-
-            return null;
-        }
-
-        static_logger.trace("Tren encontrado: {}", tren);
-
-        return new Circulacion(id, tren, ruta, estado, horaSalida, horaLlegadaReal, precioPorAsiento);
-    }
-
-
+    @Contract(pure = true)
     public String ciudadOrigen() {
         return this.ruta.ciudadOrigen();
     }
 
+    @Contract(pure = true)
     public String ciudadDestino() {
         return this.ruta.ciudadDestino();
     }
 
-    public LocalTime getHoraSalida() {
-        return this.horaSalida.toLocalTime();
-    }
-
+    @Contract(pure = true)
     public BigDecimal getPrecioPorAsiento() {
         return this.precioPorAsiento;
     }
 
+    @Contract(pure = true)
     public EnumCirculacion estado() {
         return estado;
     }
 
     @Nullable
+    @Contract(pure = true)
     public LocalDateTime horaLlegadaReal() {
         return horaLlegadaReal;
     }
 
-    public UUID id() {
-        return id;
-    }
-
+    @NotNull
+    @Contract(pure = true)
     public BigDecimal precioPorAsiento() {
         return precioPorAsiento;
     }
 
+    @NotNull
+    @Contract(pure = true)
     public Ruta ruta() {
         return ruta;
     }
 
+    @NotNull
+    @Contract(pure = true)
     public Tren tren() {
         return tren;
     }
 
+    @NotNull
+    @Contract(pure = true)
     public UUID trenId() {
         return tren.id();
     }
 
+    /**
+     * Devuelve el nombre de la ciudad de origen de la circulación
+     * @return null si la ruta es nula, el nombre de la ciudad de origen en otro caso
+     */
     @Nullable
     @Contract(pure = true)
     public String nombreCiudadOrigen() {
         return ruta == null ? null : ruta.ciudadOrigen();
     }
 
+    /**
+     * Devuelve el nombre de la ciudad de destino de la circulación
+     * @return null si la ruta es nula, el nombre de la ciudad de destino en otro caso
+     */
     @Nullable
     @Contract(pure = true)
     public String nombreCiudadDestino() {
         return ruta == null ? null : ruta.ciudadDestino();
     }
 
+    /**
+     * Devuelve la cadena de la hora y fecha de salida de la circulación
+     * @return Cadena con la hora y fecha de salida de la circulación
+     */
     @NotNull
     @Contract(pure = true)
     public String getCadenaHoraFechaSalida() {
@@ -179,15 +135,26 @@ public final class Circulacion implements Comparable {
         return horaSalida.toLocalDate().toString() + " " + getCadenaHoraSalida();
     }
 
+    /**
+     * Devuelve la cadena de la hora de salida de la circulación
+     * @return Cadena con la hora de salida de la circulación
+     */
     @NotNull
     @Contract(pure = true)
-    public String getCadenaHoraSalida() {
+    private String getCadenaHoraSalida() {
         int hora   = horaSalida.getHour();
         int minuto = horaSalida.getMinute();
         return ((hora < 10) ? "0" : "") + hora + ":" + ((minuto < 10) ? "0" : "") + minuto;
     }
 
+    /**
+     * Compara dos circulaciones por la hora de salida
+     * @param o Circulación con la que se compara
+     * @return -1 si la hora de salida de esta circulación es anterior a la de la otra, 1 si es posterior, 0 si son iguales
+     * @see Comparable
+     */
     @Override
+    @Contract(pure = true)
     public int compareTo(@NotNull Object o) {
         Circulacion otro = (Circulacion) o;
         if (this.horaSalida.isBefore(otro.horaSalida())) {
@@ -199,15 +166,25 @@ public final class Circulacion implements Comparable {
         return 0;
     }
 
+    @NotNull
+    @Contract(pure = true)
     public LocalDateTime horaSalida() {
         return horaSalida;
     }
 
+    @Contract(pure = true)
     @Override
     public int hashCode() {
         return id().hashCode();
     }
 
+    @NotNull
+    @Contract(pure = true)
+    public UUID id() {
+        return id;
+    }
+
+    @Contract(pure = true)
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Circulacion that)) {
@@ -217,6 +194,10 @@ public final class Circulacion implements Comparable {
         return id().equals(that.id());
     }
 
+    /**
+     * Devuelve una cadena con la información de la circulación
+     * @return Cadena con la información de la circulación
+     */
     @NotNull
     @Contract(pure = true)
     @Override
@@ -234,11 +215,13 @@ public final class Circulacion implements Comparable {
 
     @NotNull
     @Contract(pure = true)
-    public BigInteger precio() {
-        return precioPorAsiento.toBigInteger();
+    BigDecimal precio() {
+        return precioPorAsiento;
     }
 
-    public int trenNumero() {
+    @Contract(pure = true)
+    int trenNumero() {
         return tren.num();
     }
+
 }

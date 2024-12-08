@@ -2,10 +2,10 @@ package dao;
 
 import aplicacion.*;
 import aplicacion.excepciones.UsuarioNoEncontradoException;
-import org.jetbrains.annotations.TestOnly;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public class FachadaDAO {
     private static FachadaDAO instance = null; // Singleton pattern
@@ -32,7 +32,7 @@ public class FachadaDAO {
 
         daoCirculacion = DAOCirculacion.getInstance(this);
 
-        daoReserva = DAOReserva.getInstance();
+        daoReserva = DAOReserva.getInstance(this);
     }
 
     /**
@@ -48,50 +48,6 @@ public class FachadaDAO {
         return instance;
     }
 
-    // BUSINESS LOGIC
-
-    // CRUD Tren (Crear, Leer, Actualizar, Borrar)
-
-    public void addTren(Tren tren) {
-        this.daoTren.addTren(tren);
-    }
-
-
-    public void loadTren() {
-        this.daoTren.load();
-    }
-
-
-    public void updateTren(Tren tren) {
-        this.daoTren.updateTren(tren);
-    }
-
-    public void saveTren() {
-        this.daoTren.save();
-    }
-
-
-    public void deleteTren(Tren tren) {
-        this.daoTren.deleteTren(tren);
-    }
-
-
-    public void guardarTrenes() {
-        this.daoTren.save();
-    }
-
-    public void addUser(Usuario usuario) {
-        this.daoUsuario.addUser(usuario);
-    }
-
-    public void saveUsers() {
-        this.daoUsuario.save();
-    }
-
-    public void loadUsers() {
-        this.daoUsuario.load();
-    }
-
 
     public void cargaloTodo() {
         // Cargar trenes
@@ -104,6 +60,9 @@ public class FachadaDAO {
         this.daoRuta.load();
         // Cargar circulaciones
         this.daoCirculacion.load();
+
+        // Cargar reservas
+        this.daoReserva.load();
 
     }
 
@@ -127,14 +86,14 @@ public class FachadaDAO {
         this.daoUsuario.save();
     }
 
-    public boolean existeRuta(String origen, String destino) {
+    boolean existeRuta(String origen, String destino) {
         if (origen == null || destino == null) {
             return false;
         }
         return daoRuta.confirmarEnlace(origen, destino);
     }
 
-    public Estacion buscaEstacionPorNombre(String nombreEstacion) {
+    Estacion buscaEstacionPorNombre(String nombreEstacion) {
         return daoEstacion.buscaEstacionPorNombre(nombreEstacion);
     }
 
@@ -142,24 +101,28 @@ public class FachadaDAO {
         return daoRuta.buscarRutaPorNombres(origen, destino);
     }
 
-    public Tren localizarTren(String trenId) {
+    Tren localizarTren(String trenId) {
         return daoTren.localizarTren(trenId);
     }
 
-    @TestOnly
-    public List<Circulacion> __dbg_obtenerTodasLasCirculaciones() {
-        return daoCirculacion.__dbg_circulaciones();
-    }
 
     public List<Circulacion> obtenerCirculacionesRutaEnFecha(Ruta rutaEscogida, LocalDate fechaSalida) {
         return daoCirculacion.obtenerCirculacionesRutaEnFecha(rutaEscogida, fechaSalida);
     }
 
     public void reservarTren(Usuario usuario, Circulacion circulacion) {
-        daoReserva.addReserva(usuario, new Reserva(usuario, circulacion));
+        daoReserva.addReservaDesdeCirculacion(usuario, circulacion);
     }
 
     public List<Reserva> getReservasUsuario(Usuario usuario) {
         return daoReserva.localizarReservasUsuario(usuario);
+    }
+
+    Usuario encontrarUsuarioPorDNI(String usuarioDNI) throws UsuarioNoEncontradoException {
+        return daoUsuario.encontrarUsuarioPorDNI(usuarioDNI);
+    }
+
+    Circulacion localizarCirculacion(UUID id_circulacion) {
+        return daoCirculacion.localizarCirculacion(id_circulacion);
     }
 }

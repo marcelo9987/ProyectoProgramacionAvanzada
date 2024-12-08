@@ -13,6 +13,11 @@ public interface IDAO {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Carga los datos de un archivo.
+     *
+     * @return true si se cargaron los datos correctamente, false en caso contrario
+     */
     boolean load();
 
     default Boolean save(File file) throws UnsupportedOperationException {
@@ -27,5 +32,9 @@ public interface IDAO {
     }
 
 
+    /**
+     * Guarda los datos en un archivo.
+     * @return true si se guardaron los datos correctamente, false en caso contrario
+     */
     boolean save();
 }

@@ -3,6 +3,7 @@ package dao;
 import aplicacion.Estacion;
 import aplicacion.Ruta;
 import aplicacion.excepciones.SituacionDeRutasInesperadaException;
+import dao.constantes.ConstantesGeneral;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,14 +11,15 @@ import org.jetbrains.annotations.Nullable;
 import javax.xml.stream.*;
 import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DAORuta extends AbstractDAO {
-    private static DAORuta instance = null; // Singleton pattern
-    private final FachadaDAO fadao;
-    private final Map<Estacion, Map<Estacion, Ruta>> rutas;
+    private static DAORuta                            instance = null; // Singleton pattern
+    private final  FachadaDAO                         fadao;
+    private final  Map<Estacion, Map<Estacion, Ruta>> rutas;
 
     private DAORuta(FachadaDAO fadao) {
         super();
@@ -30,7 +32,13 @@ public class DAORuta extends AbstractDAO {
         DAORuta dao = getInstance(FachadaDAO.getInstance());
         FachadaDAO.getInstance().cargaloTodo();
         XMLEventReader xmlEvtRdr_lector = dao.obtenerXmlEventReader();
-        dao.cargarArchivo(xmlEvtRdr_lector);
+        if (xmlEvtRdr_lector != null) {
+            dao.cargarArchivo(xmlEvtRdr_lector);
+        }
+        else {
+            dao.logger.error("Error al cargar el archivo");
+            System.exit(1);
+        }
 
         for (Map<Estacion, Ruta> ruta : dao.getRutas().values()) {
             for (Ruta r : ruta.values()) {
@@ -38,10 +46,6 @@ public class DAORuta extends AbstractDAO {
             }
         }
 
-//        dao.addRutaDesdeComponentes("Madrid", "Barcelona", 600);
-//        dao.addRutaDesdeComponentes("Barcelona", "Madrid", 600);
-//
-//        dao.save();
     }
 
     public static DAORuta getInstance(FachadaDAO fadao)// Singleton
@@ -52,21 +56,19 @@ public class DAORuta extends AbstractDAO {
         return instance;
     }
 
-    public Map<Estacion, Map<Estacion, Ruta>> getRutas() {
+    private Map<Estacion, Map<Estacion, Ruta>> getRutas() {
         return this.rutas;
     }
 
     private void addRutaDesdeComponentes(String origen, String destino, int distancia) {
-        Estacion estacionOrigen  = null;
-        Estacion estacionDestino = null;
-        for (Estacion estacion : FachadaDAO.getInstance().getEstaciones()) {
-            if (estacion.ciudad().equals(origen)) {
-                estacionOrigen = estacion;
-            }
-            if (estacion.ciudad().equals(destino)) {
-                estacionDestino = estacion;
-            }
-        }
+
+        this.logger.trace("Añadiendo ruta de {} a {} con distancia de {}", origen, destino, Integer.valueOf(distancia));
+
+        Estacion estacionOrigen = fadao.buscaEstacionPorNombre(origen);
+
+
+        Estacion estacionDestino = fadao.buscaEstacionPorNombre(destino);
+
         if (estacionOrigen == null) {
             this.logger.error("No se ha encontrado la estación de origen {}", origen);
             if (estacionDestino == null) {
@@ -95,7 +97,7 @@ public class DAORuta extends AbstractDAO {
         try {
             XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
             writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("rutas.xml"));
-        } catch (Exception e) {
+        } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al volcar el archivo", e);
             return null;
         }
@@ -106,12 +108,8 @@ public class DAORuta extends AbstractDAO {
     @Override
     protected void guardarArchivo(@NotNull XMLStreamWriter writer) {
         this.logger.trace("Guardando contenido en el archivo...");
-        try {
-            writer.writeStartDocument();
-            writer.writeStartElement("rutas");
-        } catch (XMLStreamException e) {
-            this.logger.error("Error al escribir cabecera. Es posible que el haya dejado de existir (o el acceso a mutex haya sido revocado)", e);
-        }
+
+        abrirCabeceraArchivoXML(writer, ConstantesGeneral.FICHERO_RUTA);
 
         for (Map<Estacion, Ruta> ruta : rutas.values()) {
             for (Ruta r : ruta.values()) {
@@ -122,7 +120,7 @@ public class DAORuta extends AbstractDAO {
         try {
             writer.writeEndElement();
             writer.writeEndDocument();
-        } catch (Exception e) {
+        } catch (XMLStreamException e) {
             this.logger.error("¡¡CRITICO!! --> Error al escribir el final del documento. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
         }
 
@@ -135,7 +133,7 @@ public class DAORuta extends AbstractDAO {
         XMLEventReader reader;
         try {
             reader = xmlInputFactory.createXMLEventReader(new FileInputStream("rutas.xml"));
-        } catch (Exception e) {
+        } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al leer el archivo", e);
             return null;
         }
@@ -143,56 +141,50 @@ public class DAORuta extends AbstractDAO {
     }
 
     @Override
-    protected void cargarArchivo(XMLEventReader reader) {
-        this.obtenerLogger();
+    protected void cargarArchivo(@NotNull XMLEventReader reader) {
         this.logger.trace("Cargando archivo...");
 
-        try {
-            while (reader.hasNext()) {
-                XMLEvent evento = this.getNextXmlEvent(reader);
+        while (reader.hasNext()) {
+            XMLEvent evento = this.getNextXmlEvent(reader);
 
-                if (evento.isStartElement()) {
-                    String nombreElemento = evento.asStartElement().getName().getLocalPart();
-                    if (nombreElemento.equals("ruta")) {
-                        String origen = null;
-                        String destino = null;
-                        int distancia = 0;
+            if (evento.isStartElement()) {
+                String nombreElemento = evento.asStartElement().getName().getLocalPart();
+                if (!nombreElemento.equals("ruta")) {
+                    continue;
+                }
 
-                        while (reader.hasNext()) {
-                            evento = this.getNextXmlEvent(reader);
+                String origen    = null, destino = null;
+                int    distancia = 0;
 
-                            if (evento.isStartElement()) {
-                                @NonNls String nombreElementoInterno = evento.asStartElement().getName().getLocalPart();
-                                evento = this.getNextXmlEvent(reader);
+                while (reader.hasNext()) {
+                    evento = this.getNextXmlEvent(reader);
 
-                                if (evento.isCharacters()) {
-                                    String valor = evento.asCharacters().getData();
-                                    switch (nombreElementoInterno) {
-                                        case "origen" -> origen = valor;
-                                        case "destino" -> destino = valor;
-                                        case "distancia" -> distancia = Integer.parseInt(valor);
-                                    }
-                                }
-                            }
-                            else if (evento.isEndElement()) {
-                                @NonNls String nombreElementoInterno = evento.asEndElement().getName().getLocalPart();
-                                if (nombreElementoInterno.equals("ruta")) {
-                                    break;
-                                }
-                            }
+                    if (evento.isStartElement()) {
+                        @NonNls String nombreElementoInterno = evento.asStartElement().getName().getLocalPart();
+                        evento = this.getNextXmlEvent(reader);
+
+                        if (!evento.isCharacters()) {
+                            continue;
                         }
-
-                        if (origen != null && destino != null) {
-                            this.logger.trace("Añadiendo ruta de {} a {} con distancia de {}", origen, destino, Integer.valueOf(distancia));
-                            this.addRutaDesdeComponentes(origen, destino, distancia);
-
+                        String valor = evento.asCharacters().getData();
+                        switch (nombreElementoInterno) {
+                            case "origen" -> origen = valor;
+                            case "destino" -> destino = valor;
+                            case "distancia" -> distancia = Integer.parseInt(valor);
                         }
                     }
+                    else if (evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals("ruta")) {
+                        break;
+                    }
+                }
+
+                if (origen != null && destino != null) {
+                    this.addRutaDesdeComponentes(origen, destino, distancia);
+
                 }
             }
-        } catch (Exception e) {
-            this.logger.error("Error al leer el archivo", e);
         }
+
     }
 
     private void escribirRuta(@NotNull XMLStreamWriter writer, @NotNull Ruta ruta) {
@@ -217,7 +209,16 @@ public class DAORuta extends AbstractDAO {
         }
 
 
-        Estacion estacionOrigen = this.rutas.keySet().stream().filter(e -> e.ciudad().equals(origen)).findFirst().get();
+        if (this.rutas.isEmpty()) {
+            return false;
+        }
+        Estacion estacionOrigen = null;
+        for (Estacion e : this.rutas.keySet()) {
+            if (e.ciudad().equals(origen)) {
+                estacionOrigen = e;
+                break;
+            }
+        }
         Estacion estacionDestino = this.fadao.buscaEstacionPorNombre(destino);
         return this.rutas.get(estacionOrigen).containsKey(estacionDestino);
 
@@ -225,9 +226,20 @@ public class DAORuta extends AbstractDAO {
 
     }
 
-    public Ruta buscarRutaPorNombres(@NonNls @NotNull String origen, @NotNull @NonNls String destino) {
-        Estacion estacionOrigen = this.rutas.keySet().stream().filter(e -> e.ciudad().equals(origen)).findFirst().get();
+    Ruta buscarRutaPorNombres(@NonNls @NotNull String origen, @NotNull @NonNls String destino) {
+
+        Estacion estacionOrigen = null;
+        for (Estacion e : this.rutas.keySet()) {
+            if (e.ciudad().equals(origen)) {
+                estacionOrigen = e;
+                break;
+            }
+        }
         Estacion estacionDestino = this.fadao.buscaEstacionPorNombre(destino);
+
+        if (!this.rutas.containsKey(estacionOrigen)) {
+            throw new SituacionDeRutasInesperadaException("No se ha encontrado la ruta entre " + origen + " y " + destino);
+        }
 
         if (!this.rutas.get(estacionOrigen).containsKey(estacionDestino)) {
             throw new SituacionDeRutasInesperadaException("No se ha encontrado la ruta entre " + origen + " y " + destino);

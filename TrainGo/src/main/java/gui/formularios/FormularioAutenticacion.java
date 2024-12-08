@@ -8,27 +8,31 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
+import java.util.ResourceBundle;
 
 public final class FormularioAutenticacion extends JDialog {
     private final JTextField txtUsuario;
     private final JPasswordField txtContrasena;
+    private final ResourceBundle bundle;
 
     private final FachadaAplicacion fa;
 
-    public FormularioAutenticacion(FachadaAplicacion fa, Frame parent, boolean modal) {
+    public FormularioAutenticacion(@NotNull FachadaAplicacion fa, Frame parent, boolean modal) {
         super(parent, modal);
 
-        JLabel lblUsuario = new JLabel("Usuario:");
-        JLabel lblContrasena = new JLabel("Contraseña:");
+        this.bundle = fa.getBundleInstance();
+
+        JLabel lblUsuario    = new JLabel(bundle.getString("usuario"));
+        JLabel lblContrasena = new JLabel(bundle.getString("contrasenha") + ":");
         this.txtUsuario = new JTextField(20);
         this.txtContrasena = new JPasswordField(20);
-        JButton btnAceptar = new JButton("aceptar");
-        JButton btnCancelar = new JButton("Cancelar");
+        JButton btnAceptar  = new JButton(bundle.getString("aceptar"));
+        JButton btnCancelar = new JButton(bundle.getString("cancelar"));
 
         this.fa = fa;
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setTitle("Autenticación");
+        setTitle(bundle.getString("autenticacion"));
         setResizable(false);
 
         JPanel panel = new JPanel();

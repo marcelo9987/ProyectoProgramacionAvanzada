@@ -1,5 +1,6 @@
 package aplicacion;
 
+import jakarta.validation.constraints.Email;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import util.Criptograficos;
@@ -20,6 +21,7 @@ public final class Usuario {
      * @since 1.0 20/11/2024
      */
     private final String contrasenha;
+    @Email
     private String correo;
     private int telefono;
     private String direccion;
@@ -43,6 +45,7 @@ public final class Usuario {
      *
      */
     @NotNull
+    @Contract(pure = true)
     @Deprecated
     public String printReadyString() {
         return "Usuario{"
@@ -64,6 +67,12 @@ public final class Usuario {
         return Objects.hash(Integer.valueOf(dni()));
     }
 
+    /**
+     * Compara dos objetos de tipo Usuario.
+     *
+     * @param o Usuario a comparar.
+     * @return true si los DNI de los usuarios son iguales, false en caso contrario.
+     */
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Usuario usuario)) {
@@ -97,13 +106,10 @@ public final class Usuario {
         return telefono;
     }
 
-
-    public void actualizarDatos(String nuevoCorreo, String nuevaDireccion, int nuevoTelefono) {
-        this.correo = nuevoCorreo;
-        this.direccion = nuevaDireccion;
-        this.telefono = nuevoTelefono;
-    }
-
+    /**
+     * Imprime los datos del usuario.
+     * @return Cadena con los datos del usuario.
+     */
     @NotNull
     @Contract(pure = true)
     @Override
@@ -117,6 +123,19 @@ public final class Usuario {
                 ", direccion='" + direccion + '\'' +
                 ", fechaNacimiento=" + fechaNacimiento.toString() +
                 '}';
+    }
+
+    /**
+     * Actualiza los datos del usuario.
+     *
+     * @param nuevoCorreo    Nuevo correo del usuario.
+     * @param nuevaDireccion Nueva dirección del usuario.
+     * @param nuevoTelefono  Nuevo teléfono del usuario.
+     */
+    public void actualizarDatos(@Email String nuevoCorreo, String nuevaDireccion, int nuevoTelefono) {
+        this.correo = nuevoCorreo;
+        this.direccion = nuevaDireccion;
+        this.telefono = nuevoTelefono;
     }
 
     public int dni() {

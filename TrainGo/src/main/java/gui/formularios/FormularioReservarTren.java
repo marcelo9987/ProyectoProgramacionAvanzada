@@ -1,10 +1,9 @@
 package gui.formularios;
 
 import aplicacion.Circulacion;
-import aplicacion.Estacion;
 import aplicacion.FachadaAplicacion;
 import aplicacion.Ruta;
-import dao.FachadaDAO;
+import aplicacion.enums.EnumCirculacion;
 import gui.modelos.ModeloTablaCirculaciones;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -13,13 +12,14 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.ResourceBundle;
 
-public final class FormularioReservarTren extends JFrame {
-    private static final Logger         logger = LoggerFactory.getLogger(FormularioReservarTren.class);
-    private static       ResourceBundle bundle;
-    FachadaAplicacion fa;
-    private JTable tablaTrenesRuta;
+final class FormularioReservarTren extends JFrame {
+    private static final Logger            logger = LoggerFactory.getLogger(FormularioReservarTren.class);
+    private static       ResourceBundle    bundle;
+    private final        FachadaAplicacion fa;
+    private              JTable            tablaTrenesRuta;
 
     public FormularioReservarTren(@NotNull FachadaAplicacion fa, Ruta rutaEscogida, LocalDateTime fechaSalida) {
         super();
@@ -40,7 +40,7 @@ public final class FormularioReservarTren extends JFrame {
         panelPrincipal.setLayout(new BorderLayout());
 
         this.tablaTrenesRuta = new JTable();
-        tablaTrenesRuta.setModel(new ModeloTablaCirculaciones());
+        tablaTrenesRuta.setModel(new ModeloTablaCirculaciones(bundle));
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(tablaTrenesRuta);
@@ -58,7 +58,7 @@ public final class FormularioReservarTren extends JFrame {
 
         botonReservar.addActionListener(e -> {
             ModeloTablaCirculaciones modelocircu = (ModeloTablaCirculaciones) this.tablaTrenesRuta.getModel();
-            Circulacion              circulacion = (Circulacion) modelocircu.getCirculacion(tablaTrenesRuta.getSelectedRow());
+            Circulacion circulacion = modelocircu.getCirculacion(tablaTrenesRuta.getSelectedRow());
             if (circulacion != null) {
                 try {
                     LoggerFactory.getLogger(FormularioReservarTren.class).info("Reservando tren: {}", circulacion);
@@ -76,6 +76,22 @@ public final class FormularioReservarTren extends JFrame {
 
         btnCancelar.addActionListener(e -> this.dispose());
 
+        tablaTrenesRuta.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = tablaTrenesRuta.rowAtPoint(evt.getPoint());
+                if (row >= 0) {
+//                    tablaTrenesRuta.setRowSelectionInterval(row, row); // Se queda para futuras implementaciones
+                    ModeloTablaCirculaciones modelocircu         = (ModeloTablaCirculaciones) tablaTrenesRuta.getModel();
+                    Circulacion              circulacionEscogida = modelocircu.getCirculacionEnFila(row);
+                    if (circulacionEscogida != null) {
+                        botonReservar.setEnabled(circulacionEscogida.estado().equals(EnumCirculacion.PROGRAMADO));
+                        return;
+                    }
+                    LoggerFactory.getLogger(FormularioReservarTren.class).warn("Circulación no encontrada en la fila {}", row);
+                }
+            }
+        });
 
         panelBotones.add(btnCancelar);
         panelBotones.add(botonReservar);
@@ -91,26 +107,16 @@ public final class FormularioReservarTren extends JFrame {
 
     }
 
-    private void establecerCirculaciones(Ruta rutaEscogida, LocalDateTime fechaSalida) {
-        FachadaDAO               fd          = FachadaDAO.getInstance();
+    private void establecerCirculaciones(Ruta rutaEscogida, @NotNull LocalDateTime fechaSalida) {
         ModeloTablaCirculaciones modelocircu = (ModeloTablaCirculaciones) this.tablaTrenesRuta.getModel();
 
-        modelocircu.setListaCirculaciones(fd.obtenerCirculacionesRutaEnFecha(rutaEscogida, fechaSalida.toLocalDate()));
+
+        List<Circulacion> listaCirculaciones = fa.obtenerCirculacionesRuta(rutaEscogida, fechaSalida.toLocalDate());
+//        listaCirculaciones.removeIf(circulacion -> !circulacion.estado().equals(EnumCirculacion.PROGRAMADO));
+        modelocircu.setListaCirculaciones(listaCirculaciones);
+
     }
 
-    public static void main(String[] args) {
-        FachadaAplicacion fa = new FachadaAplicacion();
-        FachadaDAO        fd = FachadaDAO.getInstance();
-        fd.cargaloTodo();
-        FormularioReservarTren   frt         = new FormularioReservarTren(fa, new Ruta(new Estacion("Vigo"), new Estacion("A Coruña"), 444), LocalDateTime.now());
-        ModeloTablaCirculaciones modelocircu = (ModeloTablaCirculaciones) frt.tablaTrenesRuta().getModel();
-
-        modelocircu.setListaCirculaciones(fd.__dbg_obtenerTodasLasCirculaciones());
-
-        for (Circulacion circulacion : fd.__dbg_obtenerTodasLasCirculaciones()) {
-            logger.info(circulacion.toString());
-        }
-    }
 
     public JTable tablaTrenesRuta() {
         return tablaTrenesRuta;

@@ -1,54 +1,44 @@
 package aplicacion;
 
-import org.jetbrains.annotations.Contract;
+import aplicacion.enums.EnumCirculacion;
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigInteger;
 import java.util.UUID;
 
-public final class Reserva {
-    private final UUID        id;
-    private final Usuario     usuario;
-    private final Circulacion circulacion;
-//    private final int asiento;
+public record Reserva(@org.hibernate.validator.constraints.UUID UUID id, Usuario usuario, Circulacion circulacion) {
+
+//    public Reserva(UUID id, Usuario usuario, Circulacion circulacion){
+//        this.id = id;
+//        this.usuario = usuario;
+//        this.circulacion = circulacion;
+//    }
 
     public Reserva(Usuario usuario, Circulacion circulacion) {
-        this.id = UUID.randomUUID();
-        this.usuario = usuario;
-        this.circulacion = circulacion;
-//            this.asiento = asiento;
+        this(UUID.randomUUID(), usuario, circulacion);
     }
 
-    @NotNull
-    @Contract(pure = true)
-    public BigInteger precio() {
-        return circulacion().precio();
-    }
-
-    public Circulacion circulacion() {
-        return circulacion;
-    }
 
     @Override
     public int hashCode() {
         return id().hashCode();
     }
 
+    /**
+     * Indica si dos reservas son iguales
+     *
+     * @param o Objeto a comparar
+     * @return true si tienen el mismo id o si el usuario y la circulación son iguales, false en caso contrario
+     */
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Reserva reserva)) {
+        if (!(o instanceof Reserva(UUID id1, Usuario usuario1, Circulacion circulacion1))) {
             return false;
         }
-        return id().equals(reserva.id()) || (usuario().equals(reserva.usuario()) && circulacion().equals(reserva.circulacion()));
+        return id().equals(id1) || (usuario().equals(usuario1) && circulacion().equals(circulacion1));
     }
 
-    public UUID id() {
-        return id;
-    }
 
-    public Usuario usuario() {
-        return usuario;
-    }
+
 
     @NotNull
     public String fechaHoraSalidaImprimible() {
@@ -65,5 +55,15 @@ public final class Reserva {
 
     public String nombreDestino() {
         return circulacion().ciudadDestino();
+    }
+
+
+    @NotNull
+    public UUID idCirculacion() {
+        return circulacion().id();
+    }
+
+    public EnumCirculacion estado() {
+        return circulacion().estado();
     }
 }

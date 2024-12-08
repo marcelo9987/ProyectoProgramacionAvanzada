@@ -2,8 +2,10 @@ package dao;
 
 import aplicacion.Estacion;
 import aplicacion.excepciones.LecturaSiguienteEventoException;
+import dao.constantes.ConstantesGeneral;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.TestOnly;
 
 import javax.xml.stream.*;
 import javax.xml.stream.events.StartElement;
@@ -25,6 +27,7 @@ public class DAOEstacion extends AbstractDAO {
         this.obtenerLogger();
     }
 
+    @TestOnly
     public static void main(String[] args) {
         DAOEstacion dao = new DAOEstacion();
         XMLEventReader xmlEvtRdr_lector = dao.obtenerXmlEventReader();
@@ -48,6 +51,11 @@ public class DAOEstacion extends AbstractDAO {
         return instance;
     }
 
+    /**
+     * Añade una estación a la lista de estaciones
+     *
+     * @param estacion Estación a añadir
+     */
     private void addEstacion(Estacion estacion) {
         if (estacion == null) {
             this.logger.warn("No se puede añadir una estación nula");
@@ -63,14 +71,20 @@ public class DAOEstacion extends AbstractDAO {
 
     }
 
-    @Override
-    protected void guardarArchivo(XMLStreamWriter writer) {
+    @Deprecated(forRemoval = true)
+    private void _abrirCabeceraEstacion(@NotNull XMLStreamWriter writer) {
         try {
             writer.writeStartDocument();
             writer.writeStartElement("estaciones");
-        } catch (Exception e) {
-            this.logger.error("Error al escribir la cabecera, es posible que el archivo haya dejado de existir (o el acceso a mutex haya sido revocado)", e);
+        } catch (XMLStreamException e) {
+            this.logger.error("Error al escribir la cabecera", e);
+            throw new IllegalArgumentException("Error al escribir la cabecera");
         }
+    }
+
+    @Override
+    protected void guardarArchivo(@NotNull XMLStreamWriter writer) {
+        abrirCabeceraArchivoXML(writer, ConstantesGeneral.FICHERO_ESTACION);
 
         for (Estacion estacion : estaciones) {
             try {
@@ -92,13 +106,31 @@ public class DAOEstacion extends AbstractDAO {
         this.logger.trace("Contenido guardado en el archivo con éxito!");
     }
 
+    //-*-
+    //--
+
+    //----
+    @Override
+    protected XMLEventReader obtenerXmlEventReader() {
+        this.obtenerLogger();
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        XMLEventReader xmlReader;
+        try {
+            xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("estaciones.xml"));
+        } catch (FileNotFoundException | XMLStreamException e) {
+            throw new LecturaSiguienteEventoException();
+        }
+        return xmlReader;
+    }
 
     @Override
     protected void cargarArchivo(@NotNull XMLEventReader reader) {
         Estacion estacion;
         String nombre = "err";
+
         while (reader.hasNext()) {
             XMLEvent evento = getNextXmlEvent(reader);
+            this.logger.trace("Evento: {}", evento);
             if (evento.isStartElement()) {
                 StartElement elementoInicio = evento.asStartElement();
                 try {
@@ -107,7 +139,7 @@ public class DAOEstacion extends AbstractDAO {
                             System.out.println("Inicio de estacion");
                             break;
                         case "nombre":
-                            evento = reader.nextEvent();
+                            evento = this.getNextXmlEvent(reader);
                             nombre = evento.asCharacters().getData();
                             System.out.printf("Nombre: %s\n", nombre);
                             break;
@@ -128,19 +160,6 @@ public class DAOEstacion extends AbstractDAO {
     }
 
     @Override
-    protected XMLEventReader obtenerXmlEventReader() {
-        this.obtenerLogger();
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        XMLEventReader xmlReader;
-        try {
-            xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("estaciones.xml"));
-        } catch (FileNotFoundException | XMLStreamException e) {
-            throw new LecturaSiguienteEventoException();
-        }
-        return xmlReader;
-    }
-
-    @Override
     protected XMLStreamWriter obtenerXMLStreamWriter() {
         this.obtenerLogger();
         XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
@@ -157,7 +176,7 @@ public class DAOEstacion extends AbstractDAO {
         return estaciones;
     }
 
-    public Estacion buscaEstacionPorNombre(@NonNls String nombreEstacion) {
+    Estacion buscaEstacionPorNombre(@NonNls String nombreEstacion) {
         return estaciones.stream().filter(e -> e.ciudad().equals(nombreEstacion)).findFirst().orElse(null);
     }
 }

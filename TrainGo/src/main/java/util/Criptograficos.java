@@ -19,8 +19,12 @@ public final class Criptograficos {
     private static final Logger logger = LoggerFactory.getLogger(Criptograficos.class);
 
     private static final String ALGORITMO = "DES";
-    private static final String CLAVE = "82837445";
-    public static final int NUMERO_MAXIMO_DNI = 99999999;
+    private static final String CLAVE             = "82837445";
+    private static final int    NUMERO_MAXIMO_DNI = 99999999;
+
+    private Criptograficos() {
+        super();
+    }
 
     /**
      * Método que obtiene una clave secreta a partir de una cadena de texto.
@@ -62,9 +66,9 @@ public final class Criptograficos {
         } catch (IllegalBlockSizeException ibe) {
             // Esto ocurre cuando el tamaño del bloque es incorrecto.
             logger.error(" El tamaño del bloque es incorrecto. ¿Has hecho bien los cálculos?");
-        } catch (Exception e) {
+        } catch (BadPaddingException e) {
             // Estos son errores que solo deberían ocurrir en caso de desencriptación, por lo que los ignoramos.
-            logger.error("Error desconocido: " + e.getMessage());
+            logger.error("Error desconocido: {}", e.getMessage());
         }
         return null;
     }
@@ -131,6 +135,7 @@ public final class Criptograficos {
      * @param dniNumber Número del DNI
      * @return Letra del DNI
      */
+    @SuppressWarnings("MagicNumber")
     public static char calculateDniLetter(int dniNumber) throws IllegalArgumentException {
         if (dniNumber < 0 || dniNumber > NUMERO_MAXIMO_DNI) {
             throw new IllegalArgumentException("El número del DNI no puede ser negativo.");

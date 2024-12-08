@@ -4,12 +4,21 @@ package aplicacion.anotaciones.validadores;
 import aplicacion.anotaciones.NoNegativo;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 
 public class ValidadorNoNegativo implements ConstraintValidator<NoNegativo, BigInteger> {
+
+    /**
+     * Valida que los campos marcados con la anotación @NoNegativo no sean negativos
+     *
+     * @param obj Objeto a validar
+     * @throws IllegalArgumentException Si algún campo marcado con @NoNegativo es negativo
+     */
+    @Contract(pure = true)
     public static void validate(@NotNull Object obj) throws IllegalArgumentException {
         Field[] campos = obj.getClass().getDeclaredFields();
 
@@ -34,11 +43,13 @@ public class ValidadorNoNegativo implements ConstraintValidator<NoNegativo, BigI
         }
     }
 
+
     @Override
     public void initialize(NoNegativo constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
+    @Contract(pure = true)
     @Override
     public boolean isValid(@NotNull BigInteger bigInteger, ConstraintValidatorContext constraintValidatorContext) {
         return bigInteger.compareTo(BigInteger.ZERO) >= 0;

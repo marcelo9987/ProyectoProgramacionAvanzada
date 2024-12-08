@@ -1,9 +1,13 @@
 package aplicacion;
 
+import aplicacion.anotaciones.NoNegativo;
 import aplicacion.enums.EnumIdioma;
 import aplicacion.excepciones.UsuarioNoEncontradoException;
 import dao.FachadaDAO;
 import gui.FachadaGui;
+import jakarta.validation.constraints.Email;
+import org.jetbrains.annotations.Contract;
+import org.slf4j.helpers.CheckReturnValue;
 import util.Criptograficos;
 import util.Internacionalizacion;
 
@@ -67,9 +71,10 @@ public final class FachadaAplicacion {
      * @param plainPassword Contraseña en texto plano.
      * @return true si la tupla es válida, false en caso contrario.
      */
+    @Contract("null, _ -> false; _, null -> false")
     public boolean autenticar(String email, String plainPassword) {
         String hashedPassword = Criptograficos.cifrar(plainPassword);
-        plainPassword = null; // Eliminamos la contraseña en texto plano
+        // Eliminamos la contraseña en texto plano
         if (fdao.autenticar(email, hashedPassword)) {
             this.usuario = fdao.encontrarUsuarioPorEmail(email);
             return true;
@@ -77,6 +82,11 @@ public final class FachadaAplicacion {
         return false;
     }
 
+    /**
+     * Devuelve el bundle de internacionalización.
+     *
+     * @return ResourceBundle con las traducciones en el idioma actual.
+     */
     public ResourceBundle getBundleInstance() {
         if (bundle == null) {
             bundle = itz.getBundle();
@@ -112,6 +122,8 @@ public final class FachadaAplicacion {
      * @return Devuelve una lista (Vectorizada) con las estaciones de la «base de datos».
      * @see FachadaDAO#getEstaciones()
      */
+    @Contract(pure = true)
+    @CheckReturnValue // ¡¡Puede estar vacío!! (Algo ha fallado)
     public List<Estacion> getEstaciones() {
         return fdao.getEstaciones();
     }
@@ -136,7 +148,16 @@ public final class FachadaAplicacion {
         return this.usuario.direccion();
     }
 
-    public void actualizarUsuario(String correoAntiguo, String nuevoCorreo, String nuevaDireccion, int nuevoTelefono) throws UsuarioNoEncontradoException {
+    /**
+     * Método que permite actualizar los datos de un usuario.
+     *
+     * @param correoAntiguo  Correo antiguo del usuario.
+     * @param nuevoCorreo    Nuevo correo del usuario.
+     * @param nuevaDireccion Nueva dirección del usuario.
+     * @param nuevoTelefono  Nuevo teléfono del usuario.
+     * @throws UsuarioNoEncontradoException Cuando no se encuentra el usuario.
+     */
+    public void actualizarUsuario(String correoAntiguo, @Email String nuevoCorreo, String nuevaDireccion, @NoNegativo int nuevoTelefono) throws UsuarioNoEncontradoException {
         fdao.actualizarUsuario(correoAntiguo, this.usuario);
         this.usuario.actualizarDatos(nuevoCorreo, nuevaDireccion, nuevoTelefono);
         fdao.guardarUsuarios();
@@ -146,7 +167,7 @@ public final class FachadaAplicacion {
         return fdao.buscarRutaPorNombres(origen, destino);
     }
 
-    public List obtenerCirculacionesRuta(Ruta rutaEscogida, LocalDate fechaSalida) {
+    public List<Circulacion> obtenerCirculacionesRuta(Ruta rutaEscogida, LocalDate fechaSalida) {
         return fdao.obtenerCirculacionesRutaEnFecha(rutaEscogida, fechaSalida);
     }
 

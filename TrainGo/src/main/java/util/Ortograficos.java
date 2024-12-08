@@ -6,6 +6,10 @@ import org.jetbrains.annotations.NotNull;
 
 public final class Ortograficos {
 
+    private Ortograficos() {
+        super();
+    }
+
     /**
      * Compara dos cadenas alfabéticamente.
      *
@@ -16,7 +20,7 @@ public final class Ortograficos {
      * @return Devuelve un número negativo si s1 es menor que s2, 0 si son iguales y un número positivo si s1 es mayor que s2.
      */
     @Contract(pure = true)
-    public static int compararAlfabeticamente(@NotNull String s1, String s2) {
+    private static int compararAlfabeticamente(@NotNull String s1, String s2) {
         return s1.compareTo(s2);
     }
 

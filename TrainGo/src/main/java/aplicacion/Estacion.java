@@ -2,6 +2,11 @@ package aplicacion;
 
 import org.slf4j.LoggerFactory;
 
+/**
+ * Clase que representa una estación
+ *
+ * @param ciudad Ciudad en la que se encuentra la estación
+ */
 public record Estacion(String ciudad) {
 
     public Estacion {

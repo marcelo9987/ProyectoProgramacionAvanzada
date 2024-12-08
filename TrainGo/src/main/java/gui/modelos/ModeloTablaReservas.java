@@ -1,72 +1,83 @@
 package gui.modelos;
 
 import aplicacion.Reserva;
+import aplicacion.anotaciones.NoNegativo;
+import org.intellij.lang.annotations.MagicConstant;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 // | TREN | ORIGEN | DESTINO | HORA |
 
-public class ModeloTablaReservas extends AbstractTableModel {
+public final class ModeloTablaReservas extends AbstractTableModel {
 
-    List<Reserva> reservas;
 
-    public ModeloTablaReservas(List<Reserva> reservas) {
+    private static final int TREN       = 0;
+    private static final int ORIGEN     = 1;
+    private static final int DESTINO    = 2;
+    private static final int HORASALIDA = 3;
+    private static final int ESTADO     = 4;
+
+    private final List<Reserva>  reservas;
+    private final ResourceBundle bundle;
+
+    public ModeloTablaReservas(List<Reserva> reservas, ResourceBundle bu) {
         super();
         this.reservas = reservas;
+        this.bundle = bu;
         this.fireTableDataChanged();
     }
 
-    public ModeloTablaReservas() {
+    public ModeloTablaReservas(ResourceBundle bu) {
         super();
         this.reservas = new ArrayList<>();
+        this.bundle = bu;
+        this.fireTableDataChanged();
     }
 
     public void setReservas(List<Reserva> reservas) {
-        this.reservas = reservas;
+        this.reservas.clear();
+        this.reservas.addAll(reservas);
         this.fireTableDataChanged();
     }
 
+    @NotNull
+    @Contract(pure = true)
     @Override
-    public String getColumnName(int column) {
-        switch (column) {
-            case 0:
-                return "Tren";
-            case 1:
-                return "Origen";
-            case 2:
-                return "Destino";
-            case 3:
-                return "Hora";
-            default:
-                return "ERROR: COL._NO_VALIDA";
-        }
+    public String getColumnName(@MagicConstant(intValues = {TREN, ORIGEN, DESTINO, HORASALIDA, ESTADO}) int column) {
+        return switch (column) {
+            case TREN -> bundle.getString("tren");
+            case ORIGEN -> bundle.getString("origen");
+            case DESTINO -> bundle.getString("destino");
+            case HORASALIDA -> bundle.getString("hora.y.fecha.de.salida");
+            case ESTADO -> bundle.getString("estado.trayecto");
+            default -> "ERROR: COL._NO_VALIDA";
+        };
     }
 
     @Override
     public int getRowCount() {
-        return 0;
+        return this.reservas.size();
     }
 
     @Override
     public int getColumnCount() {
-        return 4;
+        return 5;
     }
 
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    public Object getValueAt(@NoNegativo @MagicConstant(intValues = {TREN, ORIGEN, DESTINO, HORASALIDA, ESTADO}) int rowIndex, @NoNegativo int columnIndex) {
         Reserva reserva = this.reservas.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                return reserva.numeroTren();
-            case 1:
-                return reserva.nombreOrigen();
-            case 2:
-                return reserva.nombreDestino();
-            case 3:
-                return reserva.fechaHoraSalidaImprimible();
-            default:
-                return "ERROR: COL._NO_VALIDA";
-        }
+        return switch (columnIndex) {
+            case TREN -> reserva.numeroTren();
+            case ORIGEN -> reserva.nombreOrigen();
+            case DESTINO -> reserva.nombreDestino();
+            case HORASALIDA -> reserva.fechaHoraSalidaImprimible();
+            case ESTADO -> reserva.estado();
+            default -> "ERROR: COL._NO_VALIDA";
+        };
     }
 }

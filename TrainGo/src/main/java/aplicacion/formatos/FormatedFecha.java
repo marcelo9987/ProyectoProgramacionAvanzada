@@ -1,6 +1,8 @@
 package aplicacion.formatos;
 
 
+import aplicacion.anotaciones.NoNegativo;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,12 @@ public final class FormatedFecha extends javax.swing.text.MaskFormatter {
 
     private final JLabel etiquetaError;
 
+    /**
+     * Constructor de la clase FormatedFecha
+     *
+     * @param etiquetaError Etiqueta donde se mostrará el error en el panel principal
+     * @throws java.text.ParseException si la fecha no es válida
+     */
     public FormatedFecha(JLabel etiquetaError) throws java.text.ParseException {
         super("##/##/####"); // Formato de la fecha
         setAllowsInvalid(false);
@@ -34,6 +42,7 @@ public final class FormatedFecha extends javax.swing.text.MaskFormatter {
         this.etiquetaError = etiquetaError; // Etiqueta donde se mostrará el error en el panel principal
     }
 
+    @Contract(pure = true, value = "null -> null")
     @Nullable
     @Override
     public Object stringToValue(String string) throws java.text.ParseException {
@@ -73,7 +82,8 @@ public final class FormatedFecha extends javax.swing.text.MaskFormatter {
      * @apiNote este método usa como inspiración el código de la función day_of_year (Brian W. Kernighan y Dennis M. Ritchie) para gestionar los bisiestos y los días de los meses.
      * @see #ANHO_MINIMO_FECHA_BUSQUEDA
      */
-    private static boolean comprobarFechaBienCodificada(int dia, int mes, int anho) {
+    @Contract(pure = true)
+    private static boolean comprobarFechaBienCodificada(@NoNegativo int dia, @NoNegativo int mes, @NoNegativo int anho) {
         //                   Ene Feb Mar Abr May Jun Jul Ago Sep Oct Nov Dic
         // array sacado de: Brian W. Kernighan y Dennis M. Ritchie, "The C Programming Language", 2nd ed., 1988, p. 142
         char[][] daytab = {
@@ -95,7 +105,5 @@ public final class FormatedFecha extends javax.swing.text.MaskFormatter {
         }
 
         return dia > daytab[esBisiesto ? 1 : 0][mes];
-
-
     }
 }

@@ -99,9 +99,8 @@ public final class ModeloDesplegableUbicacion implements ComboBoxModel<String>, 
     @Override
     public ModeloDesplegableUbicacion clone() {
         try {
-            ModeloDesplegableUbicacion modelo = (ModeloDesplegableUbicacion) super.clone();
             //triggerRefresh() o .ordenar() no es necesario, ya se ordena al añadir
-            return modelo;
+            return (ModeloDesplegableUbicacion) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError(e);
         }

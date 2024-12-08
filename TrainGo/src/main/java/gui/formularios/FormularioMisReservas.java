@@ -7,22 +7,23 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class FormularioMisReservas extends JFrame {
-    private final JTable            tablaReservas;
-    private final FachadaAplicacion fa;
+class FormularioMisReservas extends JFrame {
 
-    public FormularioMisReservas(@NotNull FachadaAplicacion fa) {
+    private ResourceBundle bundle;
+
+    FormularioMisReservas(@NotNull FachadaAplicacion fa) {
         super();
 
-        this.fa = fa;
+        this.bundle = fa.getBundleInstance();
 
-        this.setTitle("Mis reservas");
+        this.setTitle(bundle.getString("mis.reservas"));
 
-        this.tablaReservas = new JTable();
+        JTable tablaReservas = new JTable();
 
-        ModeloTablaReservas modeloDeDatosTablaReservas = new ModeloTablaReservas();
-        this.tablaReservas.setModel(modeloDeDatosTablaReservas);
+        ModeloTablaReservas modeloDeDatosTablaReservas = new ModeloTablaReservas(bundle);
+        tablaReservas.setModel(modeloDeDatosTablaReservas);
 
         List<Reserva> reservas = fa.getReservasUsuario(fa.usuario());
 
@@ -30,13 +31,13 @@ public class FormularioMisReservas extends JFrame {
         modeloDeDatosTablaReservas.fireTableDataChanged();
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setViewportView(this.tablaReservas);
+        scrollPane.setViewportView(tablaReservas);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         this.add(scrollPane);
 
         this.setSize(800, 600);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setVisible(true);
     }
 

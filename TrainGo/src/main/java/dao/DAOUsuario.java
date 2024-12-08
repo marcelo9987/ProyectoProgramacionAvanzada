@@ -4,6 +4,7 @@ import aplicacion.Usuario;
 import aplicacion.excepciones.SituacionDeRutasInesperadaException;
 import aplicacion.excepciones.UsuarioNoEncontradoException;
 import aplicacion.excepciones.noHayUsuariosRegistradosException;
+import dao.constantes.ConstantesGeneral;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,11 +39,7 @@ public class DAOUsuario extends AbstractDAO {
             System.out.println(usuario);
         }
 
-//        Usuario usr = new Usuario(1, "Pepe", "pepef@incibe.cdi.net", "1234", 666666666, "Calle Falsa 123", new Date(), true);
 
-//        dao.addUser(usr);
-
-//        dao.save();
     }
 
     public static DAOUsuario getInstance() {
@@ -81,10 +78,9 @@ public class DAOUsuario extends AbstractDAO {
     @Override
     protected void guardarArchivo(@NotNull XMLStreamWriter writer) {
 
-        try {
-            writer.writeStartDocument();
+        abrirCabeceraArchivoXML(writer, ConstantesGeneral.FICHERO_USUARIO);
 
-            writer.writeStartElement("usuarios");
+        try {
 
             for (Usuario usuario : usuarios) {
 
@@ -131,7 +127,7 @@ public class DAOUsuario extends AbstractDAO {
         XMLEventReader xmlReader = null;
         try {
             xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("usuarios.xml"));
-        } catch (Exception e) {
+        } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al leer el archivo: ", e);
         }
         return xmlReader;
@@ -234,39 +230,27 @@ public class DAOUsuario extends AbstractDAO {
                 }
             }
 
-            if (evento.isEndElement()) {
-                if (evento.asEndElement().getName().getLocalPart().equals("usuario")) {
-                    this.logger.trace("Fin de usuario");
-                    usr = new Usuario
-                            (
-                                    DNI
-                                    , nombre
-                                    , correo
-                                    , contrasenha
-                                    , telefono
-                                    , direccion
-                                    , LocalDate.of(fechaNacimiento[2], fechaNacimiento[1], fechaNacimiento[0])
-                                    , false
-                            );
-                    usuarios.add(usr);
-                    this.logger.debug("Usuario añadido: {}", usr);
-                    telefono = 0;
+            if (evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals("usuario")) {
+                this.logger.trace("Fin de usuario");
+                usr = new Usuario
+                        (
+                                DNI
+                                , nombre
+                                , correo
+                                , contrasenha
+                                , telefono
+                                , direccion
+                                , LocalDate.of(fechaNacimiento[2], fechaNacimiento[1], fechaNacimiento[0])
+                                , false
+                        );
+                usuarios.add(usr);
+                this.logger.debug("Usuario añadido: {}", usr);
+                telefono = 0;
 
-                }
             }
+
         }
     }
-
-
-    public void addUser(Usuario usr) {
-        this.logger.trace("Añadiendo usuario: {}", usr);
-        if (usuarios.contains(usr)) {
-            this.logger.warn("El usuario ya existe");
-            return;
-        }
-        usuarios.add(usr);
-    }
-
 
     /**
      * Método que autentica a un usuario
@@ -289,6 +273,21 @@ public class DAOUsuario extends AbstractDAO {
         return false;
     }
 
+    public Usuario encontrarUsuarioPorDNI(String usuarioDNI) throws UsuarioNoEncontradoException {
+        if (comprobarHayUsuariosEnOrigen()) {
+            throw new noHayUsuariosRegistradosException();
+        }
+        Usuario usr = this.usuarios.stream().filter(u -> (u.DNI() == Integer.parseInt(usuarioDNI))).findFirst().orElse(null);
+        if (usr != null) {
+            this.logger.info("Usuario encontrado: {}", usuarioDNI);
+        }
+        else {
+            this.logger.warn("Usuario no encontrado: {}", usuarioDNI);
+            throw new UsuarioNoEncontradoException("Usuario no encontrado: " + usuarioDNI);
+        }
+        return usr;
+    }
+
     /**
      * Método que obtiene un usuario
      *
@@ -309,14 +308,6 @@ public class DAOUsuario extends AbstractDAO {
         return usr;
     }
 
-    private boolean comprobarHayUsuariosEnOrigen() {
-        if (usuarios.isEmpty()) {
-            this.logger.warn("No hay usuarios registrados");
-            return true;
-        }
-        return false;
-    }
-
     public void actualizarUsuario(@NonNls String correoAntiguo, Usuario usuario) throws UsuarioNoEncontradoException {
         Usuario usuarioActualizar = this.usuarios.stream().filter(u -> u.correo().equals(correoAntiguo)).findFirst().orElse(null);
         if (usuarioActualizar == null) {
@@ -327,5 +318,13 @@ public class DAOUsuario extends AbstractDAO {
         logger.debug("Usuario a actualizar: {}", usuarioActualizar);
         usuarioActualizar.actualizarDatos(usuario.correo(), usuario.direccion(), usuario.telefono());
         logger.debug("Usuario actualizado: {}", usuarioActualizar);
+    }
+
+    private boolean comprobarHayUsuariosEnOrigen() {
+        if (usuarios.isEmpty()) {
+            this.logger.warn("No hay usuarios registrados");
+            return true;
+        }
+        return false;
     }
 }

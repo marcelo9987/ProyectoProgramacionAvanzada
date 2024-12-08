@@ -1,6 +1,7 @@
 package dao;
 
 import aplicacion.Tren;
+import dao.constantes.ConstantesGeneral;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,48 +44,6 @@ public class DAOTren extends AbstractDAO {
         return instance;
     }
 
-    public static void main(String[] args) {
-        DAOTren dao = getInstance();
-        XMLEventReader xmlEvtRdr_lector = dao.obtenerXmlEventReader();
-        dao.cargarArchivo(xmlEvtRdr_lector);
-
-        for (Tren tren : dao.getTrenes()) {
-            System.out.println(tren);
-        }
-
-        dao.addTren(new Tren(UUID.randomUUID(), 678));
-        dao.addTren(new Tren(UUID.randomUUID(), 91011));
-
-        dao.save();
-    }
-
-    void addTren(Tren tren) {
-        this.logger.trace("Añadiendo tren: {}", tren);
-        if (tren == null) {
-            this.logger.warn("No se puede añadir un tren nulo");
-            return;
-        }
-
-        if (trenes.contains(tren)) {
-            this.logger.warn("El tren ya existe");
-            return;
-        }
-
-        trenes.add(tren);
-    }
-
-    public List<Tren> getTrenes() {
-        return trenes;
-    }
-
-    public void deleteTren(Tren tren) {
-        trenes.remove(tren);
-    }
-
-    public void updateTren(Tren tren) {
-        trenes.set(trenes.indexOf(tren), tren);
-    }
-
     @Nullable
     @Override
     protected XMLStreamWriter obtenerXMLStreamWriter() {
@@ -103,12 +62,8 @@ public class DAOTren extends AbstractDAO {
     @Override
     protected void guardarArchivo(XMLStreamWriter writer) {
         this.logger.trace("Guardando contenido en el archivo...");
-        try {
-            writer.writeStartDocument();
-            writer.writeStartElement("trenes");
-        } catch (Exception e) {
-            this.logger.error("Error al escribir cabecera. Es posible que el haya dejado de existir (o el acceso a mutex haya sido revocado)", e);
-        }
+
+        abrirCabeceraArchivoXML(writer, ConstantesGeneral.FICHERO_TREN);
 
         for (Tren tren : trenes) {
             try {

@@ -5,17 +5,18 @@ import aplicacion.excepciones.UsuarioNoEncontradoException;
 import org.intellij.lang.annotations.MagicConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.Criptograficos;
 
 import javax.swing.*;
 import java.util.ResourceBundle;
 
-public final class FormularioMiUsuario extends JDialog {
+final class FormularioMiUsuario extends JDialog {
     private static final int INICIO    = 0;
     private static final int MODIFICAR = 1;
     private static final int GUARDAR   = 2;
 
-    private final Logger logger;
-    private final FachadaAplicacion fa;
+    private static final Logger            logger = LoggerFactory.getLogger(FormularioMiUsuario.class);
+    private final        FachadaAplicacion fa;
     private final ResourceBundle bundle;
 
     private JTextField txtCorreo, txtTelefono, txtDireccion;
@@ -23,9 +24,8 @@ public final class FormularioMiUsuario extends JDialog {
     private JButton btnModificar;
 
 
-    public FormularioMiUsuario(JFrame parent, FachadaAplicacion fa) {
+    FormularioMiUsuario(JFrame parent, FachadaAplicacion fa) {
         super(parent, true);
-        this.logger = LoggerFactory.getLogger(FormularioMiUsuario.class);
         this.fa = fa;
         this.bundle = this.fa.getBundleInstance();
         inicializarFormularioMiUsuario();
@@ -37,10 +37,14 @@ public final class FormularioMiUsuario extends JDialog {
 
         JLabel lblNombre = new JLabel(fa.getUsrNombre());
 
+//        lblNombre.setPreferredSize(new Dimension(300, 30));
+        lblNombre.setMinimumSize(lblNombre.getPreferredSize());
+
         int i_dni = fa.getUsrDni();
-        char c_dni = util.Criptograficos.calculateDniLetter(i_dni);
+        char c_dni = Criptograficos.calculateDniLetter(i_dni);
         String s_dni = Integer.toString(i_dni) + c_dni;
         JLabel lblDNI = new JLabel(s_dni);
+        lblDNI.setMinimumSize(lblDNI.getPreferredSize());
 
         JLabel lblCorreo = new JLabel(bundle.getString("correo"));
 
@@ -119,9 +123,6 @@ public final class FormularioMiUsuario extends JDialog {
 
         this.add(panelPrincipal);
         this.pack();
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setTitle(bundle.getString("mi_usuario"));
-        this.setResizable(false);
 
         btnRegresar.addActionListener(e -> dispose());
 
@@ -132,6 +133,10 @@ public final class FormularioMiUsuario extends JDialog {
         btnGuardar.addActionListener(e ->
                 gestionarModificarYGuardar(GUARDAR)
         );
+
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setTitle(bundle.getString("mi_usuario"));
+        this.setResizable(false);
 
         this.setLocationRelativeTo(null);
         this.setVisible(true);
