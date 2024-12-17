@@ -11,12 +11,10 @@ import java.util.ResourceBundle;
 
 class FormularioMisReservas extends JFrame {
 
-    private ResourceBundle bundle;
-
     FormularioMisReservas(@NotNull FachadaAplicacion fa) {
         super();
 
-        this.bundle = fa.getBundleInstance();
+        ResourceBundle bundle = fa.getBundleInstance();
 
         this.setTitle(bundle.getString("mis.reservas"));
 

@@ -9,17 +9,17 @@ import javax.swing.*;
 import javax.swing.event.ListDataListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
+/**
+ * Modelo de desplegable de ubicaciones.
+ */
 public final class ModeloDesplegableUbicacion implements ComboBoxModel<String>, Cloneable {
     private final List<Estacion> ubicaciones;
     private Estacion selectedItem;
 
-    public ModeloDesplegableUbicacion() {
-        super();
-        this.ubicaciones = new ArrayList<>();
-    }
-
+    /**
+     * @param fa Fachada de la aplicación
+     */
     public ModeloDesplegableUbicacion(@NotNull FachadaAplicacion fa) {
         this();
         this.ubicaciones.addAll(fa.getEstaciones());
@@ -27,23 +27,19 @@ public final class ModeloDesplegableUbicacion implements ComboBoxModel<String>, 
 //        System.out.println("Ubicaciones: " + this.ubicaciones);
     }
 
-    public void addUbicacion(Estacion ubicacion) {
-        this.ubicaciones.add(ubicacion);
-        this.triggerRefresh();
+    /**
+     * Constructor de la clase ModeloDesplegableUbicacion.
+     */
+    private ModeloDesplegableUbicacion() {
+        super();
+        this.ubicaciones = new ArrayList<>();
     }
 
-    public void addUbicaciones(List<Estacion> ubicaciones) {
-        this.ubicaciones.addAll(ubicaciones);
-        this.triggerRefresh();
-    }
-
+    /**
+     * @param ubicacion Ubicación a añadir
+     */
     public void addUbicacion(String ubicacion) {
         this.ubicaciones.add(new Estacion(ubicacion));
-        this.triggerRefresh();
-    }
-
-    public void addUbicaciones(Set<Estacion> ubicaciones) {
-        this.ubicaciones.addAll(ubicaciones);
         this.triggerRefresh();
     }
 
@@ -60,10 +56,6 @@ public final class ModeloDesplegableUbicacion implements ComboBoxModel<String>, 
                 return;
             }
         }
-    }
-
-    public Estacion getSelectedUbicacion() {
-        return this.selectedItem;
     }
 
     @Override

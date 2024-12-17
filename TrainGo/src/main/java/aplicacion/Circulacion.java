@@ -17,19 +17,7 @@ import java.util.UUID;
  *
  * @apiNote Una circulación es el viaje de un tren por una ruta
  */
-public final class Circulacion implements Comparable {
-    @org.hibernate.validator.constraints.UUID
-    private final UUID            id;
-    private final Tren            tren;
-    private final Ruta            ruta;
-    private final EnumCirculacion estado;
-    private final LocalDateTime   horaSalida;
-    @NoNegativo
-    private final BigDecimal      precioPorAsiento;
-    @Nullable
-    private final LocalDateTime   horaLlegadaReal;
-
-
+public record Circulacion(@org.hibernate.validator.constraints.UUID UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, @Nullable LocalDateTime horaLlegadaReal, @NoNegativo BigDecimal precioPorAsiento) implements Comparable {
     /**
      * Constructor de Circulacion
      *
@@ -43,7 +31,6 @@ public final class Circulacion implements Comparable {
      * @see EnumCirculacion
      */
     public Circulacion(@org.hibernate.validator.constraints.UUID UUID id, Tren tren, Ruta ruta, @MagicConstant(valuesFromClass = EnumCirculacion.class) EnumCirculacion estado, LocalDateTime horaSalida, @Nullable LocalDateTime horaLlegadaReal, @NoNegativo BigDecimal precioPorAsiento) {
-        super();
         this.id = id;
         this.tren = tren;
         this.ruta = ruta;
@@ -54,50 +41,25 @@ public final class Circulacion implements Comparable {
     }
 
 
+    /**
+     * @return Ciudad de origen de la circulación
+     */
     @Contract(pure = true)
     public String ciudadOrigen() {
         return this.ruta.ciudadOrigen();
     }
 
+    /**
+     * @return Ciudad a la que se dirige la circulación
+     */
     @Contract(pure = true)
     public String ciudadDestino() {
         return this.ruta.ciudadDestino();
     }
 
-    @Contract(pure = true)
-    public BigDecimal getPrecioPorAsiento() {
-        return this.precioPorAsiento;
-    }
-
-    @Contract(pure = true)
-    public EnumCirculacion estado() {
-        return estado;
-    }
-
-    @Nullable
-    @Contract(pure = true)
-    public LocalDateTime horaLlegadaReal() {
-        return horaLlegadaReal;
-    }
-
-    @NotNull
-    @Contract(pure = true)
-    public BigDecimal precioPorAsiento() {
-        return precioPorAsiento;
-    }
-
-    @NotNull
-    @Contract(pure = true)
-    public Ruta ruta() {
-        return ruta;
-    }
-
-    @NotNull
-    @Contract(pure = true)
-    public Tren tren() {
-        return tren;
-    }
-
+    /**
+     * @return Identificador del tren que realiza la circulación
+     */
     @NotNull
     @Contract(pure = true)
     public UUID trenId() {
@@ -106,6 +68,7 @@ public final class Circulacion implements Comparable {
 
     /**
      * Devuelve el nombre de la ciudad de origen de la circulación
+     *
      * @return null si la ruta es nula, el nombre de la ciudad de origen en otro caso
      */
     @Nullable
@@ -116,6 +79,7 @@ public final class Circulacion implements Comparable {
 
     /**
      * Devuelve el nombre de la ciudad de destino de la circulación
+     *
      * @return null si la ruta es nula, el nombre de la ciudad de destino en otro caso
      */
     @Nullable
@@ -126,6 +90,7 @@ public final class Circulacion implements Comparable {
 
     /**
      * Devuelve la cadena de la hora y fecha de salida de la circulación
+     *
      * @return Cadena con la hora y fecha de salida de la circulación
      */
     @NotNull
@@ -137,6 +102,7 @@ public final class Circulacion implements Comparable {
 
     /**
      * Devuelve la cadena de la hora de salida de la circulación
+     *
      * @return Cadena con la hora de salida de la circulación
      */
     @NotNull
@@ -149,6 +115,7 @@ public final class Circulacion implements Comparable {
 
     /**
      * Compara dos circulaciones por la hora de salida
+     *
      * @param o Circulación con la que se compara
      * @return -1 si la hora de salida de esta circulación es anterior a la de la otra, 1 si es posterior, 0 si son iguales
      * @see Comparable
@@ -166,23 +133,6 @@ public final class Circulacion implements Comparable {
         return 0;
     }
 
-    @NotNull
-    @Contract(pure = true)
-    public LocalDateTime horaSalida() {
-        return horaSalida;
-    }
-
-    @Contract(pure = true)
-    @Override
-    public int hashCode() {
-        return id().hashCode();
-    }
-
-    @NotNull
-    @Contract(pure = true)
-    public UUID id() {
-        return id;
-    }
 
     @Contract(pure = true)
     @Override
@@ -194,8 +144,16 @@ public final class Circulacion implements Comparable {
         return id().equals(that.id());
     }
 
+    @Contract(pure = true)
+    @Override
+    public int hashCode() {
+        return id().hashCode();
+    }
+
+
     /**
      * Devuelve una cadena con la información de la circulación
+     *
      * @return Cadena con la información de la circulación
      */
     @NotNull
@@ -213,15 +171,18 @@ public final class Circulacion implements Comparable {
                 '}';
     }
 
-    @NotNull
-    @Contract(pure = true)
-    BigDecimal precio() {
-        return precioPorAsiento;
-    }
-
     @Contract(pure = true)
     int trenNumero() {
         return tren.num();
     }
 
+    /**
+     * Comprueba si la circulación está programada
+     *
+     * @return true si la circulación está programada, false en otro caso
+     */
+    @Contract(pure = true)
+    public boolean programada() {
+        return estado == EnumCirculacion.PROGRAMADO;
+    }
 }

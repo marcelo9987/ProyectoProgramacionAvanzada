@@ -21,25 +21,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static dao.constantes.TagsXMLCirculacion.*;
 
+//--
+
+/**
+ * Clase que gestiona el IO y la persistencia de las circulaciones
+ */
 public class DAOCirculacion extends AbstractDAO {
-
-    @NonNls
-    private static final String CIRCULACION       = "circulacion";
-    @NonNls
-    private static final String UUID              = "uuid";
-    @NonNls
-    private static final String TREN              = "tren_id";
-    @NonNls
-    private static final String RUTA              = "ruta";
-    @NonNls
-    private static final String ESTADO            = "estado";
-    @NonNls
-    private static final String HORA_SALIDA       = "hora_salida";
-    @NonNls
-    private static final String HORA_LLEGADA_REAL = "hora_llegada";
-    @NonNls
-    private static final String PRECIO_POR_ASIENTO = "precio_por_asiento";
 
     private static DAOCirculacion               instance = null; // Singleton pattern
     private final  FachadaDAO                   fa_dao;
@@ -52,10 +41,15 @@ public class DAOCirculacion extends AbstractDAO {
         this.circulaciones = new HashMap<>();
     }
 
+    /**
+     * Método main para pruebas
+     *
+     * @param args no se usa
+     */
     @TestOnly
     public static void main(String[] args) {
         FachadaDAO dao = FachadaDAO.getInstance();
-        dao.cargaloTodo();
+        dao.cargarTodosLosDatosDeFicheros();
         DAOCirculacion daoCirculacion = getInstance(dao);
         daoCirculacion.load();
 
@@ -68,12 +62,22 @@ public class DAOCirculacion extends AbstractDAO {
         daoCirculacion.save();
     }
 
+    /**
+     * Método que devuelve la instancia de DAOCirculacion
+     *
+     * @param fadao la fachada DAO
+     * @return instancia de DAOCirculacion
+     */
     public static DAOCirculacion getInstance(FachadaDAO fadao)// Singleton
     {
         if (instance == null) {
             instance = new DAOCirculacion(fadao);
         }
         return instance;
+    }
+
+    private Map<Ruta, List<Circulacion>> circulaciones() {
+        return this.circulaciones;
     }
 
     @Nullable
@@ -94,15 +98,15 @@ public class DAOCirculacion extends AbstractDAO {
         return writer;
     }
 
+    // --
+
     @Override
     protected void guardarArchivo(@NotNull XMLStreamWriter writer) {
-//        _abrirCabeceraCirculaciones(writer);
-        abrirCabeceraArchivoXML(writer, ConstantesGeneral.FICHERO_CIRCULACION);
+        escribirAperturaCabeceraArchivoXML(writer, ConstantesGeneral.FICHERO_CIRCULACION);
         List<List<Circulacion>> circulacionesApiladas = new ArrayList<>(this.circulaciones().values());
 
         List<Circulacion> circulacionesSinApilar = new ArrayList<>();
-        for (Iterator<List<Circulacion>> it = circulacionesApiladas.iterator(); it.hasNext(); ) {
-            List<Circulacion> participanteNoApilada = it.next();
+        for (List<Circulacion> participanteNoApilada : circulacionesApiladas) {
             circulacionesSinApilar.addAll(participanteNoApilada);
         }
 
@@ -150,10 +154,6 @@ public class DAOCirculacion extends AbstractDAO {
         this.logger.info("Archivo guardado de forma satisfactoria");
     }
 
-    private Map<Ruta, List<Circulacion>> circulaciones() {
-        return this.circulaciones;
-    }
-
     /**
      * Escribe un elemento en un archivo XML.
      *
@@ -198,32 +198,6 @@ public class DAOCirculacion extends AbstractDAO {
         writer.writeEndElement();
     }
 
-    @Override
-    protected void cargarArchivo(@NotNull XMLEventReader reader) {
-        this.logger.trace("Cargando archivo...");
-
-
-        while (reader.hasNext()) {
-            XMLEvent evento = getNextXmlEvent(reader);
-
-            if (evento.isStartElement() && evento.asStartElement().getName().getLocalPart().equals(CIRCULACION)) {
-                try {
-                    _procesarCirculacion(reader);
-                } catch (Exception e) {
-                    throw new ProcesadoSiguienteEventoException( e);
-                }
-            }
-
-        }
-
-        for (Ruta r : circulaciones.keySet()) {
-            for (Circulacion c : circulaciones.get(r)) {
-                this.logger.trace("Circulación cargada: {}", c);
-            }
-        }
-
-    }
-
     @Nullable
     @Override
     protected XMLEventReader obtenerXmlEventReader() {
@@ -238,21 +212,30 @@ public class DAOCirculacion extends AbstractDAO {
         return reader;
     }
 
-    /**
-     * Procesa la cabecera de un archivo XML de circulaciones.
-     *
-     * @param writer el XMLStreamWriter que se usará para escribir el archivo
-     */
-    @Deprecated(forRemoval = true)
-    @Contract(pure = true)
-    private void _abrirCabeceraCirculaciones(@NotNull XMLStreamWriter writer) {
-        try {
-            writer.writeStartDocument();
-            writer.writeStartElement("circulaciones");
-        } catch (XMLStreamException e) {
-            this.logger.error("Error al escribir la cabecera", e);
-            throw new IllegalArgumentException("Error al escribir la cabecera");
+    @Override
+    protected void cargarArchivo(@NotNull XMLEventReader reader) {
+        this.logger.trace("Cargando archivo...");
+
+
+        while (reader.hasNext()) {
+            XMLEvent evento = getNextXmlEvent(reader);
+
+            if (evento.isStartElement() && evento.asStartElement().getName().getLocalPart().equals(CIRCULACION)) {
+                try {
+                    _procesarCirculacion(reader);
+                } catch (IllegalStateException e) {
+                    throw new ProcesadoSiguienteEventoException(e);
+                }
+            }
+
         }
+
+        for (Ruta r : circulaciones.keySet()) {
+            for (Circulacion c : circulaciones.get(r)) {
+                this.logger.trace("Circulación cargada: {}", c);
+            }
+        }
+
     }
 
     private void _procesarCirculacion(@NotNull XMLEventReader reader) {
@@ -266,7 +249,6 @@ public class DAOCirculacion extends AbstractDAO {
 
         while (reader.hasNext()) {
             XMLEvent evento = getNextXmlEvent(reader);
-
 
             if (evento.isStartElement()) {
                 switch (evento.asStartElement().getName().getLocalPart()) {
@@ -485,7 +467,7 @@ public class DAOCirculacion extends AbstractDAO {
     }
 
     @NotNull
-    private LocalDateTime _crearFechaHoraYcomprobarValidez(@NotNull XMLEvent evento, @NoNegativo int anho, @NoNegativo int mes, @NoNegativo int dia, @NoNegativo int hora,@NoNegativo int minuto) {
+    private LocalDateTime _crearFechaHoraYcomprobarValidez(@NotNull XMLEvent evento, @NoNegativo int anho, @NoNegativo int mes, @NoNegativo int dia, @NoNegativo int hora, @NoNegativo int minuto) {
         @NonNls String nombreElementoInterno = evento.asEndElement().getName().getLocalPart();
         this.logger.debug("Procesando{}", nombreElementoInterno);
         this.logger.debug("Elemento: {}", nombreElementoInterno);
@@ -507,7 +489,7 @@ public class DAOCirculacion extends AbstractDAO {
         throw new IllegalArgumentException("Error al crear la fecha y hora");
     }
 
-    private static boolean comprobarParametrosDeFechaSonMayoresQueCero(@NoNegativo int anho, @NoNegativo int mes, @NoNegativo int dia, @NoNegativo int hora,@NoNegativo int minuto) {
+    private static boolean comprobarParametrosDeFechaSonMayoresQueCero(@NoNegativo int anho, @NoNegativo int mes, @NoNegativo int dia, @NoNegativo int hora, @NoNegativo int minuto) {
         System.out.println("Comprobando que los parámetros de la fecha son mayores que cero");
         System.out.println("Año: " + anho + " Mes: " + mes + " Día: " + dia + " Hora: " + hora + " Minuto: " + minuto);
         if (anho > 0) {
@@ -521,6 +503,7 @@ public class DAOCirculacion extends AbstractDAO {
         }
         return false;
     }
+
 
     /**
      * Busca las circulaciones de una ruta en una fecha concreta.

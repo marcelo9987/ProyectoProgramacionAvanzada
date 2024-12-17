@@ -1,7 +1,10 @@
 package aplicacion.excepciones;
 
+/**
+ * Excepción que se lanza cuando la carga de un archivo falla.
+ */
 public abstract class CargaArchivoFallidaException extends RuntimeException {
-    public CargaArchivoFallidaException(String mensaje) {
+    CargaArchivoFallidaException(String mensaje) {
         super(mensaje);
     }
 

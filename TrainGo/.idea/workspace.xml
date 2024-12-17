@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AnalysisUIOptions">
+    <option name="SPLITTER_PROPORTION" value="0.5009881" />
     <option name="ANALYZE_INJECTED_CODE" value="false" />
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e42c1f1c-efff-470a-88be-6869e5ad2a37" name="Changes" comment="+ ya está casi todo. Sólo me falta que funcione la tabla de reservas, limar un poquillo y debería estar listo.&#10;+ Anotacion, FormularioReservarTren, BugFix, Mejora misceláneas.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/CierreArchivoXMLErroneoException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/ProcesadoSiguienteEventoException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dao/constantes/ConstantesGeneral.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dao/constantes/TagsXMLReserva.java" afterDir="false" />
+    <list default="true" id="e42c1f1c-efff-470a-88be-6869e5ad2a37" name="Changes" comment="+ He limado en general. Faltan: excepciones y un pelín de javadocs">
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/constantes/TagsXMLCirculacion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/constantes/TagsXMLEstacion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/constantes/TagsXMLRuta.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/constantes/TagsXMLTren.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/constantes/TagsXMLUsuario.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/circulaciones.xml" beforeDir="false" afterPath="$PROJECT_DIR$/circulaciones.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/estaciones.xml" beforeDir="false" afterPath="$PROJECT_DIR$/estaciones.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/Circulacion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/Circulacion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/Estacion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/Estacion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/FachadaAplicacion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/FachadaAplicacion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/Reserva.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/Reserva.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/Ruta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/Ruta.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/Tren.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/Tren.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/Usuario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/Usuario.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/anotaciones/NoNegativo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/anotaciones/NoNegativo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/anotaciones/validadores/ValidadorNoNegativo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/anotaciones/validadores/ValidadorNoNegativo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/formatos/FormatedFecha.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/formatos/FormatedFecha.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/enums/EnumCirculacion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/enums/EnumCirculacion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/enums/EnumIdioma.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/enums/EnumIdioma.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/CargaArchivoFallidaException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/CargaArchivoFallidaException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/CierreArchivoXMLErroneoException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/CierreArchivoXMLErroneoException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/EventoNuloException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/LecturaSiguienteEventoException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/LecturaSiguienteEventoException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/ProcesadoSiguienteEventoException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/ProcesadoSiguienteEventoException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/SituacionDeRutasInesperadaException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/SituacionDeRutasInesperadaException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/UsuarioNoEncontradoException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/UsuarioNoEncontradoException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/noHayUsuariosRegistradosException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/aplicacion/excepciones/noHayUsuariosRegistradosException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dao/AbstractDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/AbstractDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dao/DAOCirculacion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/DAOCirculacion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dao/DAOEstacion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/DAOEstacion.java" afterDir="false" />
@@ -33,6 +44,9 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/dao/DAOUsuario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/DAOUsuario.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dao/FachadaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/FachadaDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dao/IDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/IDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/constantes/ConstantesGeneral.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/constantes/ConstantesGeneral.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/constantes/TagsXMLReserva.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/constantes/TagsXMLReserva.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/FachadaGui.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/FachadaGui.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gui/formularios/FormularioAutenticacion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/formularios/FormularioAutenticacion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gui/formularios/FormularioConfiguracion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/formularios/FormularioConfiguracion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gui/formularios/FormularioMiUsuario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/formularios/FormularioMiUsuario.java" afterDir="false" />
@@ -87,7 +101,8 @@
     <option name="packageCheck" value="true" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="proportion" value="0.6647619" />
+    <option name="selectedTabId" value="Security Analysis" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -113,6 +128,7 @@
     "Application.FormularioReservarTren.executor": "Run",
     "Application.Main.executor": "Run",
     "Attach to process.pid 17800.executor": "ProcessAttachDebug",
+    "INTRODUCE_CONSTANT_NONNLS": "true",
     "Maven.traingo [clean].executor": "Run",
     "Maven.traingo [compile].executor": "Run",
     "Maven.traingo [package].executor": "Run",
@@ -123,7 +139,7 @@
     "extract.method.default.visibility": "private",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/ProyectoProgramacionAvanzada/TrainGo/diagramasUML",
+    "last_opened_file_path": "E:/Sep/CoDis - P2P Instant Messaging",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
@@ -131,14 +147,30 @@
     "settings.editor.selected.configurable": "Errors"
   }
 }]]></component>
+  <component name="QodanaReportsService">
+    <option name="descriptions">
+      <ReportDescription localRun="true" path="C:\Users\imarc\AppData\Local\Temp\qodana_output2\qodana.sarif.json" reportGuid="8b38a275-7151-47fa-85c6-2e30c8db58c6" reportId="TrainGo/qodana/2024-12-17" />
+      <ReportDescription localRun="true" path="C:\Users\imarc\AppData\Local\Temp\qodana_output7\qodana.sarif.json" reportGuid="b37d4751-ab26-429a-83a0-6b38f00f2ae8" reportId="TrainGo/qodana/2024-12-17" />
+      <ReportDescription localRun="true" path="C:\Users\imarc\AppData\Local\Temp\qodana_output11\qodana.sarif.json" reportGuid="39500586-10b7-47ab-a059-a0deb0b756bf" reportId="TrainGo/qodana/2024-12-17" />
+      <ReportDescription localRun="true" path="C:\Users\imarc\AppData\Local\Temp\qodana_output8\qodana.sarif.json" reportGuid="79de1d21-1b47-4953-a57b-ff60f9e86f38" reportId="TrainGo/qodana/2024-12-17" />
+      <ReportDescription localRun="true" path="C:\Users\imarc\AppData\Local\Temp\qodana_output1\qodana.sarif.json" reportGuid="755508b2-9bf5-4979-8afe-839300e488f7" reportId="TrainGo/qodana/2024-12-17" />
+      <ReportDescription localRun="true" path="C:\Users\imarc\AppData\Local\Temp\qodana_output4\qodana.sarif.json" reportGuid="749edca5-f567-4ba7-b2ef-691cdb2bc586" reportId="TrainGo/qodana/2024-12-17" />
+      <ReportDescription localRun="true" path="C:\Users\imarc\AppData\Local\Temp\qodana_output\qodana.sarif.json" reportGuid="de854040-c397-4cdc-8df5-15cf0b46a110" reportId="TrainGo/qodana/2024-12-17" />
+      <ReportDescription localRun="true" path="C:\Users\imarc\AppData\Local\Temp\qodana_output3\qodana.sarif.json" reportGuid="9634ade1-8afc-4a3d-9f53-1e8d8d8cbacb" reportId="TrainGo/qodana/2024-12-17" />
+      <ReportDescription localRun="true" path="C:\Users\imarc\AppData\Local\Temp\qodana_output5\qodana.sarif.json" reportGuid="21cee2a0-bdf2-41dc-b572-05f14a59c8cd" reportId="TrainGo/qodana/2024-12-17" />
+    </option>
+  </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="aplicacion.excepciones" />
       <recent name="gui.modelos" />
     </key>
     <key name="IntroduceConstantDialog.RECENTS_KEY">
+      <recent name="dao.constantes.TagsXMLUsuario" />
+      <recent name="dao.constantes.TagsXMLTren" />
+      <recent name="dao.constantes.TagsXMLRuta" />
+      <recent name="dao.constantes.TagsXMLEstacion" />
       <recent name="aplicacion.formatos.FormatedFecha" />
-      <recent name="util.Criptograficos" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="aplicacion.excepciones" />
@@ -222,17 +254,17 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.FachadaAplicacion" />
-        <item itemvalue="Application.DAORuta" />
-        <item itemvalue="Application.DAOReserva" />
-        <item itemvalue="Application.DAOEstacion" />
         <item itemvalue="Application.DAOCirculacion" />
+        <item itemvalue="Application.DAOReserva" />
+        <item itemvalue="Application.DAORuta" />
+        <item itemvalue="Application.DAOEstacion" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.145" />
       </set>
     </attachedChunks>
   </component>
@@ -279,7 +311,13 @@
       <workItem from="1733437741062" duration="6069000" />
       <workItem from="1733501223677" duration="22425000" />
       <workItem from="1733586802862" duration="18582000" />
-      <workItem from="1733678853657" duration="16545000" />
+      <workItem from="1733678853657" duration="18668000" />
+      <workItem from="1733823273846" duration="1990000" />
+      <workItem from="1733950501017" duration="2705000" />
+      <workItem from="1734266418573" duration="163000" />
+      <workItem from="1734266643083" duration="82000" />
+      <workItem from="1734447005580" duration="5872000" />
+      <workItem from="1734453499958" duration="12198000" />
     </task>
     <task id="LOCAL-00001" summary="Subo las cosas que he hecho por hoy.&#10;Añadido:&#10;+ criptograficos: letra del dni y criptografía. Hay que probarlo&#10;+ logback: para poder hacer un logging efectivo&#10;+ Estructura e inclusión de Facade en vez de decorador">
       <option name="closed" value="true" />
@@ -409,7 +447,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733533151246</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="+ He limado en general. Faltan: excepciones y un pelín de javadocs">
+      <option name="closed" value="true" />
+      <created>1733701478979</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1733701478979</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -441,9 +487,21 @@
     <MESSAGE value="MEJORAS:&#10;+ La pantalla de reservas ya funciona con filtro&#10;+ Un montón de refactors, el código sigue necesitando trabajo&#10;---&#10;Queda pendiente seguir con las ventanas" />
     <MESSAGE value="+ misc" />
     <MESSAGE value="+ ya está casi todo. Sólo me falta que funcione la tabla de reservas, limar un poquillo y debería estar listo.&#10;+ Anotacion, FormularioReservarTren, BugFix, Mejora misceláneas." />
-    <option name="LAST_COMMIT_MESSAGE" value="+ ya está casi todo. Sólo me falta que funcione la tabla de reservas, limar un poquillo y debería estar listo.&#10;+ Anotacion, FormularioReservarTren, BugFix, Mejora misceláneas." />
+    <MESSAGE value="+ He limado en general. Faltan: excepciones y un pelín de javadocs" />
+    <option name="LAST_COMMIT_MESSAGE" value="+ He limado en general. Faltan: excepciones y un pelín de javadocs" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dao/DAOUsuario.java</url>
+          <line>158</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

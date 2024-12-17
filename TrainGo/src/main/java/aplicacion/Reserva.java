@@ -5,14 +5,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+/**
+ * @param id          Identificador de la reserva
+ * @param usuario     Usuario que ha realizado la reserva
+ * @param circulacion Circulación reservada
+ */
 public record Reserva(@org.hibernate.validator.constraints.UUID UUID id, Usuario usuario, Circulacion circulacion) {
 
-//    public Reserva(UUID id, Usuario usuario, Circulacion circulacion){
-//        this.id = id;
-//        this.usuario = usuario;
-//        this.circulacion = circulacion;
-//    }
-
+    /**
+     * @param usuario Usuario que ha realizado la reserva
+     * @param circulacion Circulación reservada
+     */
     public Reserva(Usuario usuario, Circulacion circulacion) {
         this(UUID.randomUUID(), usuario, circulacion);
     }
@@ -38,31 +41,47 @@ public record Reserva(@org.hibernate.validator.constraints.UUID UUID id, Usuario
     }
 
 
-
-
+    /**
+     * @return Fecha y hora de salida de la circulación en formato imprimible
+     */
     @NotNull
     public String fechaHoraSalidaImprimible() {
         return circulacion().getCadenaHoraFechaSalida();
     }
 
+    /**
+     * @return Número de tren en la circulación
+     */
     public int numeroTren() {
         return circulacion().trenNumero();
     }
 
+    /**
+     * @return Nombre de la ciudad de origen de la circulación
+     */
     public String nombreOrigen() {
         return circulacion().ciudadOrigen();
     }
 
+    /**
+     * @return Nombre de la ciudad de destino de la circulación
+     */
     public String nombreDestino() {
         return circulacion().ciudadDestino();
     }
 
 
+    /**
+     * @return Identificador de la circulación
+     */
     @NotNull
     public UUID idCirculacion() {
         return circulacion().id();
     }
 
+    /**
+     * @return Estado de la circulación
+     */
     public EnumCirculacion estado() {
         return circulacion().estado();
     }

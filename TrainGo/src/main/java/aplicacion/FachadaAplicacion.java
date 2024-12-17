@@ -15,6 +15,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * FachadaAplicacion
+ * Clase que permite abstraer la lógica de la aplicación.
+ */
 public final class FachadaAplicacion {
 
     // Atributos
@@ -25,6 +29,9 @@ public final class FachadaAplicacion {
     private       ResourceBundle bundle;
     private       Usuario        usuario;
 
+    /**
+     * Fachada de la aplicación.
+     */
     public FachadaAplicacion() {
         super();
 
@@ -38,6 +45,11 @@ public final class FachadaAplicacion {
 
     }
 
+    /**
+     * Método principal de la aplicación.
+     *
+     * @param args No se usa.
+     */
     public static void main(String[] args) {
         FachadaAplicacion fa = new FachadaAplicacion();
 
@@ -54,7 +66,7 @@ public final class FachadaAplicacion {
      * @implNote No se tiene intención de permitir en un futuro próximo la carga de rutas personalizadas.
      */
     private void extraerDatosPorDefecto() {
-        fdao.cargaloTodo();
+        fdao.cargarTodosLosDatosDeFicheros();
     }
 
     /**
@@ -128,22 +140,43 @@ public final class FachadaAplicacion {
         return fdao.getEstaciones();
     }
 
-    public int getUsrDni() {
+    /**
+     * Permite obtener el dni del usuario autenticado.
+     *
+     * @return DNI del usuario autenticado.
+     */
+    public int obtenerDniUsuario() {
         return this.usuario.DNI();
     }
 
+    /**
+     * Permite obtener el nombre del usuario autenticado.
+     * @return Nombre del usuario autenticado.
+     */
     public String getUsrNombre() {
         return this.usuario.nombre();
     }
 
+    /**
+     * Permite obtener el email del usuario autenticado.
+     * @return Correo electrónico del usuario autenticado.
+     */
     public String getUsrCorreo() {
         return this.usuario.correo();
     }
 
+    /**
+     * Permite obtener el teléfono del usuario autenticado.
+     * @return Teléfono del usuario autenticado.
+     */
     public int getUsrTelefono() {
         return this.usuario.telefono();
     }
 
+    /**
+     * Permite obtener la dirección del usuario autenticado.
+     * @return Dirección del usuario autenticado.
+     */
     public String getUsrDireccion() {
         return this.usuario.direccion();
     }
@@ -163,22 +196,47 @@ public final class FachadaAplicacion {
         fdao.guardarUsuarios();
     }
 
+    /**
+     * Método que permite buscar una ruta por sus nombres de origen y destino.
+     * @param origen  Nombre de la estación de origen.
+     * @param destino Nombre de la estación de destino.
+     * @return Ruta que une las dos estaciones.
+     */
     public Ruta buscarRutaPorNombres(String origen, String destino) {
         return fdao.buscarRutaPorNombres(origen, destino);
     }
 
+    /**
+     * Método que permite obtener las circulaciones de una ruta concreta en una fecha concreta.
+     * @param rutaEscogida Ruta de la que se quieren obtener las circulaciones.
+     * @param fechaSalida Fecha en la que se quieren obtener las circulaciones.
+     * @return Lista de circulaciones de la ruta en la fecha dada.
+     */
     public List<Circulacion> obtenerCirculacionesRuta(Ruta rutaEscogida, LocalDate fechaSalida) {
         return fdao.obtenerCirculacionesRutaEnFecha(rutaEscogida, fechaSalida);
     }
 
+    /**
+     * Método que permite reservar un tren para el usuario autenticado.
+     * @param circulacion Circulación que se quiere reservar.
+     */
     public void reservarTren(Circulacion circulacion) {
         fdao.reservarTren(this.usuario, circulacion);
     }
 
+    /**
+     * Getter de usuario.
+     * @return Usuario autenticado.
+     */
     public Usuario usuario() {
         return usuario;
     }
 
+    /**
+     * Método que permite obtener las reservas de un usuario.
+     * @param usuario Usuario del que se quieren obtener las reservas.
+     * @return Lista de reservas del usuario.
+     */
     public List<Reserva> getReservasUsuario(Usuario usuario) {
         return fdao.getReservasUsuario(usuario);
     }

@@ -15,6 +15,9 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Clase que contiene métodos para cifrar, descifrar textos y calcular la letra de un DNI.
+ */
 public final class Criptograficos {
     private static final Logger logger = LoggerFactory.getLogger(Criptograficos.class);
 
@@ -97,9 +100,9 @@ public final class Criptograficos {
         } catch (BadPaddingException bpe) {
             // Esto ocurre cuando el padding es incorrecto.
             logger.error("El padding es incorrecto. ¿Has hecho bien los cálculos?");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // Estos son errores que solo deberían ocurrir en caso de desencriptación, por lo que los ignoramos.
-            logger.error("Error desconocido: " + e.getMessage());
+            logger.error("Error desconocido: {}", e.getMessage());
         }
         return null;
     }
@@ -134,6 +137,7 @@ public final class Criptograficos {
      *
      * @param dniNumber Número del DNI
      * @return Letra del DNI
+     * @throws IllegalArgumentException si el número del DNI es negativo
      */
     @SuppressWarnings("MagicNumber")
     public static char calculateDniLetter(int dniNumber) throws IllegalArgumentException {
@@ -168,6 +172,6 @@ public final class Criptograficos {
 
         int codigoCaracterResultante = dniNumber % 23;
 
-        return letterMap.get(Integer.valueOf(codigoCaracterResultante)).charValue();
+        return letterMap.get(codigoCaracterResultante);
     }
 }

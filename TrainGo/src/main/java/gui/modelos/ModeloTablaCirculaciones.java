@@ -3,6 +3,7 @@ package gui.modelos;
 import aplicacion.Circulacion;
 import aplicacion.anotaciones.NoNegativo;
 import org.intellij.lang.annotations.MagicConstant;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,37 +13,33 @@ import java.util.List;
 import java.util.ResourceBundle;
 //| ORIGEN | DESTINO | HORA_SALIDA | PRECIO |
 
+/**
+ * Modelo de tabla para las circulaciones
+ */
 public final class ModeloTablaCirculaciones extends AbstractTableModel {
     private static final int               ORIGEN      = 0;
     private static final int               DESTINO     = 1;
     private static final int               HORA_SALIDA = 2;
     private static final int               PRECIO      = 3;
     private static final int               ESTADO      = 4;
-    private final        List<Circulacion> listaCirculaciones;
-    private              ResourceBundle    bundle;
+    private final List<Circulacion> listaCirculaciones;
+    private final ResourceBundle    bundle;
 
-    public ModeloTablaCirculaciones(List<Circulacion> listaCirculaciones) {
-        super();
-        this.listaCirculaciones = listaCirculaciones;
-        this.listaCirculaciones.sort(Circulacion::compareTo);
-        this.fireTableDataChanged();
-    }
-
+    /**
+     * @param bundle Bundle con la información de internacionalización
+     */
     public ModeloTablaCirculaciones(ResourceBundle bundle) {
         super();
         this.bundle = bundle;
         this.listaCirculaciones = new ArrayList<>();
     }
 
+    /**
+     * @param listaCirculaciones Lista de circulaciones
+     */
     public void setListaCirculaciones(List<Circulacion> listaCirculaciones) {
         this.listaCirculaciones.clear();
         this.listaCirculaciones.addAll(listaCirculaciones);
-        this.listaCirculaciones.sort(Circulacion::compareTo);
-        this.fireTableDataChanged();
-    }
-
-    public void addCirculacion(Circulacion circulacion) {
-        this.listaCirculaciones.add(circulacion);
         this.listaCirculaciones.sort(Circulacion::compareTo);
         this.fireTableDataChanged();
     }
@@ -53,6 +50,10 @@ public final class ModeloTablaCirculaciones extends AbstractTableModel {
     }
 
 
+    /**
+     * @param fila Fila de la que se quiere obtener la circulación
+     * @return Circulación en la fila indicada
+     */
     @Nullable
     public Circulacion getCirculacionEnFila(int fila) {
         if (fila < 0 || fila >= this.listaCirculaciones.size()) {
@@ -81,7 +82,7 @@ public final class ModeloTablaCirculaciones extends AbstractTableModel {
                 return circulacionSeleccionada.getCadenaHoraFechaSalida();
             }
             case PRECIO -> {
-                return circulacionSeleccionada.getPrecioPorAsiento() + "€";
+                return circulacionSeleccionada.precioPorAsiento() + "€";
             }
             case ESTADO -> {
                 return circulacionSeleccionada.estado();
@@ -90,13 +91,18 @@ public final class ModeloTablaCirculaciones extends AbstractTableModel {
         }
     }
 
+    /**
+     * @param fila Fila de la que se quiere obtener la circulación
+     * @return Circulación en la fila indicada
+     */
+    @Contract(pure = true)
     public Circulacion getCirculacion(int fila) {
         return this.listaCirculaciones.get(fila);
     }
 
     @NotNull
     @Override
-    public String getColumnName(@NoNegativo @MagicConstant(intValues = {ORIGEN, DESTINO, HORA_SALIDA, PRECIO}) int column) {
+    public String getColumnName(@NoNegativo @MagicConstant(intValues = {ORIGEN, DESTINO, HORA_SALIDA, PRECIO, ESTADO}) int column) {
         switch (column) {
             case ORIGEN -> {
                 return bundle.getString("origen");

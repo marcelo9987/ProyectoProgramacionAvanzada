@@ -5,6 +5,9 @@ import gui.formularios.FormularioAutenticacion;
 import gui.formularios.FormularioPrincipal;
 import org.jetbrains.annotations.TestOnly;
 
+/**
+ * Fachada de la interfaz gráfica
+ */
 public class FachadaGui {
 
     private static FachadaGui          instancia = null;
@@ -16,6 +19,12 @@ public class FachadaGui {
         this.fa = fa;
     }
 
+    /**
+     * Obtiene la instancia de la fachada de la interfaz gráfica
+     *
+     * @param fa Fachada de la aplicación
+     * @return Instancia de la fachada de la interfaz gráfica
+     */
     public static FachadaGui getInstance(FachadaAplicacion fa) {
         if (instancia == null) {
             instancia = new FachadaGui(fa);

@@ -11,16 +11,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.xml.stream.*;
-import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.time.LocalDate;
 import java.util.*;
 
 import static dao.constantes.TagsXMLReserva.*;
 
+/**
+ * Clase que gestiona el IO y la persistencia de las reservas
+ */
 public class DAOReserva extends AbstractDAO {
     private static DAOReserva                  instance = null;
     private final  FachadaDAO                  fdao;
@@ -33,20 +34,16 @@ public class DAOReserva extends AbstractDAO {
         this.obtenerLogger();
     }
 
-    public static DAOReserva getInstance(FachadaDAO fdao) {
-        if (instance == null) {
-            instance = new DAOReserva(fdao);
-        }
-        return instance;
-    }
-
+    /**
+     * Método main para pruebas
+     *
+     * @param args no se usa
+     */
     @TestOnly
     public static void main(String[] args) {
         FachadaDAO fdao = FachadaDAO.getInstance();
-        fdao.cargaloTodo();
+        fdao.cargarTodosLosDatosDeFicheros();
         DAOReserva daoReserva = getInstance(fdao);
-        Usuario    usr        = new Usuario(12345678, "Pepe", "Perez@e.e", "hola", 658965874, "eer", LocalDate.now(), true);
-        daoReserva.addReserva(usr, new Reserva(UUID.randomUUID(), usr, new Circulacion(UUID.randomUUID(), null, null, null, null, null, null)));
 
 
         XMLEventReader reader = daoReserva.obtenerXmlEventReader();
@@ -70,39 +67,21 @@ public class DAOReserva extends AbstractDAO {
         daoReserva.guardarArchivo(writer);
     }
 
-
-    private void addReserva(Usuario usuario, Reserva reserva) {
-        comprobarSiExistereservaYAnhadirla(usuario, reserva);
-    }
-
-    void addReservaDesdeCirculacion(Usuario usuario, Circulacion circulacion) {
-        Reserva reserva = new Reserva(usuario, circulacion);
-        comprobarSiExistereservaYAnhadirla(usuario, reserva);
-    }
-
-    private void comprobarSiExistereservaYAnhadirla(Usuario usuario, Reserva reserva) {
-        if (this.reservas().containsKey(usuario)) {
-            if (this.reservas().get(usuario).contains(reserva)) {
-                logger.info("La reserva ya existe {}", reserva);
-                throw new IllegalArgumentException("La reserva ya existe");
-            }
-            else {
-                this.reservas().get(usuario).add(reserva);
-            }
+    /**
+     * Método que devuelve la instancia de DAOReserva
+     *
+     * @param fdao FachadaDAO
+     * @return instancia de DAOReserva
+     */
+    public static DAOReserva getInstance(FachadaDAO fdao) {
+        if (instance == null) {
+            instance = new DAOReserva(fdao);
         }
-        else {
-            List<Reserva> reservas = new ArrayList<>();
-            reservas.add(reserva);
-            this.reservas().put(usuario, reservas);
-        }
+        return instance;
     }
 
     private Map<Usuario, List<Reserva>> reservas() {
         return reservas;
-    }
-
-    List<Reserva> localizarReservasUsuario(Usuario usuario) {
-        return this.reservas().get(usuario);
     }
 
     @Override
@@ -126,7 +105,7 @@ public class DAOReserva extends AbstractDAO {
     @Override
     protected void guardarArchivo(@NotNull XMLStreamWriter writer) {
 
-        abrirCabeceraArchivoXML(writer, ConstantesGeneral.FICHERO_RESERVA);
+        escribirAperturaCabeceraArchivoXML(writer, ConstantesGeneral.FICHERO_RESERVA);
 
         try {
 
@@ -156,9 +135,6 @@ public class DAOReserva extends AbstractDAO {
 
     }
 
-    //-*-
-    //--
-
     @Override
     protected XMLEventReader obtenerXmlEventReader() {
         this.obtenerLogger();
@@ -176,79 +152,120 @@ public class DAOReserva extends AbstractDAO {
     @Override
     protected void cargarArchivo(@NotNull XMLEventReader reader) {
 
-        String usuarioDNI    = null;
-        String circulacionId = null;
-        String id            = null;
+        String usuarioDNI = null, circulacionId = null, id = null;
 
         while (reader.hasNext()) {
-
             XMLEvent evento = getNextXmlEvent(reader);
-            this.logger.info("Evento: {}", evento);
             if (evento.isStartElement()) {
-                this.logger.info("Elemento: {}", evento.asStartElement().getName().getLocalPart());
-                StartElement startElement = evento.asStartElement();
-                switch (startElement.getName().getLocalPart()) {
-                    case XML_TAG_RESERVA:
-                        this.logger.info("Reserva encontrada");
-                        break;
-                    case XML_TAG_DNI:
-                        evento = this.getNextXmlEvent(reader);
-                        usuarioDNI = evento.asCharacters().getData();
-                        this.logger.info("Usuario DNI: {}", usuarioDNI);
-                        break;
-                    case XML_TAG_ID_CIRCULACION:
-                        evento = this.getNextXmlEvent(reader);
-                        circulacionId = evento.asCharacters().getData();
-                        this.logger.info("Circulación ID: {}", circulacionId);
-                        break;
-                    case XML_TAG_ID_RESERVA:
-                        evento = this.getNextXmlEvent(reader);
-                        id = evento.asCharacters().getData();
-                        break;
-                    case ConstantesGeneral.FICHERO_RESERVA:
-                        this.logger.info("Inicio de archivo");
-                        break;
-                    default:
-                        this.logger.error("Etiqueta no reconocida: {}", startElement.getName().getLocalPart());
-                        break;
+                this.logger.trace("Elemento: {}", evento.asStartElement().getName().getLocalPart());
+                switch (evento.asStartElement().getName().getLocalPart()) {
+                    case XML_TAG_DNI -> usuarioDNI = _procesarCadenaTexto(reader);
+                    case XML_TAG_ID_CIRCULACION -> circulacionId = _procesarCadenaTexto(reader);
+                    case XML_TAG_ID_RESERVA -> id = _procesarCadenaTexto(reader);
+                    case ConstantesGeneral.FICHERO_RESERVA, XML_TAG_RESERVA -> this.logger.debug("Inicio de archivo | Reserva");
+                    default -> this.logger.error("Etiqueta no reconocida: {}", evento.asStartElement().getName().getLocalPart());
                 }
             }
-            if (evento.isEndElement()) {
-                this.logger.info("Fin de elemento: {}", evento.asEndElement().getName().getLocalPart());
-                if (evento.asEndElement().getName().getLocalPart().equals(XML_TAG_RESERVA)) {
+            if (_esFinalDeEtiqueta(evento)) {
+                boolean saltar;
 
-                    if (usuarioDNI == null || circulacionId == null || id == null) {
-                        this.logger.error("Error al cargar la reserva: valores nulos");
-                        continue;
-                    }
+                saltar = _comprobarParametrosNuevaReserva(usuarioDNI, circulacionId, id);
 
-                    Usuario usuario;
-                    try {
-                        usuario = fdao.encontrarUsuarioPorDNI(usuarioDNI);
-                    } catch (UsuarioNoEncontradoException e) {
-                        this.logger.error("Usuario no encontrado", e);
-                        continue;
-                    }
 
-                    Circulacion circulacion = fdao.localizarCirculacion(UUID.fromString(circulacionId));
+                recordSaltarOGuardarReserva reservaMasticada = _procesar(usuarioDNI, saltar, circulacionId, id);
 
-                    UUID reservaId = UUID.fromString(id);
-
-                    Reserva reserva = new Reserva(reservaId, usuario, circulacion);
-
-                    try {
-                        this.addReserva(usuario, reserva);
-                    } catch (Exception e) {
-                        continue;
-                    }
-
-                    id = null;
-                    circulacionId = null;
-                    usuarioDNI = null;
+                if (reservaMasticada.saltar()) {
+                    continue;
                 }
+
+                try {
+                    this.addReserva(reservaMasticada.usuario(), reservaMasticada.reserva());
+                } catch (IllegalArgumentException e) {
+                    this.logger.error("Error al añadir la reserva", e);
+                }
+
+                id = null;
+                circulacionId = null;
+                usuarioDNI = null;
             }
         }
 
+    }
+
+    private String _procesarCadenaTexto(XMLEventReader reader) {
+        XMLEvent evento = this.getNextXmlEvent(reader);
+        String   campoAusar;
+        campoAusar = evento.asCharacters().getData();
+        return campoAusar;
+    }
+
+    private static boolean _esFinalDeEtiqueta(@NotNull XMLEvent evento) {
+        return evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals(XML_TAG_RESERVA);
+    }
+
+    //-*-
+    //--
+
+    private boolean _comprobarParametrosNuevaReserva(String usuarioDNI, String circulacionId, String id) {
+        if (usuarioDNI == null || circulacionId == null || id == null) {
+            this.logger.error("Error al cargar la reserva: valores nulos");
+            return true;
+        }
+        return false;
+    }
+
+    @NotNull
+    private recordSaltarOGuardarReserva _procesar(String usuarioDNI, boolean saltar, String circulacionId, String id) {
+        if (saltar) {
+            return new recordSaltarOGuardarReserva(true, null, null);
+        }
+        Usuario usuario = null;
+        try {
+            usuario = fdao.encontrarUsuarioPorDNI(usuarioDNI);
+        } catch (UsuarioNoEncontradoException e) {
+            this.logger.error("Usuario no encontrado", e);
+            saltar = true;
+        }
+
+        Circulacion circulacion = fdao.localizarCirculacion(UUID.fromString(circulacionId));
+
+        UUID reservaId = UUID.fromString(id);
+
+        Reserva reserva = new Reserva(reservaId, usuario, circulacion);
+        return new recordSaltarOGuardarReserva(saltar, usuario, reserva);
+    }
+
+    private void addReserva(Usuario usuario, Reserva reserva) {
+        comprobarSiExistereservaYAnhadirla(usuario, reserva);
+    }
+
+    private void comprobarSiExistereservaYAnhadirla(Usuario usuario, Reserva reserva) {
+        if (this.reservas().containsKey(usuario)) {
+            if (this.reservas().get(usuario).contains(reserva)) {
+                logger.info("La reserva ya existe {}", reserva);
+                throw new IllegalArgumentException("La reserva ya existe");
+            }
+            else {
+                this.reservas().get(usuario).add(reserva);
+            }
+        }
+        else {
+            List<Reserva> reservas = new ArrayList<>();
+            reservas.add(reserva);
+            this.reservas().put(usuario, reservas);
+        }
+    }
+
+    void addReservaDesdeCirculacion(Usuario usuario, Circulacion circulacion) {
+        Reserva reserva = new Reserva(usuario, circulacion);
+        comprobarSiExistereservaYAnhadirla(usuario, reserva);
+    }
+
+    List<Reserva> localizarReservasUsuario(Usuario usuario) {
+        return this.reservas().get(usuario);
+    }
+
+    private record recordSaltarOGuardarReserva(boolean saltar, Usuario usuario, Reserva reserva) {
     }
 }
 //----

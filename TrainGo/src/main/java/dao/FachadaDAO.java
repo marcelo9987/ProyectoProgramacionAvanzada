@@ -2,11 +2,16 @@ package dao;
 
 import aplicacion.*;
 import aplicacion.excepciones.UsuarioNoEncontradoException;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * FachadaDAO
+ * Clase que permite abstraer la lógica de acceso a datos.
+ */
 public class FachadaDAO {
     private static FachadaDAO instance = null; // Singleton pattern
 
@@ -49,7 +54,10 @@ public class FachadaDAO {
     }
 
 
-    public void cargaloTodo() {
+    /**
+     * Método que carga todos los datos de la aplicación de sus respectivos archivos XML
+     */
+    public void cargarTodosLosDatosDeFicheros() {
         // Cargar trenes
         this.daoTren.load();
         // Cargar usuarios
@@ -66,26 +74,57 @@ public class FachadaDAO {
 
     }
 
+    /**
+     * Método que intenta autenticar a un usuario
+     *
+     * @param email          Email del usuario
+     * @param hashedPassword Contraseña cifrada del usuario
+     * @return true en caso de éxito, false en cualquier otro caso
+     */
     public boolean autenticar(String email, String hashedPassword) {
         return this.daoUsuario.autenticar(email, hashedPassword);
     }
 
+    /**
+     * Método que devuelve un usuario a partir de su email
+     * @param email Email del usuario
+     * @return Usuario con el email dado si existe, null en caso contrario
+     */
+    @Nullable
     public Usuario encontrarUsuarioPorEmail(String email) {
         return this.daoUsuario.encontrarUsuarioPorEmail(email);
     }
 
+    /**
+     * @return Estaciones de la aplicación
+     */
     public List<Estacion> getEstaciones() {
         return this.daoEstacion.estaciones();
     }
 
+    /**
+     * Actualiza los datos de un usuario
+     * @param correoAntiguo Correo antiguo del usuario
+     * @param usuario Datos actualizados para el usuario
+     * @throws UsuarioNoEncontradoException Si no se encuentra el usuario
+     */
     public void actualizarUsuario(String correoAntiguo, Usuario usuario) throws UsuarioNoEncontradoException {
         this.daoUsuario.actualizarUsuario(correoAntiguo, usuario);
     }
 
+    /**
+     * Guarda los usuarios en el archivo XML
+     */
     public void guardarUsuarios() {
         this.daoUsuario.save();
     }
 
+    /**
+     *  Comprueba que haya una ruta entre dos estaciones
+     * @param origen estación de origen
+     * @param destino estación de destino
+     * @return true si existe una ruta entre las dos estaciones, false en cualquier otro caso
+     */
     boolean existeRuta(String origen, String destino) {
         if (origen == null || destino == null) {
             return false;
@@ -97,6 +136,12 @@ public class FachadaDAO {
         return daoEstacion.buscaEstacionPorNombre(nombreEstacion);
     }
 
+    /**
+     * Método que permite buscar una ruta por sus nombres de origen y destino.
+     * @param origen Nombre de la estación de origen.
+     * @param destino Nombre de la estación de destino.
+     * @return Ruta que une las dos estaciones.
+     */
     public Ruta buscarRutaPorNombres(String origen, String destino) {
         return daoRuta.buscarRutaPorNombres(origen, destino);
     }
@@ -105,15 +150,30 @@ public class FachadaDAO {
         return daoTren.localizarTren(trenId);
     }
 
-
+    /**
+     * Método que permite obtener las circulaciones de una ruta en una fecha dada
+     * @param rutaEscogida Ruta de la que se quieren obtener las circulaciones
+     * @param fechaSalida Fecha en la que se quieren obtener las circulaciones
+     * @return Lista de circulaciones de la ruta en la fecha dada
+     */
     public List<Circulacion> obtenerCirculacionesRutaEnFecha(Ruta rutaEscogida, LocalDate fechaSalida) {
         return daoCirculacion.obtenerCirculacionesRutaEnFecha(rutaEscogida, fechaSalida);
     }
 
+    /**
+     * Método que permite reservar un tren para un usuario
+     * @param usuario Usuario que quiere reservar el tren
+     * @param circulacion Circulación que se quiere reservar
+     */
     public void reservarTren(Usuario usuario, Circulacion circulacion) {
         daoReserva.addReservaDesdeCirculacion(usuario, circulacion);
     }
 
+    /**
+     * Método que permite obtener las reservas de un usuario
+     * @param usuario Usuario del que se quieren obtener las reservas
+     * @return Lista de reservas del usuario
+     */
     public List<Reserva> getReservasUsuario(Usuario usuario) {
         return daoReserva.localizarReservasUsuario(usuario);
     }

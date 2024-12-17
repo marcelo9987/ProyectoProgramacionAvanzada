@@ -4,6 +4,8 @@ import aplicacion.FachadaAplicacion;
 import aplicacion.enums.EnumIdioma;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -61,14 +63,9 @@ final class FormularioConfiguracion extends JDialog {
         this.setResizable(false);
         this.add(panel);
 
-        btnAceptar.addActionListener(e -> {
-            String idiomaSeleccionado = Objects.requireNonNull(comboIdioma.getSelectedItem()).toString().equals("Español") ? "ESPANHOL" : comboIdioma.getSelectedItem().toString().toUpperCase().replace('É', 'E');
-            fa.cambiarIdioma(EnumIdioma.valueOf(idiomaSeleccionado));
-            fa.relanzarGUI();
-            FormularioConfiguracion.this.dispose();
-        });
+        btnAceptar.addActionListener(new btnAceptarPulsadoActionListener(comboIdioma));
 
-        btnCancelar.addActionListener(e -> FormularioConfiguracion.this.dispose());
+        btnCancelar.addActionListener(_ -> FormularioConfiguracion.this.dispose());
 
         this.pack();
         this.setLocationRelativeTo(null);
@@ -85,4 +82,20 @@ final class FormularioConfiguracion extends JDialog {
         inicializarFormularioConfiguracion();
     }
 
+    private class btnAceptarPulsadoActionListener implements ActionListener {
+        private final JComboBox<String> comboIdioma;
+
+        btnAceptarPulsadoActionListener(JComboBox<String> comboIdioma) {
+            super();
+            this.comboIdioma = comboIdioma;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String idiomaSeleccionado = Objects.requireNonNull(comboIdioma.getSelectedItem()).toString().equals("Español") ? "ESPANHOL" : comboIdioma.getSelectedItem().toString().toUpperCase().replace('É', 'E');
+            fa.cambiarIdioma(EnumIdioma.valueOf(idiomaSeleccionado));
+            fa.relanzarGUI();
+            FormularioConfiguracion.this.dispose();
+        }
+    }
 }

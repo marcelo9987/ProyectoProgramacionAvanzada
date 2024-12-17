@@ -10,6 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 
+/**
+ * Validador de la anotación @NoNegativo
+ */
 public class ValidadorNoNegativo implements ConstraintValidator<NoNegativo, BigInteger> {
 
     /**

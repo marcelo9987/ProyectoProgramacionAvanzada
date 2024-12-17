@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Clase que se encarga de la internacionalización de la aplicación.
+ */
 public final class Internacionalizacion {
     private ResourceBundle bundle;
 

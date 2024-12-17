@@ -10,7 +10,7 @@
         <fechaNacimiento>
             <dia>24</dia>
             <mes>1</mes>
-            <anho>1999</anho>
+            <año>1999</año>
         </fechaNacimiento>
     </usuario>
     <usuario>
@@ -23,7 +23,7 @@
         <fechaNacimiento>
             <dia>30</dia>
             <mes>11</mes>
-            <anho>2007</anho>
+            <año>2007</año>
         </fechaNacimiento>
     </usuario>
 </usuarios>

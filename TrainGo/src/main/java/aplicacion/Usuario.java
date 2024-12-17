@@ -8,8 +8,12 @@ import util.Criptograficos;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Clase Usuario
+ * Modela un usuario del sistema
+ */
 public final class Usuario {
-    private final int DNI;
+    private final int    DNI;
     private final String nombre;
     private final LocalDate fechaNacimiento;
     /**
@@ -22,10 +26,20 @@ public final class Usuario {
      */
     private final String contrasenha;
     @Email
-    private String correo;
-    private int telefono;
-    private String direccion;
+    private       String correo;
+    private       int    telefono;
+    private       String direccion;
 
+    /**
+     * @param DNI             DNI del usuario
+     * @param nombre          Nombre del usuario
+     * @param correo          Correo del usuario
+     * @param contrasenha     Contraseña del usuario
+     * @param telefono        Teléfono del usuario
+     * @param direccion       Dirección del usuario
+     * @param fechaNacimiento Fecha de nacimiento del usuario
+     * @param cifrar          Indica si la contraseña debe ser cifrada. Si es true, la contraseña se cifra.
+     */
     public Usuario(int DNI, String nombre, String correo, String contrasenha, int telefono, String direccion, LocalDate fechaNacimiento, boolean cifrar) {
         super();
         this.DNI = DNI;
@@ -42,29 +56,35 @@ public final class Usuario {
      *
      * @return Cadena con los datos del usuario listos para ser guardados en un archivo.
      * @deprecated Previo a la migración a XML. No se recomienda su uso.
-     *
      */
     @NotNull
     @Contract(pure = true)
     @Deprecated
     public String printReadyString() {
-        return "Usuario{"
-                + dni() + ","
-                + nombre + ","
-                + correo + ","
-                + contrasenha + ","
-                + telefono + ","
-                + direccion + ","
-                + fechaNacimiento.toString().substring(0, 10) + fechaNacimiento.toString().substring(23) + '}';
+        return "Usuario{" + dni() + "," + nombre + "," + correo + "," + contrasenha + "," + telefono + "," + direccion + "," + fechaNacimiento.toString().substring(0, 10) + fechaNacimiento.toString().substring(23) + '}';
     }
 
+    /**
+     * Devuelve el DNI del usuario.
+     *
+     * @return DNI del usuario.
+     */
+    public int dni() {
+        return DNI;
+    }
+
+    /**
+     * Devuelve el DNI del usuario.
+     *
+     * @return DNI del usuario.
+     */
     public int DNI() {
         return dni();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Integer.valueOf(dni()));
+        return Objects.hash(dni());
     }
 
     /**
@@ -82,47 +102,70 @@ public final class Usuario {
         return dni() == usuario.dni();
     }
 
-    public String contrasenha() {
-        return contrasenha;
-    }
-
-    public String correo() {
-        return correo;
-    }
-
-    public String direccion() {
-        return direccion;
-    }
-
-    public LocalDate fechaNacimiento() {
-        return fechaNacimiento;
-    }
-
-    public String nombre() {
-        return nombre;
-    }
-
-    public int telefono() {
-        return telefono;
-    }
-
     /**
      * Imprime los datos del usuario.
+     *
      * @return Cadena con los datos del usuario.
      */
     @NotNull
     @Contract(pure = true)
     @Override
     public String toString() {
-        return "Usuario{" +
-                "DNI=" + dni() +
-                ", nombre='" + nombre + '\'' +
-                ", correo='" + correo + '\'' +
-                ", contrasenha='" + contrasenha + '\'' +
-                ", telefono=" + telefono +
-                ", direccion='" + direccion + '\'' +
-                ", fechaNacimiento=" + fechaNacimiento.toString() +
-                '}';
+        return "Usuario{" + "DNI=" + dni() + ", nombre='" + nombre + '\'' + ", correo='" + correo + '\'' + ", contrasenha='" + contrasenha + '\'' + ", telefono=" + telefono + ", direccion='" + direccion + '\'' + ", fechaNacimiento=" + fechaNacimiento.toString() + '}';
+    }
+
+    /**
+     * Devuelve la contraseña del usuario.
+     *
+     * @return Contraseña del usuario.
+     */
+    public String contrasenha() {
+        return contrasenha;
+    }
+
+    /**
+     * Devuelve el correo del usuario.
+     *
+     * @return Correo del usuario.
+     */
+    public String correo() {
+        return correo;
+    }
+
+    /**
+     * Devuelve la dirección del usuario.
+     *
+     * @return Dirección del usuario.
+     */
+    public String direccion() {
+        return direccion;
+    }
+
+    /**
+     * Devuelve la fecha de nacimiento del usuario.
+     *
+     * @return Fecha de nacimiento del usuario.
+     */
+    public LocalDate fechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    /**
+     * Devuelve el nombre del usuario.
+     *
+     * @return Nombre del usuario.
+     */
+    public String nombre() {
+        return nombre;
+    }
+
+    /**
+     * Devuelve el teléfono del usuario.
+     *
+     * @return Teléfono del usuario.
+     */
+    public int telefono() {
+        return telefono;
     }
 
     /**
@@ -136,9 +179,5 @@ public final class Usuario {
         this.correo = nuevoCorreo;
         this.direccion = nuevaDireccion;
         this.telefono = nuevoTelefono;
-    }
-
-    public int dni() {
-        return DNI;
     }
 }

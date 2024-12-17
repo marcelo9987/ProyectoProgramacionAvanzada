@@ -15,7 +15,7 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.events.XMLEvent;
 
 
-public abstract class AbstractDAO implements IDAO {
+abstract class AbstractDAO implements IDAO {
 
     Logger logger;
 
@@ -66,7 +66,7 @@ public abstract class AbstractDAO implements IDAO {
                 logger.error("Error al obtener el XMLStreamWriter");
                 return false;
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.error("Error al obtener el XMLStreamWriter", e);
             return false;
         }
@@ -175,7 +175,7 @@ public abstract class AbstractDAO implements IDAO {
         writer.writeEndElement();
     }
 
-    void abrirCabeceraArchivoXML(@NotNull XMLStreamWriter writer, @MagicConstant(stringValues = {ConstantesGeneral.FICHERO_CIRCULACION, ConstantesGeneral.FICHERO_ESTACION, ConstantesGeneral.FICHERO_RESERVA, ConstantesGeneral.FICHERO_RESERVA, ConstantesGeneral.FICHERO_TREN, ConstantesGeneral.FICHERO_USUARIO, ConstantesGeneral.FICHERO_RUTA}) String tipo) {
+    void escribirAperturaCabeceraArchivoXML(@NotNull XMLStreamWriter writer, @MagicConstant(stringValues = {ConstantesGeneral.FICHERO_CIRCULACION, ConstantesGeneral.FICHERO_ESTACION, ConstantesGeneral.FICHERO_RESERVA, ConstantesGeneral.FICHERO_RESERVA, ConstantesGeneral.FICHERO_TREN, ConstantesGeneral.FICHERO_USUARIO, ConstantesGeneral.FICHERO_RUTA}) String tipo) {
 
         if (!ConstantesGeneral.tipoValido(tipo)) {
             this.logger.error("Tipo inválido");

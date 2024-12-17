@@ -3,6 +3,7 @@ package dao;
 import aplicacion.Estacion;
 import aplicacion.excepciones.LecturaSiguienteEventoException;
 import dao.constantes.ConstantesGeneral;
+import dao.constantes.TagsXMLEstacion;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
@@ -16,8 +17,13 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+//--
 
+/**
+ * Clase que gestiona el IO y la persistencia de las estaciones
+ */
 public class DAOEstacion extends AbstractDAO {
+
     private static DAOEstacion instance = null;
     private final List<Estacion> estaciones;
 
@@ -27,6 +33,11 @@ public class DAOEstacion extends AbstractDAO {
         this.obtenerLogger();
     }
 
+    /**
+     * Método main para pruebas
+     *
+     * @param args no se usa
+     */
     @TestOnly
     public static void main(String[] args) {
         DAOEstacion dao = new DAOEstacion();
@@ -43,7 +54,15 @@ public class DAOEstacion extends AbstractDAO {
         dao.save();
     }
 
+    List<Estacion> estaciones() {
+        return estaciones;
+    }
 
+    /**
+     * Método que devuelve la instancia de DAOEstacion
+     *
+     * @return instancia de DAOEstacion
+     */
     public static DAOEstacion getInstance() {
         if (instance == null) {
             instance = new DAOEstacion();
@@ -71,27 +90,31 @@ public class DAOEstacion extends AbstractDAO {
 
     }
 
-    @Deprecated(forRemoval = true)
-    private void _abrirCabeceraEstacion(@NotNull XMLStreamWriter writer) {
+    @Override
+    protected XMLStreamWriter obtenerXMLStreamWriter() {
+        this.obtenerLogger();
+        XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+        XMLStreamWriter  xmlWriter        = null;
         try {
-            writer.writeStartDocument();
-            writer.writeStartElement("estaciones");
-        } catch (XMLStreamException e) {
-            this.logger.error("Error al escribir la cabecera", e);
-            throw new IllegalArgumentException("Error al escribir la cabecera");
+            xmlWriter = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("estaciones.xml"));
+        } catch (FileNotFoundException | XMLStreamException e) {
+            this.logger.error("Error al volcar el archivo", e);
         }
+        return xmlWriter;
     }
+
+//--
 
     @Override
     protected void guardarArchivo(@NotNull XMLStreamWriter writer) {
-        abrirCabeceraArchivoXML(writer, ConstantesGeneral.FICHERO_ESTACION);
+        escribirAperturaCabeceraArchivoXML(writer, ConstantesGeneral.FICHERO_ESTACION);
 
         for (Estacion estacion : estaciones) {
             try {
-                writer.writeStartElement("estacion");
+                writer.writeStartElement(TagsXMLEstacion.XML_TAG_ESTACION);
                 escribirElemento(writer, "nombre", estacion.ciudad());
                 writer.writeEndElement();
-            } catch (Exception e) {
+            } catch (XMLStreamException e) {
                 this.logger.error("¡¡CRITICO!! --> Error al escribir la estacion. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
             }
         }
@@ -99,7 +122,7 @@ public class DAOEstacion extends AbstractDAO {
         try {
             writer.writeEndElement();
             writer.writeEndDocument();
-        } catch (Exception e) {
+        } catch (XMLStreamException e) {
             this.logger.error("¡¡CRITICO!! --> Error al escribir el final del documento. LA INFORMACIÓN PUEDE ESTAR CORRUPTA", e);
         }
 
@@ -135,7 +158,7 @@ public class DAOEstacion extends AbstractDAO {
                 StartElement elementoInicio = evento.asStartElement();
                 try {
                     switch (elementoInicio.getName().getLocalPart()) {
-                        case "estacion":
+                        case TagsXMLEstacion.XML_TAG_ESTACION:
                             System.out.println("Inicio de estacion");
                             break;
                         case "nombre":
@@ -144,12 +167,12 @@ public class DAOEstacion extends AbstractDAO {
                             System.out.printf("Nombre: %s\n", nombre);
                             break;
                     }
-                } catch (Exception e) {
-                    //super.logger.error("Error al leer el archivo", e);
+                } catch (IllegalStateException e) {
+                    logger.error("Error al leer el archivo", e);
                 }
             }
             if (evento.isEndElement()) {
-                if (evento.asEndElement().getName().getLocalPart().equals("estacion")) {
+                if (evento.asEndElement().getName().getLocalPart().equals(TagsXMLEstacion.XML_TAG_ESTACION)) {
                     System.out.println("Fin de estacion");
                     estacion = new Estacion(nombre);
                     estaciones.add(estacion);
@@ -159,22 +182,6 @@ public class DAOEstacion extends AbstractDAO {
         }
     }
 
-    @Override
-    protected XMLStreamWriter obtenerXMLStreamWriter() {
-        this.obtenerLogger();
-        XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
-        XMLStreamWriter xmlWriter = null;
-        try {
-            xmlWriter = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("estaciones.xml"));
-        } catch (Exception e) {
-            this.logger.error("Error al volcar el archivo", e);
-        }
-        return xmlWriter;
-    }
-
-    List<Estacion> estaciones() {
-        return estaciones;
-    }
 
     Estacion buscaEstacionPorNombre(@NonNls String nombreEstacion) {
         return estaciones.stream().filter(e -> e.ciudad().equals(nombreEstacion)).findFirst().orElse(null);

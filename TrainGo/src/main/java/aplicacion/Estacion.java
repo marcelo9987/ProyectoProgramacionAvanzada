@@ -9,6 +9,11 @@ import org.slf4j.LoggerFactory;
  */
 public record Estacion(String ciudad) {
 
+    /**
+     * Constructor del record Estacion
+     *
+     * @param ciudad Ciudad en la que se encuentra la estación
+     */
     public Estacion {
         if (ciudad == null || ciudad.isBlank()) {
             LoggerFactory.getLogger(this.getClass()).warn("La ciudad no puede ser nula o vacía");

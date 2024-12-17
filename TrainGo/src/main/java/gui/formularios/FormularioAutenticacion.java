@@ -10,17 +10,26 @@ import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
+/**
+ * Formulario de autenticación
+ */
 public final class FormularioAutenticacion extends JDialog {
     private final JTextField txtUsuario;
     private final JPasswordField txtContrasena;
-    private final ResourceBundle bundle;
 
     private final FachadaAplicacion fa;
 
+    /**
+     * Constructor del formulario de autenticación
+     *
+     * @param fa     Fachada de la aplicación
+     * @param parent Ventana padre
+     * @param modal  Modalidad: true si es modal, false en caso contrario
+     */
     public FormularioAutenticacion(@NotNull FachadaAplicacion fa, Frame parent, boolean modal) {
         super(parent, modal);
 
-        this.bundle = fa.getBundleInstance();
+        ResourceBundle bundle = fa.getBundleInstance();
 
         JLabel lblUsuario    = new JLabel(bundle.getString("usuario"));
         JLabel lblContrasena = new JLabel(bundle.getString("contrasenha") + ":");

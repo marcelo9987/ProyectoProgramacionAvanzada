@@ -3,7 +3,6 @@ package gui.formularios;
 import aplicacion.Circulacion;
 import aplicacion.FachadaAplicacion;
 import aplicacion.Ruta;
-import aplicacion.enums.EnumCirculacion;
 import gui.modelos.ModeloTablaCirculaciones;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -11,17 +10,18 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
 final class FormularioReservarTren extends JFrame {
-    private static final Logger            logger = LoggerFactory.getLogger(FormularioReservarTren.class);
     private static       ResourceBundle    bundle;
     private final        FachadaAplicacion fa;
     private              JTable            tablaTrenesRuta;
 
-    public FormularioReservarTren(@NotNull FachadaAplicacion fa, Ruta rutaEscogida, LocalDateTime fechaSalida) {
+    FormularioReservarTren(@NotNull FachadaAplicacion fa, Ruta rutaEscogida, LocalDateTime fechaSalida) {
         super();
 
         this.fa = fa;
@@ -56,25 +56,9 @@ final class FormularioReservarTren extends JFrame {
         JButton btnCancelar   = new JButton(bundle.getString("cancelar"));
         JButton botonReservar = new JButton(bundle.getString("reservar"));
 
-        botonReservar.addActionListener(e -> {
-            ModeloTablaCirculaciones modelocircu = (ModeloTablaCirculaciones) this.tablaTrenesRuta.getModel();
-            Circulacion circulacion = modelocircu.getCirculacion(tablaTrenesRuta.getSelectedRow());
-            if (circulacion != null) {
-                try {
-                    LoggerFactory.getLogger(FormularioReservarTren.class).info("Reservando tren: {}", circulacion);
-                    fa.reservarTren(circulacion);
-                } catch (IllegalArgumentException ex) {
-                    JOptionPane.showMessageDialog(this, bundle.getString("reserva.ya.existe"));
-                    return;
-                }
-                JOptionPane.showMessageDialog(this, bundle.getString("reserva.realizada.con.exito"));
-            }
-            else {
-                JOptionPane.showMessageDialog(this, bundle.getString("seleccione.una.circulacion"));
-            }
-        });
+        botonReservar.addActionListener(new actionListenerbtnReservarPulsado());
 
-        btnCancelar.addActionListener(e -> this.dispose());
+        btnCancelar.addActionListener(_ -> this.dispose());
 
         tablaTrenesRuta.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -85,7 +69,7 @@ final class FormularioReservarTren extends JFrame {
                     ModeloTablaCirculaciones modelocircu         = (ModeloTablaCirculaciones) tablaTrenesRuta.getModel();
                     Circulacion              circulacionEscogida = modelocircu.getCirculacionEnFila(row);
                     if (circulacionEscogida != null) {
-                        botonReservar.setEnabled(circulacionEscogida.estado().equals(EnumCirculacion.PROGRAMADO));
+                        botonReservar.setEnabled(circulacionEscogida.programada());
                         return;
                     }
                     LoggerFactory.getLogger(FormularioReservarTren.class).warn("Circulación no encontrada en la fila {}", row);
@@ -118,7 +102,24 @@ final class FormularioReservarTren extends JFrame {
     }
 
 
-    public JTable tablaTrenesRuta() {
-        return tablaTrenesRuta;
+    private class actionListenerbtnReservarPulsado implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ModeloTablaCirculaciones modelocircu = (ModeloTablaCirculaciones) FormularioReservarTren.this.tablaTrenesRuta.getModel();
+            Circulacion              circulacion = modelocircu.getCirculacion(tablaTrenesRuta.getSelectedRow());
+            if (circulacion != null) {
+                try {
+                    LoggerFactory.getLogger(FormularioReservarTren.class).info("Reservando tren: {}", circulacion);
+                    fa.reservarTren(circulacion);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(FormularioReservarTren.this, bundle.getString("reserva.ya.existe"));
+                    return;
+                }
+                JOptionPane.showMessageDialog(FormularioReservarTren.this, bundle.getString("reserva.realizada.con.exito"));
+            }
+            else {
+                JOptionPane.showMessageDialog(FormularioReservarTren.this, bundle.getString("seleccione.una.circulacion"));
+            }
+        }
     }
 }

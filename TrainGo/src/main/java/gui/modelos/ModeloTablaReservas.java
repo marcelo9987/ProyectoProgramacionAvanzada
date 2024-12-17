@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 // | TREN | ORIGEN | DESTINO | HORA |
 
+/**
+ * Modelo de tabla para las reservas
+ */
 public final class ModeloTablaReservas extends AbstractTableModel {
 
 
@@ -24,13 +27,9 @@ public final class ModeloTablaReservas extends AbstractTableModel {
     private final List<Reserva>  reservas;
     private final ResourceBundle bundle;
 
-    public ModeloTablaReservas(List<Reserva> reservas, ResourceBundle bu) {
-        super();
-        this.reservas = reservas;
-        this.bundle = bu;
-        this.fireTableDataChanged();
-    }
-
+    /**
+     * @param bu Bundle con la información de internacionalización
+     */
     public ModeloTablaReservas(ResourceBundle bu) {
         super();
         this.reservas = new ArrayList<>();
@@ -38,6 +37,9 @@ public final class ModeloTablaReservas extends AbstractTableModel {
         this.fireTableDataChanged();
     }
 
+    /**
+     * @param reservas Lista de reservas
+     */
     public void setReservas(List<Reserva> reservas) {
         this.reservas.clear();
         this.reservas.addAll(reservas);

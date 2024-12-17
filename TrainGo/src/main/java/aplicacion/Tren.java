@@ -2,6 +2,12 @@ package aplicacion;
 
 import java.util.UUID;
 
+/**
+ * Clase que representa un tren
+ *
+ * @param id  Identificador del tren
+ * @param num Número del tren
+ */
 public record Tren(UUID id, int num) {
     @Override
     public boolean equals(Object o) {

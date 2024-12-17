@@ -10,5 +10,20 @@ package aplicacion.enums;
  * @apiNote Una circulación es el viaje de un tren por una ruta
  */
 public enum EnumCirculacion {
-    EN_TRANSITO, PROGRAMADO, FINALIZADO, CANCELADO
+    /**
+     * La circulación está en curso
+     */
+    EN_TRANSITO,
+    /**
+     * La circulación está programada (aún no ha comenzado)
+     */
+    PROGRAMADO,
+    /**
+     * La circulación ha finalizado
+     */
+    FINALIZADO,
+    /**
+     * La circulación ha sido cancelada
+     */
+    CANCELADO
 }

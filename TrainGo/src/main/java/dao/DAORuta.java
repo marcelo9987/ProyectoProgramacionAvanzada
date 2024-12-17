@@ -4,6 +4,7 @@ import aplicacion.Estacion;
 import aplicacion.Ruta;
 import aplicacion.excepciones.SituacionDeRutasInesperadaException;
 import dao.constantes.ConstantesGeneral;
+import dao.constantes.TagsXMLRuta;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,8 +17,11 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Clase que gestiona el IO y la persistencia de las rutas
+ */
 public class DAORuta extends AbstractDAO {
-    private static DAORuta                            instance = null; // Singleton pattern
+    private static DAORuta instance = null; // Singleton pattern
     private final  FachadaDAO                         fadao;
     private final  Map<Estacion, Map<Estacion, Ruta>> rutas;
 
@@ -28,9 +32,14 @@ public class DAORuta extends AbstractDAO {
         this.rutas = new HashMap<>();
     }
 
+    /**
+     * Método main para pruebas
+     *
+     * @param args no se usa
+     */
     public static void main(String[] args) {
         DAORuta dao = getInstance(FachadaDAO.getInstance());
-        FachadaDAO.getInstance().cargaloTodo();
+        FachadaDAO.getInstance().cargarTodosLosDatosDeFicheros();
         XMLEventReader xmlEvtRdr_lector = dao.obtenerXmlEventReader();
         if (xmlEvtRdr_lector != null) {
             dao.cargarArchivo(xmlEvtRdr_lector);
@@ -48,6 +57,12 @@ public class DAORuta extends AbstractDAO {
 
     }
 
+    /**
+     * Método que devuelve la instancia de DAORuta
+     *
+     * @param fadao Fachada de DAO
+     * @return instancia de DAORuta
+     */
     public static DAORuta getInstance(FachadaDAO fadao)// Singleton
     {
         if (instance == null) {
@@ -62,7 +77,7 @@ public class DAORuta extends AbstractDAO {
 
     private void addRutaDesdeComponentes(String origen, String destino, int distancia) {
 
-        this.logger.trace("Añadiendo ruta de {} a {} con distancia de {}", origen, destino, Integer.valueOf(distancia));
+        this.logger.trace("Añadiendo ruta de {} a {} con distancia de {}", origen, destino, distancia);
 
         Estacion estacionOrigen = fadao.buscaEstacionPorNombre(origen);
 
@@ -109,7 +124,7 @@ public class DAORuta extends AbstractDAO {
     protected void guardarArchivo(@NotNull XMLStreamWriter writer) {
         this.logger.trace("Guardando contenido en el archivo...");
 
-        abrirCabeceraArchivoXML(writer, ConstantesGeneral.FICHERO_RUTA);
+        escribirAperturaCabeceraArchivoXML(writer, ConstantesGeneral.FICHERO_RUTA);
 
         for (Map<Estacion, Ruta> ruta : rutas.values()) {
             for (Ruta r : ruta.values()) {
@@ -149,7 +164,7 @@ public class DAORuta extends AbstractDAO {
 
             if (evento.isStartElement()) {
                 String nombreElemento = evento.asStartElement().getName().getLocalPart();
-                if (!nombreElemento.equals("ruta")) {
+                if (!nombreElemento.equals(TagsXMLRuta.XML_TAG_RUTA)) {
                     continue;
                 }
 
@@ -168,12 +183,12 @@ public class DAORuta extends AbstractDAO {
                         }
                         String valor = evento.asCharacters().getData();
                         switch (nombreElementoInterno) {
-                            case "origen" -> origen = valor;
-                            case "destino" -> destino = valor;
-                            case "distancia" -> distancia = Integer.parseInt(valor);
+                            case TagsXMLRuta.XML_TAG_ORIGEN -> origen = valor;
+                            case TagsXMLRuta.XML_TAG_DESTINO -> destino = valor;
+                            case TagsXMLRuta.XML_TAG_DISTANCIA -> distancia = Integer.parseInt(valor);
                         }
                     }
-                    else if (evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals("ruta")) {
+                    else if (evento.isEndElement() && evento.asEndElement().getName().getLocalPart().equals(TagsXMLRuta.XML_TAG_RUTA)) {
                         break;
                     }
                 }
@@ -189,13 +204,13 @@ public class DAORuta extends AbstractDAO {
 
     private void escribirRuta(@NotNull XMLStreamWriter writer, @NotNull Ruta ruta) {
         try {
-            writer.writeStartElement("ruta");
+            writer.writeStartElement(TagsXMLRuta.XML_TAG_RUTA);
 
-            escribirElemento(writer, "origen", ruta.ciudadOrigen());
+            escribirElemento(writer, TagsXMLRuta.XML_TAG_ORIGEN, ruta.ciudadOrigen());
 
-            escribirElemento(writer, "destino", ruta.ciudadDestino());
+            escribirElemento(writer, TagsXMLRuta.XML_TAG_DESTINO, ruta.ciudadDestino());
 
-            escribirElemento(writer, "distancia", String.valueOf(ruta.distancia()));
+            escribirElemento(writer, TagsXMLRuta.XML_TAG_DISTANCIA, String.valueOf(ruta.distancia()));
 
             writer.writeEndElement();
         } catch (XMLStreamException e) {

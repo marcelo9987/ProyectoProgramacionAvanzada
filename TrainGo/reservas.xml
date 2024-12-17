@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<reservas>
+    <reserva>
+        <usuario_DNI>1</usuario_DNI>
+        <circulación_id>8dc789ee-2535-496d-b108-01769c0e2b00</circulación_id>
+        <id>98e157d2-d24a-4b2b-823a-6fde25023825</id>
+    </reserva>
+    <reserva>
+        <usuario_DNI>2569685</usuario_DNI>
+        <circulación_id>e14a2151-065d-48fe-9674-8f7e70c86cd8</circulación_id>
+        <id>8986b183-48d0-40fa-95c2-09f01bddaa39</id>
+    </reserva>
+</reservas>

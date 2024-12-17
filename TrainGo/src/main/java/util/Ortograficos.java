@@ -4,6 +4,9 @@ import aplicacion.Estacion;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Clase que contiene métodos para comparar cadenas alfabéticamente.
+ */
 public final class Ortograficos {
 
     private Ortograficos() {

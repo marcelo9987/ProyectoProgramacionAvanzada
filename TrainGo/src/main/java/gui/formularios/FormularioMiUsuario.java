@@ -29,28 +29,25 @@ final class FormularioMiUsuario extends JDialog {
         this.fa = fa;
         this.bundle = this.fa.getBundleInstance();
         inicializarFormularioMiUsuario();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 
     private void inicializarFormularioMiUsuario() {
         JPanel panelPrincipal = new JPanel();
 
-
-        JLabel lblNombre = new JLabel(fa.getUsrNombre());
-
 //        lblNombre.setPreferredSize(new Dimension(300, 30));
-        lblNombre.setMinimumSize(lblNombre.getPreferredSize());
 
-        int i_dni = fa.getUsrDni();
-        char c_dni = Criptograficos.calculateDniLetter(i_dni);
+        int    i_dni = fa.obtenerDniUsuario();
+        char   c_dni = Criptograficos.calculateDniLetter(i_dni);
         String s_dni = Integer.toString(i_dni) + c_dni;
         JLabel lblDNI = new JLabel(s_dni);
         lblDNI.setMinimumSize(lblDNI.getPreferredSize());
 
-        JLabel lblCorreo = new JLabel(bundle.getString("correo"));
+        JLabel lblNombre   = new JLabel(fa.getUsrNombre()), lblCorreo = new JLabel(bundle.getString("correo"));
+        JLabel lblTelefono = new JLabel(bundle.getString("telefono")), lblDireccion = new JLabel(bundle.getString("direccion"));
 
-        JLabel lblTelefono = new JLabel(bundle.getString("telefono"));
-
-        JLabel lblDireccion = new JLabel(bundle.getString("direccion"));
+        lblNombre.setMinimumSize(lblNombre.getPreferredSize());
 
 
         txtCorreo = new JTextField(fa.getUsrCorreo());
@@ -75,72 +72,27 @@ final class FormularioMiUsuario extends JDialog {
 
         layout.setHorizontalGroup(
 
-                layout.createParallelGroup()
-                        .addComponent(lblNombre, GroupLayout.Alignment.CENTER)
-                        .addComponent(lblDNI, GroupLayout.Alignment.CENTER)
+                layout.createParallelGroup().addComponent(lblNombre, GroupLayout.Alignment.CENTER).addComponent(lblDNI, GroupLayout.Alignment.CENTER)
 
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnModificar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnGuardar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnRegresar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                        )
+                        .addGroup(layout.createSequentialGroup().addComponent(btnModificar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE).addComponent(btnGuardar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE).addComponent(btnRegresar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
 
-                        .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(lblCorreo)
-                                        .addComponent(lblTelefono)
-                                        .addComponent(lblDireccion)
-                                )
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtCorreo, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtTelefono, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtDireccion, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
-                                )
-                        )
-        );
+                        .addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(lblCorreo).addComponent(lblTelefono).addComponent(lblDireccion)).addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(txtCorreo, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE).addComponent(txtTelefono, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE).addComponent(txtDireccion, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE))));
 
-        layout.setVerticalGroup(
-                layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblNombre))
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblDNI))
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblCorreo)
-                                .addComponent(txtCorreo))
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblTelefono)
-                                .addComponent(txtTelefono))
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblDireccion)
-                                .addComponent(txtDireccion))
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(btnRegresar)
-                                .addComponent(btnModificar)
-                                .addComponent(btnGuardar))
-        );
+        layout.setVerticalGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(lblNombre)).addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(lblDNI)).addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(lblCorreo).addComponent(txtCorreo)).addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(lblTelefono).addComponent(txtTelefono)).addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(lblDireccion).addComponent(txtDireccion)).addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(btnRegresar).addComponent(btnModificar).addComponent(btnGuardar)));
 
 
         this.add(panelPrincipal);
         this.pack();
 
-        btnRegresar.addActionListener(e -> dispose());
+        btnRegresar.addActionListener(_ -> dispose());
 
-        btnModificar.addActionListener(e ->
-                gestionarModificarYGuardar(MODIFICAR)
-        );
+        btnModificar.addActionListener(_ -> gestionarModificarYGuardar(MODIFICAR));
 
-        btnGuardar.addActionListener(e ->
-                gestionarModificarYGuardar(GUARDAR)
-        );
+        btnGuardar.addActionListener(_ -> gestionarModificarYGuardar(GUARDAR));
 
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setTitle(bundle.getString("mi_usuario"));
         this.setResizable(false);
-
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-
     }
 
 
@@ -149,7 +101,6 @@ final class FormularioMiUsuario extends JDialog {
             logger.trace("BOTÓN MODIFICAR PULSADO");
             if (!this.btnModificar.isEnabled()) {
                 //No se debería poder pulsar el botón si no está habilitado
-                logger.trace("BOTÓN MODIFICAR DESHABILITADO, acción cancelada");
                 return;
             }
             this.btnModificar.setEnabled(false);
