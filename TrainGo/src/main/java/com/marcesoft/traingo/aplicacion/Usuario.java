@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 /**
- * Clase Usuario
  * Modela un usuario del sistema
  */
 public final class Usuario {

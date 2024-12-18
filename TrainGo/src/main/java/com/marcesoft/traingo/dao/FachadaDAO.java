@@ -23,8 +23,9 @@ public class FachadaDAO {
     private final DAOCirculacion daoCirculacion;
     private final DAOReserva  daoReserva;
 
-    // Constructor
-
+    /**
+     * Constructor de la clase FachadaDAO. Como se trata de un Singleton, es privado.
+     */
     private FachadaDAO() {
         super();
 

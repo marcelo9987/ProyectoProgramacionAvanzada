@@ -10,6 +10,9 @@ import com.marcesoft.traingo.util.Criptograficos;
 import javax.swing.*;
 import java.util.ResourceBundle;
 
+/**
+ * Formulario que muestra los datos del usuario y permite modificarlos.
+ */
 final class FormularioMiUsuario extends JDialog {
     private static final int INICIO    = 0;
     private static final int MODIFICAR = 1;

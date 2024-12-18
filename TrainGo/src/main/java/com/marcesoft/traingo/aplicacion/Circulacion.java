@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * Clase Circulacion
  * Modela la circulación de un tren por una ruta
  * Una circulación es el viaje de un tren por una ruta
  */

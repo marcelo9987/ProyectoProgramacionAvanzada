@@ -17,7 +17,13 @@ import javax.swing.*;
  */
 public final class FormatedFecha extends javax.swing.text.MaskFormatter {
 
+    /**
+     * Número mínimo de meses en un año
+     */
     private static final int    NUMERO_MINIMO_MESES_EN_ANHO = 1;
+    /**
+     * Número máximo de meses en un año
+     */
     private static final int    NUMERO_MAX_MESES_POR_ANHO   = 12;
     /**
      * Año mínimo para la fecha de búsqueda. Esta es la del primer viaje en tren en la red ferroviaria española (Barcelona-Mataró).
@@ -42,6 +48,12 @@ public final class FormatedFecha extends javax.swing.text.MaskFormatter {
         this.etiquetaError = etiquetaError; // Etiqueta donde se mostrará el error en el panel principal
     }
 
+    /**
+     * Convierte una cadena a una cadena con formato de fecha (dd/mm/aaaa).
+     * @param string String a convertir
+     * @return String con formato de fecha (dd/mm/aaaa), null si la cadena es nula o está vacía
+     * @throws java.text.ParseException si la fecha no es válida o el formato de la fecha es incorrecto
+     */
     @Contract(pure = true, value = "null -> null")
     @Nullable
     @Override

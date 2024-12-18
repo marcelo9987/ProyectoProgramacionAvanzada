@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 // | TREN | ORIGEN | DESTINO | HORA |
 
 /**
- * Modelo de tabla para las reservas
+ * Modelo de tabla para las reservas de un usuario.
  */
 public final class ModeloTablaReservas extends AbstractTableModel {
 

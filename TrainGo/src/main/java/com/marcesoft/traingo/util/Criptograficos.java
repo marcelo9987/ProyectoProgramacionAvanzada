@@ -64,14 +64,14 @@ public final class Criptograficos {
             return new String(Base64.getEncoder().encode(claveCifrada));
         } catch (InvalidKeyException e) {
             // En la documentación pone que esta excepción no se lanza, pero por si acaso...
-            logger.error("Clave Mal Formada, ¿Están bien hechos los cálculos? :(");
+            logger.error("Clave Mal Formada, ¿Están bien hechos los cálculos?");
             System.exit(-1);
         } catch (IllegalBlockSizeException ibe) {
             // Esto ocurre cuando el tamaño del bloque es incorrecto.
-            logger.error(" El tamaño del bloque es incorrecto. ¿Has hecho bien los cálculos?");
+            logger.error("El tamaño del bloque es incorrecto. ¿Has hecho bien los cálculos?");
         } catch (BadPaddingException e) {
             // Estos son errores que solo deberían ocurrir en caso de desencriptación, por lo que los ignoramos.
-            logger.error("Error desconocido: {}", e.getMessage());
+            logger.error("Error desconocido: {}.", e.getMessage());
         }
         return null;
     }

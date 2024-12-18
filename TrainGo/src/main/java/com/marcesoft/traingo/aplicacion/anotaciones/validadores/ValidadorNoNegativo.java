@@ -47,11 +47,22 @@ public class ValidadorNoNegativo implements ConstraintValidator<NoNegativo, BigI
     }
 
 
+    /**
+     * Inicializa el validador
+     * @param constraintAnnotation Anotación a inicializar
+     */
     @Override
     public void initialize(NoNegativo constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
+    /**
+     * Valida que un objeto de tipo BigInteger no sea negativo
+     * @param bigInteger objeto a validar
+     * @param constraintValidatorContext contexto de validación
+     *
+     * @return true si el objeto no es negativo, false en caso contrario
+     */
     @Contract(pure = true)
     @Override
     public boolean isValid(@NotNull BigInteger bigInteger, ConstraintValidatorContext constraintValidatorContext) {

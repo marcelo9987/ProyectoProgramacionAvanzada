@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 /**
- * Clase Reserva
+ *  Clase que representa una reserva
  * @param id          Identificador de la reserva
  * @param usuario     Usuario que ha realizado la reserva
  * @param circulacion Circulación reservada

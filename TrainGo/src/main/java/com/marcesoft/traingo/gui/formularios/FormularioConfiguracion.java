@@ -9,6 +9,9 @@ import java.awt.event.ActionListener;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+/**
+ * Formulario de configuración de la aplicación que permite cambiar el idioma de la misma.
+ */
 final class FormularioConfiguracion extends JDialog {
     private final FachadaAplicacion fa;
 

@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Formulario que permite reservar un tren.
+ */
 final class FormularioReservarTren extends JFrame {
     private static       ResourceBundle    bundle;
     private final        FachadaAplicacion fa;

@@ -1,6 +1,5 @@
 package com.marcesoft.traingo.util;
 
-import com.marcesoft.traingo.aplicacion.FachadaAplicacion;
 import com.marcesoft.traingo.aplicacion.enums.EnumIdioma;
 import org.jetbrains.annotations.NotNull;
 

@@ -6,7 +6,7 @@ import com.marcesoft.traingo.gui.formularios.FormularioPrincipal;
 import org.jetbrains.annotations.TestOnly;
 
 /**
- * Fachada de la interfaz gráfica
+ * Fachada de la interfaz gráfica de la aplicación
  */
 public class FachadaGui {
 

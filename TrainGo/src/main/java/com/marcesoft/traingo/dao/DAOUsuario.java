@@ -73,6 +73,11 @@ public class DAOUsuario extends AbstractDAO {
         return this.usuarios;
     }
 
+    /**
+     * Método que lee el DNI de un usuario a partir de un XML. Método auxiliar
+     * @param reader Lector de eventos XML
+     * @return DNI del usuario
+     */
     private int _obtenerDNI(XMLEventReader reader) {
         XMLEvent evento = this.getNextXmlEvent(reader);
         int      DNI    = Integer.parseInt(evento.asCharacters().getData());
@@ -80,6 +85,11 @@ public class DAOUsuario extends AbstractDAO {
         return DNI;
     }
 
+    /**
+     * Método que extrae el nombre de un usuario a partir de un XML. Método auxiliar
+     * @param reader Lector de eventos XML
+     * @return Nombre del usuario
+     */
     private String _obtenerNombre(XMLEventReader reader) {
         XMLEvent evento = this.getNextXmlEvent(reader);
         String   nombre = evento.asCharacters().getData();
@@ -87,6 +97,11 @@ public class DAOUsuario extends AbstractDAO {
         return nombre;
     }
 
+    /**
+     * Método que extrae el correo de un usuario a partir de un XML. Método auxiliar
+     * @param reader Lector de eventos XML
+     * @return Correo del usuario
+     */
     private String _obtenerCorreo(XMLEventReader reader) {
         XMLEvent evento = this.getNextXmlEvent(reader);
         String   correo = evento.asCharacters().getData();
@@ -94,6 +109,11 @@ public class DAOUsuario extends AbstractDAO {
         return correo;
     }
 
+    /**
+     * Método que extrae la contraseña de un usuario a partir de un XML. Método auxiliar
+     * @param reader Lector de eventos XML
+     * @return Contraseña del usuario
+     */
     private String _obtenerContrasenha(XMLEventReader reader) {
         XMLEvent evento      = this.getNextXmlEvent(reader);
         String   contrasenha = evento.asCharacters().getData();
@@ -101,6 +121,11 @@ public class DAOUsuario extends AbstractDAO {
         return contrasenha;
     }
 
+    /**
+     * Método que procesa el teléfono de un usuario a partir de un XML. Método auxiliar
+     * @param reader Lector de eventos XML
+     * @return Teléfono del usuario
+     */
     private int _procesarTelefono(@NotNull XMLEventReader reader) {
 
         XMLEvent evento = this.getNextXmlEvent(reader);
@@ -115,6 +140,11 @@ public class DAOUsuario extends AbstractDAO {
         return telefono;
     }
 
+    /**
+     * Método que extrae la dirección de un usuario a partir de un XML. Método auxiliar
+     * @param reader Lector de eventos XML
+     * @return Dirección del usuario
+     */
     private String _obtenerDireccion(XMLEventReader reader) {
         XMLEvent evento    = this.getNextXmlEvent(reader);
         String   direccion = evento.asCharacters().getData();
@@ -122,6 +152,11 @@ public class DAOUsuario extends AbstractDAO {
         return direccion;
     }
 
+    /**
+     * Extrae y procesa la fecha de nacimiento de un usuario a partir de un XML. Método auxiliar
+     * @param reader Lector de eventos XML
+     * @param fechaNacimiento Array de enteros donde se almacenará la fecha de nacimiento
+     */
     private void _obtenerFecha(@NotNull XMLEventReader reader, int[] fechaNacimiento) {
 
         do {
@@ -143,6 +178,16 @@ public class DAOUsuario extends AbstractDAO {
 
     }
 
+    /**
+     * Crea un usuario y lo añade a la lista de usuarios. Método auxiliar
+     * @param DNI DNI del usuario
+     * @param nombre Nombre del usuario
+     * @param correo Correo del usuario
+     * @param contrasenha Contraseña del usuario
+     * @param telefono Teléfono del usuario
+     * @param direccion Dirección del usuario
+     * @param fechaNacimiento Fecha de nacimiento del usuario
+     */
     private void _crearYanhadirUsuario(int DNI, String nombre, String correo, String contrasenha, int telefono, String direccion, @NotNull int[] fechaNacimiento) {
         Usuario usr;
         this.logger.trace("Fin de usuario");
@@ -151,6 +196,12 @@ public class DAOUsuario extends AbstractDAO {
         this.logger.debug("Usuario añadido: {}", usr);
     }
 
+    /**
+     * Método que gestiona los datos entrantes de una fecha. Método auxiliar
+     * @param reader Lector de eventos XML
+     * @param evento Evento XML
+     * @param fecha Array de enteros donde se almacenará la fecha
+     */
     private void _gestionarDatosEntrantesFecha(@NotNull XMLEventReader reader, @NotNull XMLEvent evento, int[] fecha) {
         @NonNls String nombreElementoInterno = evento.asStartElement().getName().getLocalPart();
 
@@ -345,13 +396,14 @@ public class DAOUsuario extends AbstractDAO {
         }
         Usuario usr = this.usuarios.stream().filter(u -> u.correo().equals(email)).findFirst().orElse(null);
         if (usr != null) {
-            this.logger.info("Usuario encontrado: {}", email);
+            this.logger.info("Usuario encontrado: {}.", email);
         }
         else {
-            this.logger.warn("Usuario no encontrado: {}", email);
+            this.logger.warn("Usuario no encontrado: {}, ¿Está bien escrito?", email);
         }
         return usr;
     }
+
 
     void actualizarUsuario(@NonNls String correoAntiguo, Usuario usuario) throws UsuarioNoEncontradoException {
         Usuario usuarioActualizar = this.usuarios.stream().filter(u -> u.correo().equals(correoAntiguo)).findFirst().orElse(null);
