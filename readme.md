@@ -66,4 +66,4 @@ TrainGo utiliza las siguientes dependencias:
 
 ## Licencia
 
-[Licencia Pública General Reducida de GNU](../LICENSE)
+[Licencia Pública General Reducida de GNU](LICENSE)
