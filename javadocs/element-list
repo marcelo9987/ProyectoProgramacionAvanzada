@@ -1,0 +1,12 @@
+com.marcesoft.traingo.aplicacion
+com.marcesoft.traingo.aplicacion.anotaciones
+com.marcesoft.traingo.aplicacion.anotaciones.validadores
+com.marcesoft.traingo.aplicacion.enums
+com.marcesoft.traingo.aplicacion.excepciones
+com.marcesoft.traingo.aplicacion.formatos
+com.marcesoft.traingo.dao
+com.marcesoft.traingo.dao.constantes
+com.marcesoft.traingo.gui
+com.marcesoft.traingo.gui.formularios
+com.marcesoft.traingo.gui.modelos
+com.marcesoft.traingo.util
