@@ -1,6 +1,6 @@
 # TrainGo
 
-![banner]()
+![banner](TrainGo/src/main/resources/images/tren.png)
 
 [![license](https://img.shields.io/github/license/marcelo9987/ProyectoProgramacionAvanzada.svg)](LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
