@@ -43,16 +43,24 @@ Para obtener el código fuente, clonar el repositorio en tu máquina local. <br/
 Este proyecto se ha desarrollado con Java 22 y Maven. <br/>
 Si usa un IDE como Eclipse o IntelliJ, importe el proyecto como un proyecto Maven. <br/>
 Para ejecutar la aplicación, ejecute el método main de fachada aplicación. <br/>
-Para crear un autoejecutable, ejecute el comando `mvn clean compile package` y ejecute el jar generado en una terminal. <br/>
+Para crear un autoejecutable, ejecute el comando `mvn -f TrainGo/pom.xml clean compile package` y ejecute el jar generado en una terminal. <br/>
 
 Nota: Para que el programa pueda funcionar, necesitas tener los xml de datos en la misma carpeta que el jar. Si no los tienes, puedes usar los que están proporcionados en este repositorio. <br/>
 
 ## Uso
 
 Para ejecutar la aplicación, ejecute el método main de la clase `FachadaAplicacion`. <br/>
+Alternativamente, puede ejecutar el jar disponible en la sección de lanzamientos o que hayas generado con Maven. <br/>
+Para hacerlo, ejecute el siguiente comando en una terminal (asegúrese de estar en la carpeta donde se encuentra el jar): <br/>
 
+Con  salida por consola:
 ```
 java -jar trainGo.jar
+```
+
+Como proceso en segundo plano:
+```
+javaw -jar trainGo.jar
 ```
 
 ## Dependencias
