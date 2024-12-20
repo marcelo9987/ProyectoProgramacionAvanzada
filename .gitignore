@@ -33,3 +33,7 @@ replay_pid*
 *.ipr
 /.idea/
 /auxil/
+/informe/informe.synctex.gz
+/out/informe.pdf
+/out/informe.synctex.gz
+/out/informe.synctex.gz.sum.synctex
