@@ -36,6 +36,7 @@ Diciembre del 2024
 - [XML](https://www.w3schools.com/xml/)
 - [Maven](https://maven.apache.org/)
 - [Baeldung](https://www.baeldung.com/)
+- [Medium](https://medium.com/@chanakaanuruddha/serialization-in-java-best-practices-and-strategies-for-protecting-your-data-7fe82a8ea32b)
 
 ## Instalación y puesta en marcha
 
@@ -45,7 +46,8 @@ Si usa un IDE como Eclipse o IntelliJ, importe el proyecto como un proyecto Mave
 Para ejecutar la aplicación, ejecute el método main de fachada aplicación. <br/>
 Para crear un autoejecutable, ejecute el comando `mvn -f TrainGo/pom.xml clean compile package` y ejecute el jar generado en una terminal. <br/>
 
-Nota: Para que el programa pueda funcionar, necesitas tener los xml de datos en la misma carpeta que el jar. Si no los tienes, puedes usar los que están proporcionados en este repositorio. <br/>
+Nota: Para que el programa pueda funcionar, necesitas tener los xml de datos en una carpeta datos/ al lado del .jar. Si no los tienes, puedes usar los que están proporcionados en este repositorio para hacer pruebas. 
+<br/>Nota 2: El usuario y contraseña para acceder a la aplicación es "a@a.a" y "a".
 
 ## Uso
 
@@ -53,7 +55,7 @@ Para ejecutar la aplicación, ejecute el método main de la clase `FachadaAplica
 Alternativamente, puede ejecutar el jar disponible en la sección de lanzamientos o que hayas generado con Maven. <br/>
 Para hacerlo, ejecute el siguiente comando en una terminal (asegúrese de estar en la carpeta donde se encuentra el jar): <br/>
 
-Con  salida por consola:
+Con salida por consola:
 ```
 java -jar trainGo.jar
 ```
