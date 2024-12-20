@@ -4,7 +4,7 @@ import com.marcesoft.traingo.aplicacion.Usuario;
 import com.marcesoft.traingo.aplicacion.excepciones.LecturaSiguienteEventoException;
 import com.marcesoft.traingo.aplicacion.excepciones.SituacionDeRutasInesperadaException;
 import com.marcesoft.traingo.aplicacion.excepciones.UsuarioNoEncontradoException;
-import com.marcesoft.traingo.aplicacion.excepciones.noHayUsuariosRegistradosException;
+import com.marcesoft.traingo.aplicacion.excepciones.NoHayUsuariosRegistradosException;
 import com.marcesoft.traingo.dao.constantes.ConstantesGeneral;
 import com.marcesoft.traingo.dao.constantes.TagsXMLUsuario;
 import org.jetbrains.annotations.NonNls;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class DAOUsuario extends AbstractDAO {
 
-    private static DAOUsuario instance = null;
+    private static volatile DAOUsuario instance = null;
     private final  List<Usuario> usuarios;
 
     private DAOUsuario() {
@@ -58,8 +58,13 @@ public class DAOUsuario extends AbstractDAO {
      * @return instancia de DAOUsuario
      */
     public static DAOUsuario getInstance() {
-        if (instance == null) {
-            instance = new DAOUsuario();
+        if(instance != null) {
+            return instance;
+        }
+        synchronized (DAOUsuario.class) {
+            if (instance == null) {
+                instance = new DAOUsuario();
+            }
         }
         return instance;
     }
@@ -229,7 +234,7 @@ public class DAOUsuario extends AbstractDAO {
 
         try {
             XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
-            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("usuarios.xml"));
+            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("datos/usuarios.xml"));
         } catch (FileNotFoundException e) {
             this.logger.error("El archivo no ha podido ser encontrado", e);
             throw new SituacionDeRutasInesperadaException("El archivo no ha podido ser encontrado");
@@ -293,7 +298,7 @@ public class DAOUsuario extends AbstractDAO {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         XMLEventReader xmlReader = null;
         try {
-            xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("usuarios.xml"));
+            xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("datos/usuarios.xml"));
         } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al leer el archivo: ", e);
         }
@@ -371,7 +376,7 @@ public class DAOUsuario extends AbstractDAO {
 
     Usuario encontrarUsuarioPorDNI(String usuarioDNI) throws UsuarioNoEncontradoException {
         if (comprobarHayUsuariosEnOrigen()) {
-            throw new noHayUsuariosRegistradosException();
+            throw new NoHayUsuariosRegistradosException();
         }
         Usuario usr = this.usuarios.stream().filter(u -> (u.DNI() == Integer.parseInt(usuarioDNI))).findFirst().orElse(null);
         if (usr != null) {
@@ -392,7 +397,7 @@ public class DAOUsuario extends AbstractDAO {
      */
     Usuario encontrarUsuarioPorEmail(String email) {
         if (comprobarHayUsuariosEnOrigen()) {
-            throw new noHayUsuariosRegistradosException();
+            throw new NoHayUsuariosRegistradosException();
         }
         Usuario usr = this.usuarios.stream().filter(u -> u.correo().equals(email)).findFirst().orElse(null);
         if (usr != null) {
@@ -405,6 +410,12 @@ public class DAOUsuario extends AbstractDAO {
     }
 
 
+    /**
+     * Actualiza los datos de un usuario
+     * @param correoAntiguo Correo antiguo del usuario
+     * @param usuario Datos actualizados para el usuario
+     * @throws UsuarioNoEncontradoException Si no se encuentra el usuario
+     */
     void actualizarUsuario(@NonNls String correoAntiguo, Usuario usuario) throws UsuarioNoEncontradoException {
         Usuario usuarioActualizar = this.usuarios.stream().filter(u -> u.correo().equals(correoAntiguo)).findFirst().orElse(null);
         if (usuarioActualizar == null) {

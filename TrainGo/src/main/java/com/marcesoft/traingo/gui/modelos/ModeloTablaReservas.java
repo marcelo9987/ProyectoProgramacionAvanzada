@@ -28,6 +28,7 @@ public final class ModeloTablaReservas extends AbstractTableModel {
     private final ResourceBundle bundle;
 
     /**
+     * Constructor de la clase ModeloTablaReservas
      * @param bu Bundle con la información de internacionalización
      */
     public ModeloTablaReservas(ResourceBundle bu) {
@@ -38,6 +39,7 @@ public final class ModeloTablaReservas extends AbstractTableModel {
     }
 
     /**
+     * Establece las reservas en la tabla en formato de List
      * @param reservas Lista de reservas
      */
     public void setReservas(List<Reserva> reservas) {

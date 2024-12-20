@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NonNls;
 /**
  * Clase que contiene las constantes de las etiquetas XML de los trenes
  */
-public class TagsXMLTren {
+public final class TagsXMLTren {
     /**
      * Etiqueta para el tren
      */

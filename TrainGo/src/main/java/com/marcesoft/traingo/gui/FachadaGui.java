@@ -10,7 +10,7 @@ import org.jetbrains.annotations.TestOnly;
  */
 public class FachadaGui {
 
-    private static FachadaGui          instancia = null;
+    private static volatile FachadaGui          instancia = null;
     private final  FachadaAplicacion   fa;
     private        FormularioPrincipal vp;
 
@@ -26,8 +26,13 @@ public class FachadaGui {
      * @return Instancia de la fachada de la interfaz gráfica
      */
     public static FachadaGui getInstance(FachadaAplicacion fa) {
-        if (instancia == null) {
-            instancia = new FachadaGui(fa);
+        if (instancia != null) {
+            return instancia;
+        }
+        synchronized (FachadaGui.class) {
+            if (instancia == null) {
+                instancia = new FachadaGui(fa);
+            }
         }
         return instancia;
     }
@@ -37,6 +42,8 @@ public class FachadaGui {
      */
     public void ponerEnMarcha() {
         vp = new FormularioPrincipal(fa);
+
+
         vp.setVisible(true);
 
         FormularioAutenticacion va = new FormularioAutenticacion(this.fa, this.vp, true);

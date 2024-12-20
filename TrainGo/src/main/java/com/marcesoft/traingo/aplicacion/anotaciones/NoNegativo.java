@@ -14,6 +14,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 public @interface NoNegativo {
     /**
+     * Mensaje de error que se mostrará si el campo es negativo
      * @return Mensaje de error que se mostrará si el campo es negativo
      */
     String message() default "";//"El valor del campo no puede ser negativo";

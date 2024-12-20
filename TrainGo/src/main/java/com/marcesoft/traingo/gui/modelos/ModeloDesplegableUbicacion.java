@@ -18,6 +18,7 @@ public final class ModeloDesplegableUbicacion implements ComboBoxModel<String>, 
     private Estacion selectedItem;
 
     /**
+     * Constructor de la clase ModeloDesplegableUbicacion.
      * @param fa Fachada de la aplicación
      */
     public ModeloDesplegableUbicacion(@NotNull FachadaAplicacion fa) {
@@ -36,6 +37,7 @@ public final class ModeloDesplegableUbicacion implements ComboBoxModel<String>, 
     }
 
     /**
+     * Añade una ubicación al modelo de desplegable de ubicaciones.
      * @param ubicacion Ubicación a añadir
      */
     public void addUbicacion(String ubicacion) {

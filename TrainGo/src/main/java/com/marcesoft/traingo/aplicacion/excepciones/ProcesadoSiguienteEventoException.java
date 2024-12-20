@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class ProcesadoSiguienteEventoException extends CargaArchivoFallidaException {
 
     /**
+     * Constructor de la excepción
      * @param cause excepción original
      */
     public ProcesadoSiguienteEventoException(@NotNull Exception cause) {

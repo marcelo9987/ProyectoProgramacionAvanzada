@@ -30,7 +30,7 @@ import static com.marcesoft.traingo.dao.constantes.TagsXMLCirculacion.*;
  */
 public class DAOCirculacion extends AbstractDAO {
 
-    private static DAOCirculacion               instance = null; // Singleton pattern
+    private static volatile DAOCirculacion               instance = null; // Singleton pattern
     private final  FachadaDAO                   fa_dao;
     private final  Map<Ruta, List<Circulacion>> circulaciones;
 
@@ -75,8 +75,13 @@ public class DAOCirculacion extends AbstractDAO {
      */
     public static DAOCirculacion getInstance(FachadaDAO fadao)// Singleton
     {
-        if (instance == null) {
-            instance = new DAOCirculacion(fadao);
+        if (instance != null) {
+            return instance;
+        }
+        synchronized (DAOCirculacion.class) {
+            if (instance == null) {
+                instance = new DAOCirculacion(fadao);
+            }
         }
         return instance;
     }
@@ -94,7 +99,7 @@ public class DAOCirculacion extends AbstractDAO {
 
         try {
             XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
-            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("circulaciones.xml"));
+            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("datos/circulaciones.xml"));
         } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al volcar el archivo", e);
             return null;
@@ -209,7 +214,7 @@ public class DAOCirculacion extends AbstractDAO {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         XMLEventReader  reader;
         try {
-            reader = xmlInputFactory.createXMLEventReader(new FileInputStream("circulaciones.xml"));
+            reader = xmlInputFactory.createXMLEventReader(new FileInputStream("datos/circulaciones.xml"));
         } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al leer el archivo", e);
             return null;
@@ -470,8 +475,7 @@ public class DAOCirculacion extends AbstractDAO {
      */
     private boolean _comprobarDentroDeHora(@NotNull XMLEvent evento) {
         if (evento.isEndElement()) {
-            return !evento.asEndElement().getName().getLocalPart().equals(HORA_SALIDA)
-                    && !evento.asEndElement().getName().getLocalPart().equals(HORA_LLEGADA_REAL);
+            return !evento.asEndElement().getName().getLocalPart().equals(HORA_SALIDA) && !evento.asEndElement().getName().getLocalPart().equals(HORA_LLEGADA_REAL);
         }
         return true;
     }

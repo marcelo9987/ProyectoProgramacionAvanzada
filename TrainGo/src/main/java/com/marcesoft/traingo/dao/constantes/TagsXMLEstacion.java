@@ -3,7 +3,7 @@ package com.marcesoft.traingo.dao.constantes;
 /**
  * Clase que contiene las constantes de las etiquetas XML de las estaciones
  */
-public class TagsXMLEstacion {
+public final class TagsXMLEstacion {
     /**
      * Etiqueta para la estación
      */

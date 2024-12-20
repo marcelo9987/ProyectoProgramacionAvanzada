@@ -5,6 +5,7 @@ package com.marcesoft.traingo.aplicacion.excepciones;
  */
 public class SituacionDeRutasInesperadaException extends IllegalStateException {
     /**
+     * Constructor de la excepción
      * @param mensaje mensaje de error
      */
     public SituacionDeRutasInesperadaException(String mensaje) {

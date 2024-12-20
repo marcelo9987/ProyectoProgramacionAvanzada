@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NonNls;
 /**
  * Clase que contiene las constantes de las etiquetas XML de las circulaciones
  */
-public class TagsXMLCirculacion {
+public final class TagsXMLCirculacion {
     /**
      * Etiqueta para la circulación
      */

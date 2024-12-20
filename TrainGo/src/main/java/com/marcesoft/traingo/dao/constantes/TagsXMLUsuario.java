@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NonNls;
 /**
  * Clase que contiene las constantes de las etiquetas XML de los usuarios
  */
-public class TagsXMLUsuario {
+public final class TagsXMLUsuario {
 
     /**
      * Etiqueta para el usuario

@@ -216,6 +216,7 @@ public final class FormularioPrincipal extends JFrame {
     }
 
     /**
+     * Lanza el formulario principal
      * @param args the command line arguments
      */
     public static void main(String[] args) {

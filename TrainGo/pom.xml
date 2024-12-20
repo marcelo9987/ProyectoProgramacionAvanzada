@@ -65,7 +65,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.marcesoft.traingo.aplicacion.FachadaAplicacion</mainClass>
+                            <mainClass>com.marcesoft.traingo.Main</mainClass>
 <!--                            <addClasspath>true</addClasspath>-->
                         </manifest>
                     </archive>

@@ -23,7 +23,7 @@ import static com.marcesoft.traingo.dao.constantes.TagsXMLReserva.*;
  * Clase que gestiona el IO y la persistencia de las reservas
  */
 public class DAOReserva extends AbstractDAO {
-    private static DAOReserva                  instance = null;
+    private static volatile DAOReserva                  instance = null;
     private final  FachadaDAO                  fdao;
     private final  Map<Usuario, List<Reserva>> reservas;
 
@@ -74,8 +74,13 @@ public class DAOReserva extends AbstractDAO {
      * @return instancia de DAOReserva
      */
     public static DAOReserva getInstance(FachadaDAO fdao) {
-        if (instance == null) {
-            instance = new DAOReserva(fdao);
+        if (instance != null) {
+            return instance;
+        }
+        synchronized (DAOReserva.class) {
+            if (instance == null) {
+                instance = new DAOReserva(fdao);
+            }
         }
         return instance;
     }
@@ -93,7 +98,7 @@ public class DAOReserva extends AbstractDAO {
 
         try {
             XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
-            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("reservas.xml"));
+            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("datos/reservas.xml"));
         } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al volcar el archivo", e);
             throw new SituacionDeRutasInesperadaException("Error al obtener punteros de escritura");
@@ -141,7 +146,7 @@ public class DAOReserva extends AbstractDAO {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         XMLEventReader  xmlReader;
         try {
-            xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("reservas.xml"));
+            xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("datos/reservas.xml"));
         } catch (FileNotFoundException | XMLStreamException e) {
             throw new LecturaSiguienteEventoException();
         }
@@ -261,6 +266,11 @@ public class DAOReserva extends AbstractDAO {
         comprobarSiExistereservaYAnhadirla(usuario, reserva);
     }
 
+    /**
+     * Método que localiza las reservas de un usuario
+     * @param usuario Usuario
+     * @return Lista de reservas
+     */
     List<Reserva> localizarReservasUsuario(Usuario usuario) {
         return this.reservas().get(usuario);
     }

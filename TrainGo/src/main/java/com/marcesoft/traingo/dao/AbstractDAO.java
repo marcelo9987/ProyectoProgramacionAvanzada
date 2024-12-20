@@ -32,7 +32,7 @@ abstract class AbstractDAO implements IDAO {
     @Override
     public boolean load() {
         XMLEventReader reader = null;
-        obtenerLogger(); // no hace nada si t_odo está bien, y si no, inicializa logger
+        obtenerLogger(); // no hace nada si todo está bien, y si no, inicializa logger
         logger.info("Cargando archivo...");
 
         try {

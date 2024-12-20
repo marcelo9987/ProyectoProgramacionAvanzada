@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Clase que contiene las constantes generales de la aplicación para los ficheros XML.
  */
-public class ConstantesGeneral {
+public final class ConstantesGeneral {
     /**
      * Cabecera del fichero de circulaciones
      */

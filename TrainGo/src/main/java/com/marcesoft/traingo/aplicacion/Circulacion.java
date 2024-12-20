@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -14,9 +16,28 @@ import java.util.UUID;
 /**
  * Modela la circulación de un tren por una ruta
  * Una circulación es el viaje de un tren por una ruta
+ * @param id Identificador de la circulación
+ * @param tren Tren que realiza la circulación
+ * @param ruta Ruta por la que circula el tren (origen y destino)
+ * @param estado Estado de la circulación. Puede ser EN_TRANSITO, PROGRAMADO, FINALIZADO o CANCELADO
+ * @param horaSalida Hora de salida de la circulación
+ * @param horaLlegadaReal Hora de llegada real de la circulación (opcional)
+ * @param precioPorAsiento Precio por asiento de la circulación
  */
-public record Circulacion(@org.hibernate.validator.constraints.UUID UUID id, Tren tren, Ruta ruta, EnumCirculacion estado, LocalDateTime horaSalida, @Nullable LocalDateTime horaLlegadaReal, @NoNegativo BigDecimal precioPorAsiento) implements Comparable<Circulacion>
+public record Circulacion
+        (
+                @org.hibernate.validator.constraints.UUID UUID id
+                , Tren tren
+                , Ruta ruta
+                , EnumCirculacion estado
+                , LocalDateTime horaSalida
+                , @Nullable LocalDateTime horaLlegadaReal
+                , @NoNegativo BigDecimal precioPorAsiento
+        ) implements Comparable<Circulacion>, Serializable
 {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     /**
      * Constructor de Circulacion
      *
@@ -41,6 +62,7 @@ public record Circulacion(@org.hibernate.validator.constraints.UUID UUID id, Tre
 
 
     /**
+     * Devuelve la ciudad de origen de la circulación
      * @return Ciudad de origen de la circulación
      */
     @Contract(pure = true)
@@ -49,6 +71,7 @@ public record Circulacion(@org.hibernate.validator.constraints.UUID UUID id, Tre
     }
 
     /**
+     * Devuelve la ciudad de destino de la circulación
      * @return Ciudad a la que se dirige la circulación
      */
     @Contract(pure = true)
@@ -57,6 +80,7 @@ public record Circulacion(@org.hibernate.validator.constraints.UUID UUID id, Tre
     }
 
     /**
+     * Devuelve el UUID del tren que realiza la circulación
      * @return Identificador del tren que realiza la circulación
      */
     @NotNull
@@ -170,6 +194,10 @@ public record Circulacion(@org.hibernate.validator.constraints.UUID UUID id, Tre
                 '}';
     }
 
+    /**
+     * Devuelve el número del tren que realiza la circulación
+     * @return Número del tren que realiza la circulación
+     */
     @Contract(pure = true)
     int trenNumero() {
         return tren.num();

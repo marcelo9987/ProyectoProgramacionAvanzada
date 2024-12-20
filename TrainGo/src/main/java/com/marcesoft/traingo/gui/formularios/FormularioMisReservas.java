@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 /**
  * Formulario que muestra las reservas realizadas por el usuario.
  */
-class FormularioMisReservas extends JFrame {
+final class FormularioMisReservas extends JFrame {
 
     FormularioMisReservas(@NotNull FachadaAplicacion fa) {
         super();

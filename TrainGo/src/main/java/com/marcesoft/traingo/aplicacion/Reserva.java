@@ -1,8 +1,11 @@
 package com.marcesoft.traingo.aplicacion;
 
 import com.marcesoft.traingo.aplicacion.enums.EnumCirculacion;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -11,9 +14,13 @@ import java.util.UUID;
  * @param usuario     Usuario que ha realizado la reserva
  * @param circulacion Circulación reservada
  */
-public record Reserva(@org.hibernate.validator.constraints.UUID UUID id, Usuario usuario, Circulacion circulacion) {
+public record Reserva(@org.hibernate.validator.constraints.UUID UUID id, Usuario usuario, Circulacion circulacion) implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
+     * Constructor de la clase Reserva
      * @param usuario Usuario que ha realizado la reserva
      * @param circulacion Circulación reservada
      */
@@ -43,6 +50,7 @@ public record Reserva(@org.hibernate.validator.constraints.UUID UUID id, Usuario
 
 
     /**
+     * Obtiene la fecha y hora de la salida en un formato imprimible
      * @return Fecha y hora de salida de la circulación en formato imprimible
      */
     @NotNull
@@ -51,13 +59,15 @@ public record Reserva(@org.hibernate.validator.constraints.UUID UUID id, Usuario
     }
 
     /**
-     * @return Número de tren en la circulación
+     * Devuelve el número del tren de la circulación
+     * @return Número del tren de dicha circulación
      */
     public int numeroTren() {
         return circulacion().trenNumero();
     }
 
     /**
+     * Nombre de la ciudad de origen de la circulación
      * @return Nombre de la ciudad de origen de la circulación
      */
     public String nombreOrigen() {
@@ -65,6 +75,7 @@ public record Reserva(@org.hibernate.validator.constraints.UUID UUID id, Usuario
     }
 
     /**
+     * Nombre de la ciudad de destino de la circulación
      * @return Nombre de la ciudad de destino de la circulación
      */
     public String nombreDestino() {
@@ -73,6 +84,7 @@ public record Reserva(@org.hibernate.validator.constraints.UUID UUID id, Usuario
 
 
     /**
+     * Identificador de la circulación
      * @return Identificador de la circulación
      */
     @NotNull
@@ -81,9 +93,21 @@ public record Reserva(@org.hibernate.validator.constraints.UUID UUID id, Usuario
     }
 
     /**
+     * Estado de la circulación
      * @return Estado de la circulación
      */
     public EnumCirculacion estado() {
         return circulacion().estado();
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    @Override
+    public String toString() {
+        return "Reserva{"
+                + "id=" + id
+                + ", usuario=" + usuario
+                + ", circulacion=" + circulacion
+                + '}';
     }
 }

@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NonNls;
 /**
  * Clase que contiene las constantes de las etiquetas XML de las rutas
  */
-public class TagsXMLRuta {
+public final class TagsXMLRuta {
     /**
      * Etiqueta para la ruta
      */

@@ -5,13 +5,19 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import com.marcesoft.traingo.util.Criptograficos;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
 /**
  * Modela un usuario del sistema
  */
-public final class Usuario {
+public final class Usuario implements Serializable
+{
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final int    DNI;
     private final String nombre;
     private final LocalDate fechaNacimiento;

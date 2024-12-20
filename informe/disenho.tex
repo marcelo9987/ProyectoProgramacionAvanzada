@@ -1,0 +1,139 @@
+\section{Prototipado de la interfaz gráfica}\label{sec:prototipado_de_la_interfaz_grafica}
+\begin{figure}
+    \centering
+    \includegraphics[width=300px,height=200px]{recursos/prototipos/autenticacion}
+    \caption{Pantalla 1: Formulario de autenticación}
+    \label{fig:autenticacion}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=300px,height=200px]{recursos/prototipos/pantalla_principal}
+    \caption{Pantalla 2: Pantalla principal}
+    \label{fig:pantalla_principal}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics{recursos/prototipos/reservar_tren}
+    \caption[width=120px,height=200px]{Pantalla 3: Lista de trenes y reserva de billetes}
+    \label{fig:reservar_tren}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=300px,height=200px]{recursos/prototipos/elegir_idioma}
+    \caption{Pantalla 4: Configuración}
+    \label{fig:elegir_idioma}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=300px,height=200px]{recursos/prototipos/mis_reservas}
+    \caption{Pantalla 5: Mis Reservas}
+    \label{fig:mis_reservas}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=300px,height=200px]{recursos/prototipos/mi_usuario}
+    \caption{Pantalla 6: Mi usuario}
+    \label{fig:mi_usuario}
+\end{figure}
+
+
+\newpage
+
+
+\section{Diagramas UML}\label{sec:diagrama_de_clases}
+
+\subsection{Diagrama de clases}\label{subsec:diagrama_de_clases}
+
+Para comenzar, en la \autoref{fig:clases}, se muestran las clases que representan a la información que se maneja en la aplicación.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=260px]{recursos/diagramas/clases}
+    \caption{Modelo de datos}
+    \label{fig:clases}
+\end{figure}
+
+\subsection{Diagrama de clases DAO}\label{subsec:diagrama_de_clases_dao}
+
+Relacionado con el modelo de datos, para implementar una persistencia o «serialización» de los datos, se ha implementado un patrón DAO (\textit{Data Access Object}).
+El patrón DAO se encarga de abstraer la lógica de acceso a los datos (ver \autoref{sec:estructura}).
+En la \autoref{fig:clases_dao} se muestra el diagrama de clases de este patrón.
+
+En la implementación de este patrón, se han usado varias funcionalidades clave de Java.
+Por un lado, la clase \textit{AbstractDAO} es una clase abstracta que implementa la interfaz \textit{IDAO}.
+La clase AbstractDAO a su vez tiene una relación de herencia con los DAOs individuales.
+\begin{figure}
+    \centering
+    \includegraphics[width=200px]{recursos/diagramas/daoEstructura}
+    \caption{Diseño de la estructura de clases del DAO}
+    \label{fig:clases_dao}
+\end{figure}
+
+\subsection{Diagrama de clases GUI}\label{subsec:diagrama_de_clases_gui}
+Llegados a este punto, se ha implementado la interfaz gráfica de usuario (GUI).
+Se ha usado una estructura formulario-modelo para las clases GUI con tablas y elementos con información.
+En la \autoref{fig:clases_gui} se muestra el diagrama de clases de la GUI\@.
+\begin{figure}
+    \centering
+    \includegraphics[width=200px]{recursos/diagramas/gui}
+    \caption{Diagrama de clases para la interfaz gráfica}
+    \label{fig:clases_gui}
+\end{figure}
+
+\subsection{Façade}\label{subsec:facade}
+Para simplificar la interacción entre la GUI y el modelo de datos, se ha implementado un patrón Façade.
+No solo simplifica la interacción, sino que también permite una mayor flexibilidad en la implementación de la GUI respecto al modelo de datos.
+En la \autoref{fig:jerarquia_fachada} se muestra el diagrama de clases del Façade respecto a su jerarquía interna.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=200px]{recursos/diagramas/jerarquia_fachada}
+    \caption{Jerarquia de clases para el patrón façade}
+    \label{fig:jerarquia_fachada}
+\end{figure}
+
+Para poner un ejemplo, se puede ver como interactúan los DAOs con el Façade en la \autoref{fig:interaccion_fachada_dao}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=200px]{recursos/diagramas/fdao_dao_rel}
+    \caption{Relaciones entre la façada de los DAOs y los mismos DAOs}
+    \label{fig:interaccion_fachada_dao}
+\end{figure}
+
+Estos son todos los diagramas UML más relevantes.
+Se hablará más en detalle de la implementación en la \autoref{ch:implementacion}.
+Respecto a la estructura del proyecto, se detalla a continuación en la \autoref{sec:estructura}.
+\newpage
+
+
+\section{Estructura del proyecto}\label{sec:estructura}
+\input{disenho.estructura-del-proyecto}
+
+\section{Herramientas, tecnologías y librerías}\label{sec:herramientas_tecnologias_y_librerias}
+Para la implementación de la aplicación, se han usado varias herramientas, tecnologías y librerías.
+A continuación, se detallan las más relevantes (obviaré las más obvias, como Java 22).
+
+Para generar los diagramas UML, JavaDocs y como IDE de desarrollo, se ha usado IntelliJ IDEA~\autocite{jetbrains.idea}.
+
+Para la gestión de dependencias, se ha usado Maven~\autocite{maven}.
+Maven es una herramienta de gestión de proyectos que se encarga de la gestión desde las dependencias hasta la compilación (y más allá).
+
+Para la generación de datos «dummy», se ha utilizado la página web \textit{Mockaroo}~\autocite{mockaroo}.
+Mockaroo es una herramienta que permite generar datos de prueba de forma aleatoria.
+
+Para la creación de este informe, se ha usado \LaTeX{}.
+
+Pasando a las librerías, se han usado las siguientes:
+\begin{itemize}
+    \item logback~\autocite{logback} para el registro de eventos (logging).
+    \item Jetbrains Annotations~\autocite{jetbrains.annotations} para las anotaciones.
+\end{itemize}
+
+Finalmente, se ha hecho uso del estándar XML (eXtensible Markup Language) para el almacenamiento de los datos.
+
+\newpage

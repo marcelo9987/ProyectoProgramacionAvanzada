@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class DAOEstacion extends AbstractDAO {
 
-    private static DAOEstacion instance = null;
+    private static volatile DAOEstacion instance = null;
     private final List<Estacion> estaciones;
 
     private DAOEstacion() {
@@ -54,6 +54,10 @@ public class DAOEstacion extends AbstractDAO {
         dao.save();
     }
 
+    /**
+     * Método que devuelve la lista de estaciones
+     * @return Lista de estaciones
+     */
     List<Estacion> estaciones() {
         return estaciones;
     }
@@ -64,8 +68,13 @@ public class DAOEstacion extends AbstractDAO {
      * @return instancia de DAOEstacion
      */
     public static DAOEstacion getInstance() {
-        if (instance == null) {
-            instance = new DAOEstacion();
+        if (instance != null) {
+            return instance;
+        }
+        synchronized (DAOEstacion.class) {
+            if (instance == null) {
+                instance = new DAOEstacion();
+            }
         }
         return instance;
     }
@@ -96,7 +105,7 @@ public class DAOEstacion extends AbstractDAO {
         XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
         XMLStreamWriter  xmlWriter        = null;
         try {
-            xmlWriter = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("estaciones.xml"));
+            xmlWriter = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("datos/estaciones.xml"));
         } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al volcar el archivo", e);
         }
@@ -139,7 +148,7 @@ public class DAOEstacion extends AbstractDAO {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         XMLEventReader xmlReader;
         try {
-            xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("estaciones.xml"));
+            xmlReader = xmlInputFactory.createXMLEventReader(new FileInputStream("datos/estaciones.xml"));
         } catch (FileNotFoundException | XMLStreamException e) {
             throw new LecturaSiguienteEventoException();
         }
@@ -183,6 +192,11 @@ public class DAOEstacion extends AbstractDAO {
     }
 
 
+    /**
+     * Busca una estación por su nombre
+     * @param nombreEstacion Nombre de la estación a buscar
+     * @return Estación encontrada o null si no se encuentra
+     */
     Estacion buscaEstacionPorNombre(@NonNls String nombreEstacion) {
         return estaciones.stream().filter(e -> e.ciudad().equals(nombreEstacion)).findFirst().orElse(null);
     }

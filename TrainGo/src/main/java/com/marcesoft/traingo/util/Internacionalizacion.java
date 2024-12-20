@@ -29,8 +29,13 @@ public final class Internacionalizacion {
      * @return Devuelve la instancia de la clase Internacionalizacion.
      */
     public static Internacionalizacion getInstance() {
-        if (instance == null) {
-            instance = new Internacionalizacion();
+        if (instance != null) {
+            return instance;
+        }
+        synchronized (Internacionalizacion.class) {
+            if (instance == null) {
+                instance = new Internacionalizacion();
+            }
         }
         return instance;
     }

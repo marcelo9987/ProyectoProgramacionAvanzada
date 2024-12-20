@@ -25,7 +25,7 @@ import java.util.UUID;
 public class DAOTren extends AbstractDAO {
 
     // Logger (heredado de AbstractDAO)
-    private static DAOTren instance = null;
+    private static volatile DAOTren instance = null;
 
     private final List<Tren> trenes;
 
@@ -45,8 +45,13 @@ public class DAOTren extends AbstractDAO {
      * @return instancia de DAOTren
      */
     public static DAOTren getInstance() {
-        if (instance == null) {
-            instance = new DAOTren();
+        if (instance != null) {
+            return instance;
+        }
+        synchronized (DAOTren.class) {
+            if (instance == null) {
+                instance = new DAOTren();
+            }
         }
         return instance;
     }
@@ -57,7 +62,7 @@ public class DAOTren extends AbstractDAO {
         XMLStreamWriter writer;
         try {
             XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
-            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("trenes.xml"));
+            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("datos/trenes.xml"));
         } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al solicitar P sobre el archivo", e);
             return null;
@@ -107,7 +112,7 @@ public class DAOTren extends AbstractDAO {
         XMLEventReader reader = null;
         try {
             XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-            reader = xmlInputFactory.createXMLEventReader(new FileInputStream("trenes.xml"));
+            reader = xmlInputFactory.createXMLEventReader(new FileInputStream("datos/trenes.xml"));
         } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al solicitar P sobre el archivo. Puede que la ruta sea incorrecta o el archivo no exista", e);
         }

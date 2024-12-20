@@ -21,7 +21,7 @@ import java.util.Map;
  * Clase que gestiona el IO y la persistencia de las rutas
  */
 public class DAORuta extends AbstractDAO {
-    private static DAORuta instance = null; // Singleton pattern
+    private static volatile DAORuta instance = null; // Singleton pattern
     private final  FachadaDAO                         fadao;
     private final  Map<Estacion, Map<Estacion, Ruta>> rutas;
 
@@ -65,8 +65,13 @@ public class DAORuta extends AbstractDAO {
      */
     public static DAORuta getInstance(FachadaDAO fadao)// Singleton
     {
-        if (instance == null) {
-            instance = new DAORuta(fadao);
+        if (instance != null) {
+            return instance;
+        }
+        synchronized (DAORuta.class) {
+            if (instance == null) {
+                instance = new DAORuta(fadao);
+            }
         }
         return instance;
     }
@@ -111,7 +116,7 @@ public class DAORuta extends AbstractDAO {
 
         try {
             XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
-            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("rutas.xml"));
+            writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream("datos/rutas.xml"));
         } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al volcar el archivo", e);
             return null;
@@ -147,7 +152,7 @@ public class DAORuta extends AbstractDAO {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         XMLEventReader reader;
         try {
-            reader = xmlInputFactory.createXMLEventReader(new FileInputStream("rutas.xml"));
+            reader = xmlInputFactory.createXMLEventReader(new FileInputStream("datos/rutas.xml"));
         } catch (FileNotFoundException | XMLStreamException e) {
             this.logger.error("Error al leer el archivo", e);
             return null;

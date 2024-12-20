@@ -1,0 +1,63 @@
+Llegados a este punto, ya familiarizados con la estructura de clases de la aplicación, se procede a la implementación de la misma.
+
+Como dijo el matemático Clive Humby, \enquote{Los datos son el nuevo petróleo}\autocite{talagala2022data}.
+En este sentido, la aplicación se ha diseñado para que los datos sean el centro de la misma.
+Por ello, se ha implementado un patrón DAO (\textit{Data Access Object}) para abstraer la lógica de acceso a los datos.
+Como ya hemos hablado de este patrón en la \autoref{subsec:diagrama_de_clases_dao}, no se repetirá la explicación aquí.
+Sin embargo, es un trozo de código interesante para abrir este capítulo.
+
+\section{Código de la aplicación}\label{sec:codigo_de_la_aplicacion}
+\input{impl.codigo}
+
+\section{Problemas encontrados durante la implementación}\label{sec:problemas_encontrados_during_la_implementacion}
+Como en todo proyecto, se han encontrado problemas durante la implementación.
+Empezando por el principio, el primer problema fue la serialización y persistencia de los datos.
+
+\subsection{Serialización y persistencia de los datos}\label{subsec:serializacion_y_persistencia_de_los_datos}
+El primer enfoque que se adoptó para atajar este objetivo fue la serialización que java nos proporciona.
+Funcionaba bien, pero los archivos generados eran muy grandes y, no permitían una modificación fuera de la aplicación.
+Además, no son agnósticos respecto al lenguaje.
+
+Por ello, se decidió cambiar a XML\@.
+
+Lo que no se esperaba era la dificultad que iba a suponer la lectura y escritura de los datos.
+Como se espera trabajar con muchos datos, la carga en memoria del archivo XML no era una opción.
+Por ello, había que leer el archivo de forma secuencial y en streaming.
+
+Sin embargo, tras uno o dos refactorings, se consiguió implementar la carga y guardado de los datos de forma eficiente y
+con un código más limpio que el de la primera implementación.
+
+\section{Resultados y Conclusiones}\label{sec:resultados_y_conclusiones}
+En resumen, la implementación de la aplicación ha sido un éxito.
+Se ha implementado un patrón DAO para abstraer la lógica de acceso a los datos.
+Se ha implementado un patrón Façade para simplificar la interacción entre la GUI y el modelo de datos.
+Se ha implementado un patrón Singleton para las clases DAO y Façade.
+Se ha implementado un patrón Template Method para la clase AbstractDAO y sus hijas.
+Se han implementado contenedores de datos inmutables y mutables.
+Se ha implementado la GUI con Java Swing.
+Se ha creado una clase para cifrar y descifrar contraseñas.
+Se han encontrado problemas durante la implementación, pero se han resuelto con éxito.
+Se ha implementado la persistencia de los datos en XML\@.
+Se ha permitido la internacionalización de la aplicación.
+Se ha implementado un sistema de loggin.
+
+Toda esta funcionalidad no significa tampoco que el proyecto esté perfecto,
+quedan algunas cosas que habría sido interesante implementar.
+
+\section{Trabajo futuro}\label{sec:trabajo_futuro}
+Como «deberes» hipotéticos para el futuro, se podrían implementar las siguientes funcionalidades:
+\begin{itemize}
+\item Permitir cambiar la contraseña de un usuario.
+    \item Filtrar los trenes por fecha y hora.
+    \item Filtrar los trenes por precio
+    \item No mostrar los trenes que ya han pasado o que estén cancelados.
+    \item Tal vez, migrar a una base de datos.
+    \item De migrar a una base de datos, añadir protección contra conflictos de concurrencia.
+\end{itemize}
+
+
+
+
+
+
+

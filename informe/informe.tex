@@ -1,0 +1,81 @@
+%! Author = imarc
+%! Date = 19/12/2024
+
+% Preamble
+\documentclass[11pt]{report}
+
+% Packages
+\usepackage{amsmath}
+%idioma
+\usepackage[spanish]{babel}
+\usepackage{csquotes}
+%bibliografía
+\usepackage[style=ieee]{biblatex}
+\addbibresource{bibliografia.bib}
+%enlaces
+\usepackage{hyperref}
+
+%Incluir segmentos de código
+\usepackage{listings}
+
+%Poder facer árbores de directorios
+\usepackage{dirtree}
+
+
+\usepackage{graphicx}
+\usepackage{biblatex}
+%\usepackage{minipage}
+
+
+
+\author {Marcelo Fort Muñoz}
+\title {Entrega final: Documentación adicional}
+
+
+
+
+% Document
+\begin{document}
+    %--
+    \maketitle
+    %--
+    \abstract{Este documento es una documentación adicional a la entrega final del proyecto de la asignatura
+    de Técnicas de Programación Avanzada.}
+    %--
+    \tableofcontents
+    %--
+
+    %INICIO DEL INFORME
+
+    % Introducción
+
+
+    \chapter{Introducción}\label{ch:intro}
+    \input{introduccion}
+
+    % Diseño
+
+
+    \chapter{Diseño del programa}\label{ch:diseno}
+    \input{disenho}
+
+    % Implementación
+
+
+    \chapter{Implementación}\label{ch:implementacion}
+    \input{implementacion}
+
+
+    % Biblio
+    \addcontentsline{toc}{chapter}{Bibliografía}
+    \printbibliography
+
+    % Anexos
+%    \appendix
+
+
+%    \chapter{Anexos}\label{ch:anexos}
+%    \input{anexos}
+
+
+\end{document}

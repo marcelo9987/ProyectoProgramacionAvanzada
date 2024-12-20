@@ -14,7 +14,7 @@ import java.util.UUID;
  * Clase que permite abstraer la lógica de acceso a datos.
  */
 public class FachadaDAO {
-    private static FachadaDAO instance = null; // Singleton pattern
+    private static volatile FachadaDAO instance = null; // Singleton pattern
 
     private final DAOTren     daoTren;
     private final DAOUsuario  daoUsuario;
@@ -49,8 +49,13 @@ public class FachadaDAO {
      */
     public static FachadaDAO getInstance()// Singleton
     {
-        if (instance == null) {
-            instance = new FachadaDAO();
+        if(instance != null) {
+            return instance;
+        }
+        synchronized(FachadaDAO.class) {
+            if(instance == null) {
+                instance = new FachadaDAO();
+            }
         }
         return instance;
     }
@@ -135,6 +140,10 @@ public class FachadaDAO {
         return daoRuta.confirmarEnlace(origen, destino);
     }
 
+    /** Método que permite buscar una estación por su nombre
+     * @param nombreEstacion Nombre de la estación a buscar
+     * @return Estación con el nombre dado
+     */
     Estacion buscaEstacionPorNombre(String nombreEstacion) {
         return daoEstacion.buscaEstacionPorNombre(nombreEstacion);
     }
@@ -149,6 +158,11 @@ public class FachadaDAO {
         return daoRuta.buscarRutaPorNombres(origen, destino);
     }
 
+    /**
+     * Método que permite obtener todas las rutas de la aplicación
+     * @param trenId Identificador del tren
+     * @return Lista de rutas del tren
+     */
     Tren localizarTren(String trenId) {
         return daoTren.localizarTren(trenId);
     }
@@ -181,10 +195,20 @@ public class FachadaDAO {
         return daoReserva.localizarReservasUsuario(usuario);
     }
 
+    /**
+     * Permite encontrar a un usuario por su DNI
+     * @param usuarioDNI DNI del usuario
+     * @return Usuario con el DNI dado
+     * @throws UsuarioNoEncontradoException Si no se encuentra el usuario
+     */
     Usuario encontrarUsuarioPorDNI(String usuarioDNI) throws UsuarioNoEncontradoException {
         return daoUsuario.encontrarUsuarioPorDNI(usuarioDNI);
     }
 
+    /** Localiza una circulación por su identificador
+     * @param id_circulacion Identificador de la circulación
+     * @return Circulación con el identificador dado
+     */
     Circulacion localizarCirculacion(UUID id_circulacion) {
         return daoCirculacion.localizarCirculacion(id_circulacion);
     }

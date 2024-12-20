@@ -26,6 +26,7 @@ public final class ModeloTablaCirculaciones extends AbstractTableModel {
     private final ResourceBundle    bundle;
 
     /**
+     * Constructor de la clase ModeloTablaCirculaciones
      * @param bundle Bundle con la información de internacionalización
      */
     public ModeloTablaCirculaciones(ResourceBundle bundle) {
@@ -35,6 +36,7 @@ public final class ModeloTablaCirculaciones extends AbstractTableModel {
     }
 
     /**
+     * Establece las circulaciones en la tabla en formato de List
      * @param listaCirculaciones Lista de circulaciones
      */
     public void setListaCirculaciones(List<Circulacion> listaCirculaciones) {
@@ -51,6 +53,7 @@ public final class ModeloTablaCirculaciones extends AbstractTableModel {
 
 
     /**
+     * Obtiene la circulación en la fila indicada
      * @param fila Fila de la que se quiere obtener la circulación
      * @return Circulación en la fila indicada
      */
@@ -92,6 +95,7 @@ public final class ModeloTablaCirculaciones extends AbstractTableModel {
     }
 
     /**
+     * Obtiene la circulación en la fila indicada
      * @param fila Fila de la que se quiere obtener la circulación
      * @return Circulación en la fila indicada
      */

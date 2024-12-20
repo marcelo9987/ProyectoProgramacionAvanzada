@@ -7,10 +7,10 @@ import com.marcesoft.traingo.dao.FachadaDAO;
 import com.marcesoft.traingo.gui.FachadaGui;
 import jakarta.validation.constraints.Email;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.TestOnly;
 import org.slf4j.helpers.CheckReturnValue;
 import com.marcesoft.traingo.util.Criptograficos;
 import com.marcesoft.traingo.util.Internacionalizacion;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -18,7 +18,8 @@ import java.util.ResourceBundle;
 /**
  * Clase que permite abstraer la lógica de la aplicación.
  */
-public final class FachadaAplicacion {
+public final class FachadaAplicacion{
+
 
     // Atributos
 
@@ -45,19 +46,27 @@ public final class FachadaAplicacion {
     }
 
     /**
-     * Método principal de la aplicación.
+     * Método principal de la Fachada.
      *
-     * @param args No se usa.
+     * @param args No se usa,
      */
+    @TestOnly
     public static void main(String[] args) {
         FachadaAplicacion fa = new FachadaAplicacion();
 
         fa.extraerDatosPorDefecto();
         fa.lanzaInterfazGrafica();
-        // pruebo miUsuario
-//        fa.lanzaInterfazGrafica();
+     }
 
-    }
+    /**
+     * Método que permite ejecutar la aplicación.
+     * Pone en marcha la interfaz gráfica y extrae los datos por defecto.
+     */
+     public void ejecutar()
+     {
+        extraerDatosPorDefecto();
+        lanzaInterfazGrafica();
+     }
 
     /**
      * Método que extrae los datos almacenados en los ficheros por defecto
@@ -238,4 +247,5 @@ public final class FachadaAplicacion {
     public List<Reserva> getReservasUsuario(Usuario usuario) {
         return fdao.getReservasUsuario(usuario);
     }
+
 }

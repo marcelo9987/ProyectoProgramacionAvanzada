@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 
 /**
- * Formulario de autenticación que se muestra al iniciar la aplicación
+ * Formulario de autenticación
  */
 public final class FormularioAutenticacion extends JDialog {
     private final JTextField txtUsuario;

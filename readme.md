@@ -65,6 +65,25 @@ Como proceso en segundo plano:
 javaw -jar trainGo.jar
 ```
 
+La aplicación se ejecutará y se abrirá una ventana de inicio de sesión. <br/>
+<br/>
+Estos son los datos disponibles para hacer pruebas: <br/>
+- Estaciones:
+  - A Coruña
+  - Madrid
+  - Barcelona
+  - Valencia
+  - Sevilla
+  - Vigo
+  - Lisboa
+  - Oporto
+  - Mataró
+- Rutas:
+- Vigo --> A Coruña
+- A Coruña --> Madrid
+- Oporto --> Vigo
+
+Existen circulaciones de trenes para la ruta Vigo --> A Coruña <br/>
 ## Dependencias
 
 TrainGo utiliza las siguientes dependencias:

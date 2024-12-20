@@ -1,0 +1,173 @@
+\subsection{Implementación del DAO}\label{subsec:implementacion_del_dao}
+
+Nada más empezar a analizar este paquete, resalta la existencia de una interfaz \textit{IDAO} que define los métodos básicos de acceso a los datos.
+De entrar en ella, se verán dos métodos sobrecargados: \textit{load} y \textit{save}.
+Estos métodos son los que se encargan de cargar y guardar los datos, respectivamente.
+
+Algo interesante de esta «sobrecarga» es que solo no se han implementado los métodos sin argumentos.
+Es interesante, porque nos permite establecer métodos obligatorios y otros métodos que se han
+de implementar si se desea.
+Por ejemplo, si se desea implementar un método \textit{load(String file)} que cargue los datos de un archivo específico, se puede hacer.
+Pero si no se desea, no es necesario.
+He de puntualizar que, esta forma de usar las interfaces fue polémica cuando se implementó\autocite{stackoverflow2014defaultforbidden},
+    pero es una forma de hacerlo que me gusta y ha llegado a ser aceptada en la comunidad\autocite{mikemybytes2021defaultmethods}.
+
+Dicho esto, se puede ver que la clase \textit{AbstractDAO} implementa la interfaz \textit{IDAO}.
+
+\subsubsection{Clase AbstractDAO}\label{subsubsec:clase_abstractdao}
+Esta clase es el «esqueleto» de los DAOs.
+Llegando como llegamos de la interfaz, lo propio sería empezar por los métodos \textit{load} y \textit{save}.
+Estos métodos son los que se encargan de cargar y guardar los datos, respectivamente.
+
+Para implementarlos, se ha hecho uso del patrón \textit{Template Method}.
+Este patrón es muy útil para definir un esquema de algoritmo y dejar que las subclases implementen los detalles.
+Para ejemplificarlo, se puede ver el método \textit{load} en la \autoref{lst:load}.
+\begin{lstlisting}[language=Java, caption={Método \textit{load} de la clase \textit{AbstractDAO}}, label={lst:load}]
+    @Override
+    public boolean load() {
+        XMLEventReader reader = null;
+        obtenerLogger(); //Obtiene el logger
+        logger.info("Cargando archivo...");
+
+        try {
+            reader = obtenerXmlEventReader();
+            cargarArchivo(reader);
+        } catch (CargaArchivoFallidaException e) {
+            logger.error("Error al cargar el archivo", e);
+            return false;
+        } finally {
+            try {
+                cerrarArchivo(reader);
+            } catch (CierreArchivoXMLErroneoException e) {
+                logger.error("Error al cerrar el archivo", e);
+            }
+        }
+
+        logger.info("Archivo cargado de forma satisfactoria");
+        return true;
+    }
+\end{lstlisting}
+
+Este método tiene una lógica muy normal hasta que se llega a la llamada a \textit{obtenerXmlEventReader()}.
+Si se mira el código de esta función, se verá que es abstracta.
+Uno podría preguntarse, ¿cómo se implementa?
+Pues bien, se implementa en las subclases.
+De esta forma, se puede tener un método que se ejecuta siempre, pero que depende de la implementación de las subclases.
+
+Luego, se llama a \textit{cargarArchivo(reader)}.
+Como la estructura de cada archivo de datos es distinta, este método también es abstracto.
+Así permitimos que cada subclase implemente cómo cargar sus datos mientras mantenemos una estructura
+común, reducimos la duplicación de código y mantenemos la cohesión.
+Este patrón se llama \textit{Template Method} y es muy útil en este tipo de situaciones.\autocite{digitalocean2024templatemethod}.\par
+
+Si seguimos analizando la clase, (obviando el método save, que es similar y los métodos triviales como \textit{obtenerLogger})
+llegamos al final, que es una parte interesante.
+
+Estos métodos como \textit{getNextXMLEvent} o \textit{escribirElemento}
+son resultado de un proceso de refactorización.
+En un principio, estos métodos estaban en las clases hijas, pero
+se detectó en el proceso de codificación que estos métodos eran comunes a todas las clases hijas.
+Por ello, se decidió moverlos a la clase madre.\par
+
+Analizar una a una las clases hijas sería tedioso y no aportaría mucho.
+Por ello, vamos a hacer un análisis general de las clases hijas.
+Estas procesan los datos XML\@.
+Se ha usado la librería \textit{javax.xml} para procesar los datos XML\@.
+
+Todas las clases hijas implementan el patrón singleton y por ello tienen
+un método \textit{getInstance} que devuelve la instancia de la clase.
+Se puede ver un ejemplo en \textit{DAOCirculacion}:
+\begin{lstlisting}[language=Java, caption={Método \textit{getInstance}}, label={lst:getInstance}]
+    public static volatile DAOCirculacion getInstance(FachadaDAO fadao)// Singleton
+    {
+        if (instance != null)
+        {
+            return instance;
+        }
+        synchronized (DAOCirculacion.class)
+        {
+            if (instance == null)
+            {
+                instance = new DAOCirculacion(fadao);
+            }
+        }
+    return instance;
+    }
+\end{lstlisting}
+
+Respecto al resto del código, es bastante trivial.
+En el caso de \textit{guardarArchivo}, se ha usado un \textit{BufferedWriter} para escribir los datos.
+Con él se itera sobre los datos y se escriben en el archivo.
+
+El caso de \textit{cargarArchivo} es más interesante.
+Se ha usado un \textit{XMLEventReader} para leer los datos.
+Este itera por los datos con un (o varios) «whiles» y mediante un \textit{enhanced-switch} se procesan los datos.
+
+En resumen, el DAO es una parte fundamental de la aplicación.
+Se encarga de la persistencia de los datos y de abstraer la lógica de acceso a los mismos.
+En este caso, se ha implementado un patrón DAO con una estructura común y clases hijas que implementan la lógica específica de cada clase.
+
+Las clases de paquetes externos al DAO mismo, acceden a los datos mediante el patrón Façade.
+
+\subsection{Implementación del Façade}\label{subsec:implementacion_del_facade}
+Las «façadas» son el «hilo conductor» de la aplicación.
+Todo pasa por ellas.
+Gracias a ellas, se puede añadir una capa de abstracción entre la GUI y el modelo de datos.
+Además, aumenta la encapsulación proporcionada por el MVC\@.
+Las façadas implementan también el patrón singleton.
+
+\subsection{Contenedores de datos}\label{subsec:contenedores_de_datos}
+
+Una vez visto el DAO y las façadas, es pertinente hablar de los contenedores de datos.
+Estas son las representaciones de como se estructura la información en la aplicación.
+
+Podemos distinguir dos tipos de «contenedores»: los inmutables y los mutables.
+En nuestro caso, JAVA nos proporciona un forma de diferenciarlos: los \textit{Records} y las \textit{Clases}.
+
+\subsubsection{Records}\label{subsubsec:records}
+En nuestra aplicación, como hay muchos datos de infraestructura y fechas,
+hemos acabado teniendo muchos tipos que no admiten cambios.
+De esta forma, se ha decidido usar \textit{Records} para representar estos datos.
+Estas clases además de ser una «señal» de inmutabilidad,
+nos dan alguna que otra ventaja como, por ejemplo, que los «getters», «equals», «hashCode» y «toString» se generan automáticamente.
+
+
+\subsubsection{Clases}\label{subsubsec:clases}
+Al otro lado del espectro, tenemos los usuarios.
+Estos pueden cambiar su correo, teléfono y dirección.
+
+
+\subsection{Implementación de la Interfaz Gráfica de Usuario (GUI)}\label{subsec:implementacion_gui}
+
+La interfaz gráfica de usuario (GUI) es la parte de la aplicación que interactúa con el usuario.
+Esta construída con Java Swing.
+Hay dos asuntos que son interesantes de comentar: la interacción con el modelo de datos y la construcción de
+elementos dependientes de modelos.
+
+\subsubsection{Interacción con el modelo de datos}\label{subsubsec:interaccion_con_el_modelo_de_datos}
+La interacción con el modelo de datos se hace mediante las façadas.
+Estas se encargan de abstraer la lógica de acceso a los datos.
+
+Por ejemplo, para reservar un tren, se llama al método \textit{reservarTren} de la clase \textit{FachadaAplicacion}:
+\begin{lstlisting}[language=Java, caption={Interacción con el modelo de datos}, label={lst:interaccion_modelo_datos}]
+    FachadaAplicacion fachada = new FachadaAplicacion(); Usuario usuario = new Usuario(...);
+    Tren tren = new Tren(...);
+    fachada.reservarTren(usuario, tren);
+\end{lstlisting}
+
+\subsubsection{Construcción de elementos dependientes de modelos}\label{subsubsec:construccion_de_elementos_dependientes_de_modelos}
+En algunos formularios de la gui, se han usado elementos que, como almacenan información de una forma específica,
+necesitan de un modelo específico.
+
+Este es el caso de, por ejemplo, las tablas.
+Para construir una tabla, se necesita un modelo de tabla.
+Los modelos de tabla son clases que extienden de \textit{AbstractTableModel} y que se encargan de almacenar y gestionar los datos de la tabla.
+
+\subsection{Clases de utilidades}\label{subsec:clases_de_utilidades}
+Las clases de utilidades son clases que no tienen estado y que contienen métodos estáticos.
+En nuestro caso, tenemos 3: \textit{Criptograficos}, \textit{Internacionalizacion} y \textit{Ortograficos}.
+
+En el caso de \textit{Criptograficos}, se encarga de cifrar y descifrar contraseñas.
+En el caso de \textit{Internacionalizacion}, se encarga de cargar los ficheros de internacionalización.
+En el caso de \textit{Ortograficos}, se encarga de hacer operaciones de comparación de cadenas.
+

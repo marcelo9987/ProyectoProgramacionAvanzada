@@ -1,0 +1,286 @@
+Para este apartado, seguiremos una lógica de aproximación top-down.
+Analizaremos primero la estructura general del proyecto, para luego ir descendiendo en detalle. \footnote{Nota para el lector: Algunos patrones están repartidos entre este capítulo y el siguiente.}
+
+
+ De esta forma iremos viendo cómo se ha estructurado el proyecto, desde la raíz hasta las clases más concretas.
+A continuación, se muestra la estructura de directorios del proyecto en la \autoref{fig:estructura}.
+
+
+\begin{figure}[h]
+    \centering
+    \framebox[\textwidth]{%
+        \begin{minipage}{0.9\textwidth}
+
+            \dirtree{%
+                .1 TrainGo.
+                .2 datos.
+                .2 src.
+            }
+        \end{minipage}
+    }
+    \caption{Estructura de directorios del proyecto}
+    \label{fig:estructura}
+\end{figure}
+
+Dentro del directorio \textit{datos}, habremos de hallar los archivos de datos que se usan en la aplicación.
+Estos están escritos en un formato XML\@.
+
+En el directorio \textit{src}, se encuentran los archivos fuente del proyecto, donde se encuentra la implementación de la aplicación.
+
+El código fuente de esta aplicación sigue una modificación \textbf{patrón Modelo-Vista-Controlador} (MVC).
+En este caso, se ha modificado el patrón para que se ajuste a las necesidades de la aplicación.
+La estructura de directorios de la aplicación se muestra en la \autoref{fig:estructura_src}.
+
+\begin{figure}[h]
+    \centering
+    \framebox[\textwidth]{%
+        \begin{minipage}{0.9\textwidth}
+            \dirtree{%
+                .1 src.
+                .2 main.
+                .3 java.
+                .4 com.
+                .5 marceSoft.
+                .6 trainGo.
+                .7 aplicacion.
+                .7 dao.
+                .7 gui.
+                .7 util.
+                .3 resources.
+                .4 images.
+            }
+        \end{minipage}
+    }
+    \caption{Estructura de directorios del código fuente}
+    \label{fig:estructura_src}
+\end{figure}
+
+En el directorio \textit{aplicacion}, se encuentran las clases que implementan la lógica de la aplicación
+y los modelos de datos.
+(es decir, modelo y controlador).
+
+En el directorio \textit{dao}, se encuentran las clases que implementan el patrón DAO\@.
+Es importante separar la lógica de acceso a los datos de la lógica de la aplicación,
+ya que al hacerlo, se facilita la implementación de la persistencia de los datos.
+
+En el directorio \textit{gui}, se encuentran las clases que implementan la interfaz gráfica de usuario.
+Estas clases se encargan de mostrar la información al usuario y de recibir la información del usuario (vista).
+
+En el directorio \textit{util}, se encuentran las clases que implementan utilidades para la aplicación.
+
+En el directorio \textit{resources}, hallamos los \textit{bundles} de internacionalización,
+archivo de configuración del \textit{logger} y las imágenes que se usan en la aplicación.
+Sin embargo, es mejor no adelantarse, ya trataremos estos aspectos en el \autoref{ch:implementacion}.
+
+\newpage
+
+\subsection{Estructura del paquete \textit{aplicacion}}\label{subsec:estructura_del_paquete_aplicacion}
+Volviendo a la estructura de paquetes, en el paquete \textit{aplicacion} se encuentran las clases que implementan parte de la lógica de la aplicación.
+
+Por un lado, tenemos la \textit{FachadaAplicacion}, que se encarga de abstraer la lógica de la aplicación. \footnote{ En la \autoref{fig:jerarquia_fachada} se muestra la jerarquía de clases de la Fachada.}
+Al mismo nivel, se encuentran las clases «contenedoras» de los modelos de datos.
+
+Bajando un nivel nos podemos encontrar con la anotación \textit{NoNegativo} y su validador,
+los dos enums, las excepciones y formateadores personalizados.
+Esto se ve muy bien en la \autoref{fig:estructura_aplicacion}.
+
+\begin{figure}[h]
+    \centering
+    \framebox[\textwidth]{%
+        \begin{minipage}{0.9\textwidth}
+            \dirtree{%
+                .1 aplicacion.
+                .2 anotaciones.
+                .3 validadores.
+                .4 ValidadorNoNegativo.java.
+                .3 NoNegativo.java.
+                .2 enums.
+                .3 EnumCirculacion.java.
+                .3 EnumIdioma.java.
+                .2 excepciones.
+                .3 CargaArchivoFallidaException.java.
+                .3 CierreArchivoXMLErroneoException.java.
+                .3 LecturaSiguienteEventoException.java.
+                .3 NoHayUsuariosRegistradosException.java.
+                .3 ProcesadoSiguieteEventoException.java.
+                .3 SituacionDeRutasInesperadaException.java.
+                .3 UsuarioNoEncontradoException.java.
+                .2 formato.
+                .3 FormattedFecha.java.
+                .2 FachadaAplicacion.java.
+                .2 Circulacion.java.
+                .2 Estacion.java.
+                .2 Reserva.java.
+                .2 Ruta.java.
+                .2 Tren.java.
+                .2 Usuario.java.
+            }
+        \end{minipage}
+    }
+    \caption{Estructura de clases del paquete \textit{aplicacion}}
+    \label{fig:estructura_aplicacion}
+\end{figure}
+
+De esta zona, lo más reseñable a nivel de diseño, es, tal vez, es la decisión de poner Usuario
+como clase contenedora modificable, mientras que el resto de clases son inmutables (\textit{Records}).
+Esto se debe a que los usuarios son los únicos datos que son susceptibles a cambios.
+
+Otra vez, se me puede (con cierta razón) acusar de adelantarme.
+Permitidme, entonces, que me disculpe y que os remita al \autoref{ch:implementacion} para más detalles.
+Sin embargo, considero que es una decisión de diseño importante,
+ya que aunque hay datos que pueden ser «renovados» (como las reservas),
+una reserva «modificada» es, en realidad, una reserva nueva (en nuestro caso).
+Por este motivo, se ha decidido que las reservas sean inmutables.
+
+\subsection{Estructura del paquete \textit{dao}}\label{subsec:estructura_del_paquete_dao}
+En el paquete \textit{dao}, se encuentran las clases que implementan el patrón DAO,
+que se encarga de abstraer la lógica de acceso a los datos (persistencia).
+
+Este paquete está estructurado como se muestra en la \autoref{fig:estructura_dao}.
+
+\begin{figure}[h]
+    \centering
+    \framebox[\textwidth]{%
+        \begin{minipage}{0.9\textwidth}
+            \dirtree{%
+                .1 dao.
+                .2 constantes.
+                .2 FachadaDAO.java.
+                .2 IDAO.java.
+                .2 AbstractDAO.java.
+                .2 DAOCirculacion.java.
+                .2 DAOEstacion.java.
+                .2 DAOReserva.java.
+                .2 DAORuta.java.
+                .2 DAOTren.java.
+                .2 DAOUsuario.java.
+            }
+        \end{minipage}
+    }
+    \caption{Estructura de clases del paquete \textit{dao}}
+    \label{fig:estructura_dao}
+\end{figure}
+
+
+En este paquete, se ha implementado un patrón DAO para abstraer la lógica de acceso a los datos.
+Este ha sido implementado siguiendo una versión simplificada de las directrices oficiales de ORACLE~\autocite
+{oracle.dao},
+que también es usado por otros autores~\autocite{baeldung.dao}.
+
+La toma de decisiones en este paquete ha sido más sencilla,
+ya que se ha seguido una estructura de clases más estándar.
+
+Siguiendo el patrón previamente mencionado, se ha implementado una interfaz \textit{IDAO} que define los métodos que deben implementar los DAOs.
+En este caso, se ha añadido una clase abstracta \textit{AbstractDAO} que implementa la interfaz \textit{IDAO}.
+Todo esto se puede ver en la \autoref{fig:clases_dao}.
+
+Hay un paquete más dentro del paquete \textit{dao}, que puede pasar fácilmente desapercibido.
+Este paquete es el de las constantes.
+Su distribución se muestra en la \autoref{fig:estructura_dao_constantes}.
+
+\begin{figure}[h]
+    \centering
+    \framebox[\textwidth]{%
+        \begin{minipage}{0.9\textwidth}
+            \dirtree{%
+                .1 dao.
+                .2 constantes.
+                .3 ConstantesGeneral.java.
+                .3 TagsXMLCirculacion.java.
+                .3 TagsXMLEstacion.java.
+                .3 TagsXMLReserva.java.
+                .3 TagsXMLRuta.java.
+                .3 TagsXMLTren.java.
+                .3 TagsXMLUsuario.java.
+            }
+        \end{minipage}
+    }
+    \caption{Estructura de clases del paquete \textit{dao}}
+    \label{fig:estructura_dao_constantes}
+\end{figure}
+
+En este paquete, se encuentran las constantes que se usan en los DAOs.
+
+\subsection{Estructura del paquete \textit{gui}}\label{subsec:estructura_del_paquete_gui}
+Saliendo de la espesura de los DAOs, nos encontramos con el paquete \textit{gui}.
+
+Este paquete contiene las clases que implementan la interfaz gráfica de usuario.
+La estructura de este paquete se muestra en la \autoref{fig:estructura_gui}.
+\begin{figure}[h]
+    \centering
+    \framebox[\textwidth]
+    {%
+        \begin{minipage}{0.9\textwidth}
+            \dirtree{%
+                .1 gui.
+                .2 FachadaGUI.java.
+                .2 formularios.
+                .2 modelos.
+            }
+        \end{minipage}
+    }
+    \caption{Estructura de clases del paquete \textit{gui}}
+    \label{fig:estructura_gui}
+\end{figure}
+
+Es un paquete relativamente sencillo con una estructura bastante intuitiva.
+Por un lado, tenemos la habitual façada, que se encarga de abstraer la lógica de la interfaz gráfica.
+Y, nos quedan los formularios y los modelos.
+
+Si desviamos la mirada hacia los formularios, nos encontramos con todos los formularios que se usan en la aplicación.
+La estructura de este paquete se muestra en la \autoref{fig:estructura_gui_formularios}.
+
+\begin{figure}[h]
+    \centering
+    \framebox[\textwidth]
+    {%
+        \begin{minipage}{0.9\textwidth}
+            \dirtree{%
+                .1 gui.
+                .2 formularios.
+                .3 FormularioAutenticacion.java.
+                .3 FormularioConfiguracion.java.
+                .3 FormularioMisReservas.java.
+                .3 FormularioMiUsuario.java.
+                .3 FormularioPrincipal.java.
+                .3 FormularioReservarTren.java.
+            }
+        \end{minipage}
+    }
+    \caption{Estructura de clases del paquete \textit{gui}}
+    \label{fig:estructura_gui_formularios}
+\end{figure}
+
+Pero, ¿qué es ese paquete \textit{modelos} que se ve en la \autoref{fig:estructura_gui}?
+Pues, es un paquete que contiene los modelos de las tablas que se usan en la aplicación.
+
+La estructura de este paquete se muestra en la \autoref{fig:estructura_gui_modelos}.
+
+\begin{figure}[h]
+    \centering
+    \framebox[\textwidth]
+    {%
+        \begin{minipage}{0.9\textwidth}
+            \dirtree{%
+                .1 gui.
+                .2 modelos.
+                .3 ModeloDesplegableUbicacion.
+                .3 ModeloTablaCirculaciones.
+                .3 ModeloTablaReservas.
+            }
+        \end{minipage}
+    }
+    \caption{Estructura de clases del paquete \textit{gui}}
+    \label{fig:estructura_gui_modelos}
+\end{figure}
+
+En este paquete, se encuentran los modelos de las tablas que se usan en la aplicación.
+
+\subsection{Estructura del paquete \textit{util}}\label{subsec:estructura_del_paquete_util}
+Por último, nos encontramos con el paquete \textit{util}.
+Este paquete es trivial, ya que solo contiene clases de utilidades.
+Contamos tres clases en este paquete: \textit{Criptograficos}, \textit{Internacionalizacion} y \textit{Ortograficos}.
+
+Para no hacer un «look-ahead», ya hablamos ahora de sus propósitos en el capítulo de la implementación de la aplicación.
+
+\newpage
